@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+
+    <dbname value="bus_db"></dbname>
+
+    <version value="5"></version>
+
+    <storage value="external"></storage>
+
+    <list>
+
+        <mapping class="com.liyu.suzhoubus.model.Gank"></mapping>
+
+        <mapping class="com.liyu.suzhoubus.model.BusLineDetail"></mapping>
+
+        <mapping class="com.liyu.suzhoubus.model.StandInfoBean"></mapping>
+
+    </list>
+
+</litepal>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="IndicatorItem">
+        <attr name="indicatorColor" format="reference|color" />
+        <attr name="indicatorChecked" format="boolean" />
+        <attr name="indicatorRingWidth" format="dimension"/>
+        <attr name="indicatorInnerCircle" format="dimension"/>
+    </declare-styleable>
+
+</resources>

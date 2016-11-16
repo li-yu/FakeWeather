@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/navigation_item_1"
+            android:checked="true"
+            android:icon="@drawable/ic_directions_bus_white_24dp"
+            android:title="公交" />
+        <item
+            android:id="@+id/navigation_item_2"
+            android:icon="@drawable/ic_wb_sunny_white_24dp"
+            android:title="天气" />
+        <item
+            android:id="@+id/navigation_item_3"
+            android:icon="@drawable/ic_redeem_white_24dp"
+            android:title="福利" />
+
+    </group>
+
+    <item android:title="@string/app_name">
+        <menu>
+            <item
+                android:id="@+id/navigation_item_settings"
+                android:icon="@drawable/ic_settings_white_24dp"
+                android:title="设置"/>
+        </menu>
+    </item>
+
+</menu>
