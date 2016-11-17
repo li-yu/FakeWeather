@@ -1,9 +1,12 @@
 package com.liyu.suzhoubus.ui.weather;
 
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.http.ApiFactory;
@@ -11,9 +14,12 @@ import com.liyu.suzhoubus.http.BaseWeatherResponse;
 import com.liyu.suzhoubus.model.HeWeather5;
 import com.liyu.suzhoubus.ui.MainActivity;
 import com.liyu.suzhoubus.ui.base.BaseFragment;
+import com.liyu.suzhoubus.ui.gank.PictureActivity;
 import com.liyu.suzhoubus.ui.weather.adapter.DailyAdapter;
 import com.liyu.suzhoubus.ui.weather.adapter.HourlyAdapter;
 import com.liyu.suzhoubus.utils.ACache;
+import com.liyu.suzhoubus.utils.RxFiles;
+import com.liyu.suzhoubus.utils.ShareUtils;
 import com.liyu.suzhoubus.utils.TimeUtils;
 
 import java.text.SimpleDateFormat;
@@ -45,6 +51,8 @@ public class WeatherFragment extends BaseFragment {
 
     private ACache mCache;
 
+    private HeWeather5 currentWeather;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_weather;
@@ -56,7 +64,19 @@ public class WeatherFragment extends BaseFragment {
         mToolbar = findView(R.id.toolbar);
         mToolbar.setTitle("苏州天气");
         ((MainActivity) getActivity()).initDrawer(mToolbar);
-        mToolbar.inflateMenu(R.menu.menu_bus);
+        mToolbar.inflateMenu(R.menu.menu_weather);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.menu_share) {
+                    if (currentWeather != null)
+                        ShareUtils.shareText(getActivity(), getShareMessage(currentWeather));
+                    return true;
+                }
+                return false;
+            }
+        });
         tvCityName = findView(R.id.tv_city_name);
         tvNowWeatherString = findView(R.id.tv_weather_string);
         tvNowTemp = findView(R.id.tv_temp);
@@ -119,6 +139,7 @@ public class WeatherFragment extends BaseFragment {
         if (weather == null || !weather.getStatus().equals("ok")) {
             return;
         }
+        currentWeather = weather;
         tvNowWeatherString.setText(weather.getNow().getCond().getTxt());
         tvAqi.setText(weather.getAqi().getCity().getQlty());
         tvNowTemp.setText(String.format("%s℃", weather.getNow().getTmp()));
@@ -126,6 +147,47 @@ public class WeatherFragment extends BaseFragment {
         tvUpdateTime.setText(String.format("%s 更新", updateTime));
         hourlyAdapter.setNewData(weather.getHourly_forecast());
         dailyAdapter.setNewData(weather.getDaily_forecast());
+    }
+
+    private String getShareMessage(HeWeather5 weather) {
+        StringBuffer message = new StringBuffer();
+        message.append("苏州天气：");
+        message.append("\r\n");
+        message.append(weather.getBasic().getUpdate().getLoc());
+        message.append("发布：");
+        message.append("\r\n");
+        message.append("此时此刻：");
+        message.append(weather.getNow().getCond().getTxt());
+        message.append(", ");
+        message.append(weather.getNow().getTmp() + "℃");
+        message.append("。");
+        message.append("\r\n");
+        message.append("空气质量：PM2.5 → " + weather.getAqi().getCity().getPm25());
+        message.append(", ");
+        message.append(weather.getAqi().getCity().getQlty());
+        message.append("。");
+        message.append("\r\n");
+        message.append("今日天气：");
+        message.append(weather.getDaily_forecast().get(0).getTmp().getMin() + "℃ ～ ");
+        message.append(weather.getDaily_forecast().get(0).getTmp().getMax() + "℃");
+        message.append(", ");
+        message.append(weather.getDaily_forecast().get(0).getCond().getTxt_d());
+        message.append(", ");
+        message.append(weather.getDaily_forecast().get(0).getWind().getDir());
+        message.append(weather.getDaily_forecast().get(0).getWind().getSc());
+        message.append("级。");
+        message.append("\r\n");
+        message.append("明日天气：");
+        message.append(weather.getDaily_forecast().get(1).getTmp().getMin() + "℃ ～ ");
+        message.append(weather.getDaily_forecast().get(1).getTmp().getMax() + "℃");
+        message.append(", ");
+        message.append(weather.getDaily_forecast().get(1).getCond().getTxt_d());
+        message.append(", ");
+        message.append(weather.getDaily_forecast().get(1).getWind().getDir());
+        message.append(weather.getDaily_forecast().get(1).getWind().getSc());
+        message.append("级。");
+
+        return message.toString();
     }
 
 }

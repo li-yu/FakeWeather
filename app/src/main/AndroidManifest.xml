@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.liyu.suzhoubus">
+    package="com.liyu.suzhoubus">
 
     <!-- 这个权限用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
@@ -35,21 +35,27 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="E6rdq6U1vjjmTTglEtdX6fFbYTejWKEq" />
+
         <activity android:name=".ui.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".ui.bus.LineDetailActivity"></activity>
         <activity android:name=".ui.bus.StationDetailActivity"></activity>
-        <service android:name="com.baidu.location.f" android:enabled="true">
-        </service>
-        <activity android:name=".ui.gank.PictureActivity"></activity>
-        <service android:name=".service.GirlService"
-                 android:enabled="true">
-        </service>
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"></service>
+        <activity
+            android:name=".ui.gank.PictureActivity"
+            android:label=""
+            android:theme="@style/PictureTheme"></activity>
+        <service
+            android:name=".service.GirlService"
+            android:enabled="true"></service>
     </application>
 
 </manifest>

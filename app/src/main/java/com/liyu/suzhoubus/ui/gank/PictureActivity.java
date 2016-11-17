@@ -129,7 +129,7 @@ public class PictureActivity extends BaseActivity {
 
                         @Override
                         public void onNext(Uri uri) {
-                            Toast.makeText(PictureActivity.this, "图片成功保存至" + RxFiles.getRealFilePath(PictureActivity.this, uri), Toast.LENGTH_LONG).show();
+                            Toast.makeText(PictureActivity.this, "图片成功保存至: " + RxFiles.getRealFilePath(PictureActivity.this, uri), Toast.LENGTH_LONG).show();
                         }
                     });
 

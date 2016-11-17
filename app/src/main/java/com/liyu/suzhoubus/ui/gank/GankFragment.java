@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.liyu.suzhoubus.R;
@@ -45,7 +46,6 @@ public class GankFragment extends BaseFragment {
         mToolbar = findView(R.id.toolbar);
         mToolbar.setTitle("福利");
         ((MainActivity) getActivity()).initDrawer(mToolbar);
-        mToolbar.inflateMenu(R.menu.menu_bus);
 
         adapter = new GankAdapter(R.layout.item_gank, null);
         adapter.openLoadAnimation();
@@ -82,7 +82,7 @@ public class GankFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

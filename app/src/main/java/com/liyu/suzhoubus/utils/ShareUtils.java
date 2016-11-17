@@ -10,6 +10,14 @@ import android.net.Uri;
 
 public class ShareUtils {
 
+    public static void shareText(Context context, String extraText) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, extraText);
+        context.startActivity(
+                Intent.createChooser(intent, "分享到"));
+    }
+
     public static void shareImage(Context context, Uri uri, String title) {
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
