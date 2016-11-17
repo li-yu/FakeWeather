@@ -1,10 +1,15 @@
 package com.liyu.suzhoubus.ui.gank;
 
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -12,7 +17,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
+import com.liyu.suzhoubus.utils.RxFiles;
+import com.liyu.suzhoubus.utils.ShareUtils;
 
+import java.io.IOException;
+
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
@@ -26,7 +37,6 @@ public class PictureActivity extends BaseActivity {
     public static final String TRANSIT_PIC = "picture";
 
     ImageView mImageView;
-    PhotoViewAttacher mAttacher;
 
     String mImageUrl, mImageTitle;
 
@@ -44,14 +54,21 @@ public class PictureActivity extends BaseActivity {
 
     @Override
     protected int getMenuId() {
-        return 0;
+        return R.menu.menu_pic;
     }
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        showSystemUI();
         setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setShowHideAnimationEnabled(true);
         mImageView = (ImageView) findViewById(R.id.picture);
-//        mAttacher = new PhotoViewAttacher(mImageView);
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideOrShowToolbar();
+            }
+        });
     }
 
     @Override
@@ -61,5 +78,91 @@ public class PictureActivity extends BaseActivity {
         ViewCompat.setTransitionName(mImageView, TRANSIT_PIC);
         Glide.with(this).load(mImageUrl).diskCacheStrategy(DiskCacheStrategy.SOURCE).crossFade(0)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(mImageView);
+    }
+
+    private void hideOrShowToolbar() {
+        if (getSupportActionBar().isShowing()) {
+            getSupportActionBar().hide();
+            hideSystemUI();
+        } else {
+            showSystemUI();
+            getSupportActionBar().show();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        if (id == R.id.menu_share) {
+            RxFiles.saveImageAndGetPathObservable(this, mImageUrl, mImageTitle)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<Uri>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(Uri uri) {
+                            ShareUtils.shareImage(PictureActivity.this, uri, "分享福利...");
+                        }
+                    });
+        } else if (id == R.id.menu_save) {
+            RxFiles.saveImageAndGetPathObservable(this, mImageUrl, mImageTitle)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<Uri>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(Uri uri) {
+                            Toast.makeText(PictureActivity.this, "图片成功保存至" + RxFiles.getRealFilePath(PictureActivity.this, uri), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+        } else if (id == R.id.menu_wallpaper) {
+            final WallpaperManager wm = WallpaperManager.getInstance(this);
+            RxFiles.saveImageAndGetPathObservable(this, mImageUrl, mImageTitle)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<Uri>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(Uri uri) {
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                                startActivity(wm.getCropAndSetWallpaperIntent(uri));
+                            } else {
+                                try {
+                                    wm.setStream(PictureActivity.this.getContentResolver().openInputStream(uri));
+                                    Toast.makeText(PictureActivity.this, "设置壁纸成功!", Toast.LENGTH_SHORT).show();
+                                } catch (IOException e) {
+                                    Toast.makeText(PictureActivity.this, "设置壁纸失败!" + e.toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    });
+        }
+        return true;
     }
 }

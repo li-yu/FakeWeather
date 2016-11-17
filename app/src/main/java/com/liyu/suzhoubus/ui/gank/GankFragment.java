@@ -3,6 +3,7 @@ package com.liyu.suzhoubus.ui.gank;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.widget.ProgressBar;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.liyu.suzhoubus.R;
@@ -52,6 +53,7 @@ public class GankFragment extends BaseFragment {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        adapter.setLoadingView(new ProgressBar(getActivity()));
         adapter.openLoadMore(10);
         adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override

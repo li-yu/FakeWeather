@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".ui.gank.PictureActivity">
+    <item
+        android:id="@+id/menu_share"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title="分享"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_save"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title="保存"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_wallpaper"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title="设为壁纸"
+        app:showAsAction="never"/>
+</menu>
