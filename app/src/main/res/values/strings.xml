@@ -4,4 +4,10 @@
     <string name="close">close</string>
     <string name="bus_nearby_line">附近线路</string>
     <string name="bus_nearby_station">附近站台</string>
+
+    <string-array name="share_type">
+        <item>纯文本</item>
+        <item>仿锤子便签</item>
+        <item>屏幕截屏</item>
+    </string-array>
 </resources>

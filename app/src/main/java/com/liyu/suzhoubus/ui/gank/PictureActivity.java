@@ -9,16 +9,15 @@ import android.support.v4.view.ViewCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.utils.RxFiles;
 import com.liyu.suzhoubus.utils.ShareUtils;
+import com.liyu.suzhoubus.utils.ToastUtil;
 
 import java.io.IOException;
 
@@ -129,7 +128,7 @@ public class PictureActivity extends BaseActivity {
 
                         @Override
                         public void onNext(Uri uri) {
-                            Toast.makeText(PictureActivity.this, "图片成功保存至: " + RxFiles.getRealFilePath(PictureActivity.this, uri), Toast.LENGTH_LONG).show();
+                            ToastUtil.showLong("图片成功保存至: " + RxFiles.getRealFilePath(PictureActivity.this, uri));
                         }
                     });
 
@@ -155,9 +154,9 @@ public class PictureActivity extends BaseActivity {
                             } else {
                                 try {
                                     wm.setStream(PictureActivity.this.getContentResolver().openInputStream(uri));
-                                    Toast.makeText(PictureActivity.this, "设置壁纸成功!", Toast.LENGTH_SHORT).show();
+                                    ToastUtil.showShort("设置壁纸成功!");
                                 } catch (IOException e) {
-                                    Toast.makeText(PictureActivity.this, "设置壁纸失败!" + e.toString(), Toast.LENGTH_SHORT).show();
+                                    ToastUtil.showShort("设置壁纸失败!" + e.toString());
                                 }
                             }
                         }

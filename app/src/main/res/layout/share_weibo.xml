@@ -3,15 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/weibo_layout"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/weibo_background1"
+    android:background="@drawable/weibo_background"
     >
     <TextView
         android:id="@+id/weibo_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="22sp"
+        android:text="12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n12312312\n"
         />
 
 </LinearLayout>

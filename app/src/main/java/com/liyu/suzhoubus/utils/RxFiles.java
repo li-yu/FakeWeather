@@ -1,27 +1,20 @@
 package com.liyu.suzhoubus.utils;
 
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
+import android.widget.ScrollView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
-import com.liyu.suzhoubus.BuildConfig;
-import com.liyu.suzhoubus.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -103,19 +96,15 @@ public class RxFiles {
 
     }
 
-    public static Observable<Uri> saveText2ImageObservable(final Context context, final String text) {
+    public static Observable<Uri> saveText2ImageObservable(final Context context, final ScrollView view) {
         return Observable
                 .create(new Observable.OnSubscribe<Bitmap>() {
                     @Override
                     public void call(Subscriber<? super Bitmap> subscriber) {
-                        LayoutInflater inflater = LayoutInflater.from(context);
-                        View view = inflater.inflate(R.layout.share_weibo,null);
-                        TextView tv = (TextView) view.findViewById(R.id.weibo_text);
-                        tv.setText(text);
 
                         Bitmap bitmap = null;
                         try {
-                            bitmap = saveViewBitmap(view);
+                            bitmap = saveScrollViewToBitmap(view);
                         } catch (Exception e) {
                             subscriber.onError(e);
                         }
@@ -181,13 +170,13 @@ public class RxFiles {
 
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                , new String[] { MediaStore.Images.Media._ID }
+                , new String[]{MediaStore.Images.Media._ID}
                 , MediaStore.Images.Media.DATA + "=? "
-                , new String[] { absPath }, null);
+                , new String[]{absPath}, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
-            return Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI , Integer.toString(id));
+            return Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Integer.toString(id));
 
         } else if (!absPath.isEmpty()) {
             ContentValues values = new ContentValues();
@@ -199,29 +188,34 @@ public class RxFiles {
         }
     }
 
-    private static Bitmap saveViewBitmap(View view) {
-        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
-        view.buildDrawingCache();
-        Bitmap bitmap = view.getDrawingCache();
+    private static Bitmap saveScrollViewToBitmap(ScrollView scrollView) {
+        int h = 0;
+        Bitmap bitmap = null;
+        for (int i = 0; i < scrollView.getChildCount(); i++) {
+            h += scrollView.getChildAt(i).getHeight();
+        }
+        bitmap = Bitmap.createBitmap(scrollView.getWidth(), h,
+                Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bitmap);
+        scrollView.draw(canvas);
         return bitmap;
     }
 
-
-    public static Bitmap duplicateBitmap(Bitmap bmpSrc)
-    {
-        if (null == bmpSrc)
-        { return null; }
-
-        int bmpSrcWidth = bmpSrc.getWidth();
-        int bmpSrcHeight = bmpSrc.getHeight();
-
-        Bitmap bmpDest = Bitmap.createBitmap(bmpSrcWidth, bmpSrcHeight, Bitmap.Config.ARGB_8888); if (null != bmpDest) { Canvas canvas = new Canvas(bmpDest); final Rect rect = new Rect(0, 0, bmpSrcWidth, bmpSrcHeight);
-
-        canvas.drawBitmap(bmpSrc, rect, rect, null); }
-
-        return bmpDest;
+    public static boolean delete(File file) {
+        if (file.isFile()) {
+            return file.delete();
+        }
+        if (file.isDirectory()) {
+            File[] childFiles = file.listFiles();
+            if (childFiles == null || childFiles.length == 0) {
+                return file.delete();
+            }
+            for (File childFile : childFiles) {
+                delete(childFile);
+            }
+            return file.delete();
+        }
+        return false;
     }
 
 }

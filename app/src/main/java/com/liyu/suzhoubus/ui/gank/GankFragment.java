@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.liyu.suzhoubus.R;
@@ -14,6 +13,7 @@ import com.liyu.suzhoubus.model.Gank;
 import com.liyu.suzhoubus.service.GirlService;
 import com.liyu.suzhoubus.ui.MainActivity;
 import com.liyu.suzhoubus.ui.base.BaseFragment;
+import com.liyu.suzhoubus.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,6 +53,7 @@ public class GankFragment extends BaseFragment {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        adapter.setEmptyView(new ProgressBar(getActivity()));
         adapter.setLoadingView(new ProgressBar(getActivity()));
         adapter.openLoadMore(10);
         adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
@@ -82,7 +83,7 @@ public class GankFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-                        Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_SHORT).show();
+                        ToastUtil.showShort(e.toString());
                     }
 
                     @Override

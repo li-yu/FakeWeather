@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="天气">
+        <ListPreference
+            android:key="weather_share_type"
+            android:title="分享形式"
+            android:entries="@array/share_type"
+            android:entryValues="@array/share_type"
+            android:defaultValue="纯文本"
+            android:dialogTitle="天气分享形式"/>
+        <CheckBoxPreference
+            android:key="weather_alert"
+            android:title="灾害预警"
+            android:summary="每小时请求一次"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="系统">
+        <Preference
+            android:key="clear_cache"
+            android:title="清除缓存"/>
+        <Preference
+            android:key="about"
+            android:title="关于"/>
+    </PreferenceCategory>
+</PreferenceScreen>

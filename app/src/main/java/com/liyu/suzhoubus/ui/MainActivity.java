@@ -1,5 +1,6 @@
 package com.liyu.suzhoubus.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -17,7 +18,12 @@ import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.ui.bus.BusFragment;
 import com.liyu.suzhoubus.ui.gank.GankFragment;
+import com.liyu.suzhoubus.ui.setting.SettingActivity;
 import com.liyu.suzhoubus.ui.weather.WeatherFragment;
+import com.liyu.suzhoubus.utils.RxDrawer;
+import com.liyu.suzhoubus.utils.SimpleSubscriber;
+
+import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends BaseActivity {
 
@@ -51,7 +57,7 @@ public class MainActivity extends BaseActivity {
 
     private void initFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            switchContent(FRAGMENT_TAG_BUS);
+            switchContent(FRAGMENT_TAG_WEATHER);
         } else {
             currentFragmentTag = savedInstanceState.getString(AppGlobal.CURRENT_INDEX);
             switchContent(currentFragmentTag);
@@ -83,31 +89,37 @@ public class MainActivity extends BaseActivity {
 
     private void initNavigationViewHeader() {
         navigationView = (NavigationView) findViewById(R.id.navigation);
-        View view = navigationView.inflateHeaderView(R.layout.drawer_header);
-        TextView userName = (TextView) view.findViewById(R.id.userName);
+        navigationView.inflateHeaderView(R.layout.drawer_header);
         navigationView.setNavigationItemSelectedListener(new NavigationItemSelected());
     }
 
     class NavigationItemSelected implements NavigationView.OnNavigationItemSelectedListener {
         @Override
-        public boolean onNavigationItemSelected(MenuItem menuItem) {
-            mDrawerLayout.closeDrawers();
-            switch (menuItem.getItemId()) {
-                case R.id.navigation_item_1:
-                    menuItem.setChecked(true);
-                    switchContent(FRAGMENT_TAG_BUS);
-                    return true;
-                case R.id.navigation_item_2:
-                    menuItem.setChecked(true);
-                    switchContent(FRAGMENT_TAG_WEATHER);
-                    return true;
-                case R.id.navigation_item_3:
-                    menuItem.setChecked(true);
-                    switchContent(FRAGMENT_TAG_GANK);
-                    return true;
-                default:
-                    return true;
-            }
+        public boolean onNavigationItemSelected(final MenuItem menuItem) {
+            RxDrawer.close(mDrawerLayout).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                    new SimpleSubscriber<Void>() {
+                        @Override
+                        public void onNext(Void aVoid) {
+                            switch (menuItem.getItemId()) {
+                                case R.id.navigation_item_1:
+                                    menuItem.setChecked(true);
+                                    switchContent(FRAGMENT_TAG_BUS);
+                                    break;
+                                case R.id.navigation_item_2:
+                                    menuItem.setChecked(true);
+                                    switchContent(FRAGMENT_TAG_WEATHER);
+                                    break;
+                                case R.id.navigation_item_3:
+                                    menuItem.setChecked(true);
+                                    switchContent(FRAGMENT_TAG_GANK);
+                                    break;
+                                case R.id.navigation_item_settings:
+                                    startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                                    break;
+                            }
+                        }
+                    });
+            return false;
         }
     }
 
@@ -116,6 +128,7 @@ public class MainActivity extends BaseActivity {
             return;
 
         FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         Fragment currentFragment = fragmentManager.findFragmentByTag(currentFragmentTag);
         if (currentFragment != null) {
             ft.hide(currentFragment);

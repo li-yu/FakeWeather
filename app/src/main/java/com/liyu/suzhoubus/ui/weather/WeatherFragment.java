@@ -1,24 +1,24 @@
 package com.liyu.suzhoubus.ui.weather;
 
-import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.http.ApiFactory;
 import com.liyu.suzhoubus.http.BaseWeatherResponse;
 import com.liyu.suzhoubus.model.HeWeather5;
 import com.liyu.suzhoubus.ui.MainActivity;
+import com.liyu.suzhoubus.ui.ShareActivity;
 import com.liyu.suzhoubus.ui.base.BaseFragment;
-import com.liyu.suzhoubus.ui.gank.PictureActivity;
 import com.liyu.suzhoubus.ui.weather.adapter.DailyAdapter;
 import com.liyu.suzhoubus.ui.weather.adapter.HourlyAdapter;
 import com.liyu.suzhoubus.utils.ACache;
-import com.liyu.suzhoubus.utils.RxFiles;
+import com.liyu.suzhoubus.utils.SettingsUtil;
 import com.liyu.suzhoubus.utils.ShareUtils;
 import com.liyu.suzhoubus.utils.TimeUtils;
 
@@ -70,8 +70,7 @@ public class WeatherFragment extends BaseFragment {
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.menu_share) {
-                    if (currentWeather != null)
-                        ShareUtils.shareText(getActivity(), getShareMessage(currentWeather));
+                    shareWeather();
                     return true;
                 }
                 return false;
@@ -121,7 +120,12 @@ public class WeatherFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Snackbar.make(getView(), "获取天气失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                lazyFetchData();
+                            }
+                        }).show();
                     }
 
                     @Override
@@ -149,30 +153,40 @@ public class WeatherFragment extends BaseFragment {
         dailyAdapter.setNewData(weather.getDaily_forecast());
     }
 
+    private void shareWeather() {
+        if (currentWeather == null)
+            return;
+        String shareType = SettingsUtil.getWeatherShareType();
+        if (shareType.equals("纯文本"))
+            ShareUtils.shareText(getActivity(), getShareMessage(currentWeather));
+        else if (shareType.equals("仿锤子便签"))
+            ShareActivity.start(getActivity(), getShareMessage(currentWeather));
+    }
+
     private String getShareMessage(HeWeather5 weather) {
         StringBuffer message = new StringBuffer();
         message.append("苏州天气：");
         message.append("\r\n");
         message.append(weather.getBasic().getUpdate().getLoc());
-        message.append("发布：");
+        message.append(" 发布：");
         message.append("\r\n");
         message.append("此时此刻：");
         message.append(weather.getNow().getCond().getTxt());
-        message.append(", ");
+        message.append("，");
         message.append(weather.getNow().getTmp() + "℃");
         message.append("。");
         message.append("\r\n");
         message.append("空气质量：PM2.5 → " + weather.getAqi().getCity().getPm25());
-        message.append(", ");
+        message.append("，");
         message.append(weather.getAqi().getCity().getQlty());
         message.append("。");
         message.append("\r\n");
         message.append("今日天气：");
         message.append(weather.getDaily_forecast().get(0).getTmp().getMin() + "℃ ～ ");
         message.append(weather.getDaily_forecast().get(0).getTmp().getMax() + "℃");
-        message.append(", ");
+        message.append("，");
         message.append(weather.getDaily_forecast().get(0).getCond().getTxt_d());
-        message.append(", ");
+        message.append("，");
         message.append(weather.getDaily_forecast().get(0).getWind().getDir());
         message.append(weather.getDaily_forecast().get(0).getWind().getSc());
         message.append("级。");
@@ -180,9 +194,9 @@ public class WeatherFragment extends BaseFragment {
         message.append("明日天气：");
         message.append(weather.getDaily_forecast().get(1).getTmp().getMin() + "℃ ～ ");
         message.append(weather.getDaily_forecast().get(1).getTmp().getMax() + "℃");
-        message.append(", ");
+        message.append("，");
         message.append(weather.getDaily_forecast().get(1).getCond().getTxt_d());
-        message.append(", ");
+        message.append("，");
         message.append(weather.getDaily_forecast().get(1).getWind().getDir());
         message.append(weather.getDaily_forecast().get(1).getWind().getSc());
         message.append("级。");

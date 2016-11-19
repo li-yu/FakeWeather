@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.model.HeWeather5;
 import com.liyu.suzhoubus.model.WeatherBean;
+import com.liyu.suzhoubus.utils.SimpleSubscriber;
 import com.liyu.suzhoubus.utils.WeatherUtil;
 
 import java.util.List;
@@ -29,15 +30,7 @@ public class DailyAdapter extends BaseQuickAdapter<HeWeather5.DailyForecastBean,
     @Override
     protected void convert(BaseViewHolder holder, HeWeather5.DailyForecastBean item) {
         final ImageView iv = holder.getView(R.id.iv_day_weather);
-        WeatherUtil.getWeatherDict(item.getCond().getCode_d()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<WeatherBean>() {
-            @Override
-            public void onCompleted() {
-            }
-
-            @Override
-            public void onError(Throwable e) {
-            }
-
+        WeatherUtil.getWeatherDict(item.getCond().getCode_d()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
             @Override
             public void onNext(WeatherBean weatherBean) {
                 Glide.with(mContext).load(weatherBean.getIcon()).diskCacheStrategy(DiskCacheStrategy.ALL).into(iv);

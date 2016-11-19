@@ -1,7 +1,5 @@
 package com.liyu.suzhoubus.utils;
 
-import android.content.Context;
-
 import com.google.gson.reflect.TypeToken;
 import com.liyu.suzhoubus.App;
 import com.liyu.suzhoubus.http.RetrofitManager;

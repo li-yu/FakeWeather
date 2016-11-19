@@ -1,7 +1,9 @@
 package com.liyu.suzhoubus.ui.bus;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.baidu.location.BDLocation;
 import com.liyu.suzhoubus.R;
@@ -71,6 +73,12 @@ public class NearbyStationFragment extends BaseContentFragment {
                     @Override
                     public void onError(Throwable e) {
                         refreshLayout.setRefreshing(false);
+                        Snackbar.make(getView(), "获取站点信息失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                lazyFetchData();
+                            }
+                        }).show();
                     }
 
                     @Override

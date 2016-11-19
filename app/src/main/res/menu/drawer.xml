@@ -6,14 +6,16 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/navigation_item_1"
-            android:checked="true"
-            android:icon="@drawable/ic_directions_bus_white_24dp"
-            android:title="公交" />
-        <item
             android:id="@+id/navigation_item_2"
             android:icon="@drawable/ic_wb_sunny_white_24dp"
+            android:checked="true"
             android:title="天气" />
+
+        <item
+            android:id="@+id/navigation_item_1"
+            android:icon="@drawable/ic_directions_bus_white_24dp"
+            android:title="公交" />
+
         <item
             android:id="@+id/navigation_item_3"
             android:icon="@drawable/ic_redeem_white_24dp"
