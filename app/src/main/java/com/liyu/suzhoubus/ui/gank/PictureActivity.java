@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
+import com.jakewharton.rxbinding.view.RxMenuItem;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.utils.RxFiles;
@@ -104,7 +105,7 @@ public class PictureActivity extends BaseActivity {
 
                         @Override
                         public void onError(Throwable e) {
-
+                            ToastUtil.showLong("图片分享失败: " + e.toString());
                         }
 
                         @Override
@@ -123,7 +124,7 @@ public class PictureActivity extends BaseActivity {
 
                         @Override
                         public void onError(Throwable e) {
-
+                            ToastUtil.showLong("图片成功失败: " + e.toString());
                         }
 
                         @Override
@@ -144,7 +145,7 @@ public class PictureActivity extends BaseActivity {
 
                         @Override
                         public void onError(Throwable e) {
-
+                            ToastUtil.showLong("壁纸设置失败: " + e.toString());
                         }
 
                         @Override

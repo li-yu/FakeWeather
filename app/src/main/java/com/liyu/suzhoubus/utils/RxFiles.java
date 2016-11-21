@@ -1,5 +1,7 @@
 package com.liyu.suzhoubus.utils;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,6 +17,7 @@ import android.widget.ScrollView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,58 +48,64 @@ public class RxFiles {
         });
     }
 
-    public static Observable<Uri> saveImageAndGetPathObservable(final Context context, final String url, final String title) {
-        return Observable
-                .create(new Observable.OnSubscribe<Bitmap>() {
-                    @Override
-                    public void call(Subscriber<? super Bitmap> subscriber) {
-                        Bitmap bitmap = null;
-                        try {
-                            bitmap = Glide.with(context)
-                                    .load(url)
-                                    .asBitmap()
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                                    .get();
-                        } catch (Exception e) {
-                            subscriber.onError(e);
-                        }
-                        if (bitmap == null) {
-                            subscriber.onError(new Exception("无法下载到图片!"));
-                        }
-                        subscriber.onNext(bitmap);
-                        subscriber.onCompleted();
-                    }
-                })
-                .flatMap(new Func1<Bitmap, Observable<Uri>>() {
-                    @Override
-                    public Observable<Uri> call(Bitmap bitmap) {
-                        File appDir = new File(Environment.getExternalStorageDirectory(), "Girls");
-                        if (!appDir.exists()) {
-                            appDir.mkdir();
-                        }
-                        String fileName = title.replace('/', '-') + ".jpg";
-                        File file = new File(appDir, fileName);
-                        try {
-                            FileOutputStream outputStream = new FileOutputStream(file);
-                            assert bitmap != null;
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                            outputStream.flush();
-                            outputStream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        Uri uri = Uri.fromFile(file);
-                        Intent scannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
-                        context.sendBroadcast(scannerIntent);
-                        Uri contentURI = getImageContentUri(context, file.getAbsolutePath());
-                        return Observable.just(contentURI);
-                    }
-                }).subscribeOn(Schedulers.io());
+    public static Observable<Uri> saveImageAndGetPathObservable(final Activity context, final String url, final String title) {
+
+        return new RxPermissions(context).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).flatMap(new Func1<Boolean, Observable<Uri>>() {
+            @Override
+            public Observable<Uri> call(Boolean aBoolean) {
+                return Observable
+                        .create(new Observable.OnSubscribe<Bitmap>() {
+                            @Override
+                            public void call(Subscriber<? super Bitmap> subscriber) {
+                                Bitmap bitmap = null;
+                                try {
+                                    bitmap = Glide.with(context)
+                                            .load(url)
+                                            .asBitmap()
+                                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                            .get();
+                                } catch (Exception e) {
+                                    subscriber.onError(e);
+                                }
+                                if (bitmap == null) {
+                                    subscriber.onError(new Exception("无法下载到图片!"));
+                                }
+                                subscriber.onNext(bitmap);
+                                subscriber.onCompleted();
+                            }
+                        })
+                        .flatMap(new Func1<Bitmap, Observable<Uri>>() {
+                            @Override
+                            public Observable<Uri> call(Bitmap bitmap) {
+                                File appDir = new File(Environment.getExternalStorageDirectory(), "Girls");
+                                if (!appDir.exists()) {
+                                    appDir.mkdir();
+                                }
+                                String fileName = title.replace('/', '-') + ".jpg";
+                                File file = new File(appDir, fileName);
+                                try {
+                                    FileOutputStream outputStream = new FileOutputStream(file);
+                                    assert bitmap != null;
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                                    outputStream.flush();
+                                    outputStream.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                Uri uri = Uri.fromFile(file);
+                                Intent scannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
+                                context.sendBroadcast(scannerIntent);
+                                Uri contentURI = getImageContentUri(context, file.getAbsolutePath());
+                                return Observable.just(contentURI);
+                            }
+                        }).subscribeOn(Schedulers.io());
+            }
+        });
 
     }
 
-    public static Observable<Uri> saveText2ImageObservable(final Context context, final ScrollView view) {
+    public static Observable<Uri> saveText2ImageObservable(final Activity context, final ScrollView view) {
         return Observable
                 .create(new Observable.OnSubscribe<Bitmap>() {
                     @Override

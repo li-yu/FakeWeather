@@ -1,8 +1,10 @@
 package com.liyu.suzhoubus.ui.gank;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -83,7 +85,12 @@ public class GankFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showShort(e.toString());
+                        Snackbar.make(getView(), "获取福利失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                lazyFetchData();
+                            }
+                        }).show();
                     }
 
                     @Override
@@ -96,7 +103,11 @@ public class GankFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateGirls(final List<Gank> ganks) {
-        adapter.addData(adapter.getData().size(), ganks);
+        if (adapter.getData() == null || adapter.getData().size() == 0) {
+            adapter.setNewData(ganks);
+        } else {
+            adapter.addData(adapter.getData().size(), ganks);
+        }
     }
 
     @Override

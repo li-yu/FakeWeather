@@ -1,5 +1,6 @@
 package com.liyu.suzhoubus.ui.weather;
 
+import android.Manifest;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.http.ApiFactory;
@@ -17,14 +17,13 @@ import com.liyu.suzhoubus.model.HeWeather5;
 import com.liyu.suzhoubus.ui.MainActivity;
 import com.liyu.suzhoubus.ui.ShareActivity;
 import com.liyu.suzhoubus.ui.base.BaseContentFragment;
-import com.liyu.suzhoubus.ui.base.BaseFragment;
-import com.liyu.suzhoubus.ui.weather.adapter.DailyAdapter;
 import com.liyu.suzhoubus.ui.weather.adapter.WeatherAdapter;
 import com.liyu.suzhoubus.utils.ACache;
 import com.liyu.suzhoubus.utils.SettingsUtil;
 import com.liyu.suzhoubus.utils.ShareUtils;
 import com.liyu.suzhoubus.utils.TimeUtils;
 import com.liyu.suzhoubus.utils.WeatherUtil;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ import java.util.Locale;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -75,7 +75,14 @@ public class WeatherFragment extends BaseContentFragment {
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.menu_share) {
-                    shareWeather();
+                    new RxPermissions(getActivity()).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean result) {
+                            if (result){
+                                shareWeather();
+                            }
+                        }
+                    });
                     return true;
                 }
                 return false;

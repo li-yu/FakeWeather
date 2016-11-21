@@ -63,7 +63,7 @@ public class ShareActivity extends BaseActivity {
 
                             @Override
                             public void onError(Throwable e) {
-                                ToastUtil.showShort(e.toString());
+                                ToastUtil.showShort("天气分享失败：" + e.toString());
                             }
 
                             @Override
