@@ -47,7 +47,7 @@
             android:maxLines="1"
             android:layout_marginTop="8dp"
             android:text="气象条件有利于空气污染物稀释、扩散和清除，可在室外正常活动"
-            android:textSize="14sp"/>
+            android:textSize="12sp"/>
 
     </LinearLayout>
 

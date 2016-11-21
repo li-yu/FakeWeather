@@ -3,6 +3,7 @@ package com.liyu.suzhoubus.utils;
 import com.google.gson.reflect.TypeToken;
 import com.liyu.suzhoubus.App;
 import com.liyu.suzhoubus.http.RetrofitManager;
+import com.liyu.suzhoubus.model.HeWeather5;
 import com.liyu.suzhoubus.model.WeatherBean;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -66,5 +68,28 @@ public class WeatherUtil {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public static void saveDailyHistory(HeWeather5 weather) {
+        Observable.just(weather).filter(new Func1<HeWeather5, Boolean>() {
+            @Override
+            public Boolean call(HeWeather5 weather5) {
+                return weather5 != null;
+            }
+        }).map(new Func1<HeWeather5, Boolean>() {
+            @Override
+            public Boolean call(HeWeather5 weather5) {
+                ACache mCache = ACache.get(App.getContext());
+                for (HeWeather5.DailyForecastBean bean : weather5.getDaily_forecast()) {
+                    mCache.put(bean.getDate(), bean, 7 * 24 * 60 * 60);//每天的情况缓存7天，供后面查询
+                }
+                return true;
+            }
+        }).subscribeOn(Schedulers.io()).subscribe();
+    }
+
+    public static HeWeather5.DailyForecastBean getYesterday() {
+        return (HeWeather5.DailyForecastBean) ACache.get(App.getContext())
+                .getAsObject(TimeUtils.getPreviousDay(TimeUtils.getCurTimeString(TimeUtils.DATE_SDF), 1));
     }
 }

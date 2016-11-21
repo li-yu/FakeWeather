@@ -8,21 +8,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.http.ApiFactory;
 import com.liyu.suzhoubus.http.BaseWeatherResponse;
 import com.liyu.suzhoubus.model.HeWeather5;
 import com.liyu.suzhoubus.ui.MainActivity;
 import com.liyu.suzhoubus.ui.ShareActivity;
+import com.liyu.suzhoubus.ui.base.BaseContentFragment;
 import com.liyu.suzhoubus.ui.base.BaseFragment;
 import com.liyu.suzhoubus.ui.weather.adapter.DailyAdapter;
-import com.liyu.suzhoubus.ui.weather.adapter.HourlyAdapter;
+import com.liyu.suzhoubus.ui.weather.adapter.WeatherAdapter;
 import com.liyu.suzhoubus.utils.ACache;
 import com.liyu.suzhoubus.utils.SettingsUtil;
 import com.liyu.suzhoubus.utils.ShareUtils;
 import com.liyu.suzhoubus.utils.TimeUtils;
+import com.liyu.suzhoubus.utils.WeatherUtil;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import rx.Observer;
@@ -33,7 +39,7 @@ import rx.schedulers.Schedulers;
  * Created by liyu on 2016/10/31.
  */
 
-public class WeatherFragment extends BaseFragment {
+public class WeatherFragment extends BaseContentFragment {
 
     private static final String CACHE_WEAHTHER_NAME = "weather_cache";
 
@@ -41,13 +47,11 @@ public class WeatherFragment extends BaseFragment {
     private TextView tvCityName;
     private TextView tvNowWeatherString;
     private TextView tvNowTemp;
-    private RecyclerView hourlyRecyclerView;
-    private HourlyAdapter hourlyAdapter;
     private TextView tvUpdateTime;
     private TextView tvAqi;
 
-    private RecyclerView dailyRecyclerView;
-    private DailyAdapter dailyAdapter;
+    private RecyclerView recyclerView;
+    private WeatherAdapter adapter;
 
     private ACache mCache;
 
@@ -60,6 +64,7 @@ public class WeatherFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
+        super.initViews();
         mCache = ACache.get(getActivity());
         mToolbar = findView(R.id.toolbar);
         mToolbar.setTitle("苏州天气");
@@ -83,19 +88,14 @@ public class WeatherFragment extends BaseFragment {
         tvUpdateTime = findView(R.id.tv_update_time);
         tvAqi = findView(R.id.tv_weather_aqi);
 
-        LinearLayoutManager hourlyLayoutManager = new LinearLayoutManager(getActivity());
-        hourlyLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        hourlyRecyclerView = findView(R.id.rv_hourly_weather);
-        hourlyRecyclerView.setLayoutManager(hourlyLayoutManager);
-        hourlyAdapter = new HourlyAdapter(R.layout.item_hourly_weather, null);
-        hourlyRecyclerView.setAdapter(hourlyAdapter);
 
-        LinearLayoutManager dailyLayoutManager = new LinearLayoutManager(getActivity());
-        dailyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        dailyRecyclerView = findView(R.id.rv_daily_weather);
-        dailyRecyclerView.setLayoutManager(dailyLayoutManager);
-        dailyAdapter = new DailyAdapter(R.layout.item_day_weather, null);
-        dailyRecyclerView.setAdapter(dailyAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView = findView(R.id.rv_weather);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new WeatherAdapter(null);
+        adapter.openLoadAnimation();
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -104,6 +104,7 @@ public class WeatherFragment extends BaseFragment {
         HeWeather5 cacheWeather = (HeWeather5) mCache.getAsObject(CACHE_WEAHTHER_NAME);
         if (cacheWeather != null) {
             showWeather(cacheWeather);
+            refreshLayout.setRefreshing(false);
             return;
         }
 
@@ -115,11 +116,12 @@ public class WeatherFragment extends BaseFragment {
                 .subscribe(new Observer<BaseWeatherResponse<HeWeather5>>() {
                     @Override
                     public void onCompleted() {
-
+                        refreshLayout.setRefreshing(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        refreshLayout.setRefreshing(false);
                         Snackbar.make(getView(), "获取天气失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -135,6 +137,7 @@ public class WeatherFragment extends BaseFragment {
                         }
                         showWeather(listBaseWeatherResponse.HeWeather5.get(0));
                         mCache.put(CACHE_WEAHTHER_NAME, listBaseWeatherResponse.HeWeather5.get(0), 10 * 60);
+                        WeatherUtil.saveDailyHistory(listBaseWeatherResponse.HeWeather5.get(0));
                     }
                 });
     }
@@ -145,12 +148,19 @@ public class WeatherFragment extends BaseFragment {
         }
         currentWeather = weather;
         tvNowWeatherString.setText(weather.getNow().getCond().getTxt());
-        tvAqi.setText(weather.getAqi().getCity().getQlty());
+        tvAqi.setText(weather.getAqi() == null ? "" : weather.getAqi().getCity().getQlty());
         tvNowTemp.setText(String.format("%s℃", weather.getNow().getTmp()));
         String updateTime = TimeUtils.string2String(weather.getBasic().getUpdate().getLoc(), new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()), new SimpleDateFormat("HH:mm", Locale.getDefault()));
-        tvUpdateTime.setText(String.format("%s 更新", updateTime));
-        hourlyAdapter.setNewData(weather.getHourly_forecast());
-        dailyAdapter.setNewData(weather.getDaily_forecast());
+        tvUpdateTime.setText(String.format("截止 %s", updateTime));
+        List<MultiItemEntity> weather5s = new ArrayList<>();
+        HeWeather5 nowWeather = (HeWeather5) weather.clone();
+        nowWeather.setItemType(HeWeather5.TYPE_NOW);
+        weather5s.add(nowWeather);
+        weather5s.add(weather.getSuggestion());
+        HeWeather5 dailyWeather = (HeWeather5) weather.clone();
+        dailyWeather.setItemType(HeWeather5.TYPE_DAILYFORECAST);
+        weather5s.add(dailyWeather);
+        adapter.setNewData(weather5s);
     }
 
     private void shareWeather() {

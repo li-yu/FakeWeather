@@ -183,6 +183,8 @@ public class TimeUtils {
 
     public static final SimpleDateFormat UTC_SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
 
+    public static final SimpleDateFormat DATE_SDF = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
     /**
      * 将时间戳转为时间字符串
      * <p>格式为yyyy-MM-dd HH:mm:ss</p>
@@ -616,4 +618,27 @@ public class TimeUtils {
             return false;
         }
     }
+    /**
+     * 获取某个日期的前几天的日期
+     *
+     * @param dateString 某日期
+     * @param dayNumber  前面第几天
+     * @return
+     */
+    public static String getPreviousDay(String dateString, int dayNumber) {
+        Calendar c = Calendar.getInstance();
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.setTime(date);
+        int day = c.get(Calendar.DATE);
+        c.set(Calendar.DATE, day - dayNumber);
+
+        String previousDay = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+        return previousDay;
+    }
+
 }

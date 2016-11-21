@@ -1,5 +1,7 @@
 package com.liyu.suzhoubus.model;
 
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -7,7 +9,13 @@ import java.util.List;
  * Created by liyu on 2016/11/10.
  */
 
-public class HeWeather5 implements Serializable{
+public class HeWeather5 implements Serializable, Cloneable, MultiItemEntity {
+
+    public static final int TYPE_NOW = 1;
+    public static final int TYPE_DAILYFORECAST = 2;
+    public static final int TYPE_SUGGESTION = 3;
+
+    private int itemType = 0;
 
     /**
      * city : {"aqi":"48","co":"1","no2":"51","o3":"26","pm10":"47","pm25":"25","qlty":"优","so2":"24"}
@@ -142,7 +150,16 @@ public class HeWeather5 implements Serializable{
         this.hourly_forecast = hourly_forecast;
     }
 
-    public static class AqiBean implements Serializable{
+    @Override
+    public int getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(int type) {
+        this.itemType = type;
+    }
+
+    public static class AqiBean implements Serializable {
         /**
          * aqi : 48
          * co : 1
@@ -164,7 +181,7 @@ public class HeWeather5 implements Serializable{
             this.city = city;
         }
 
-        public static class CityBean implements Serializable{
+        public static class CityBean implements Serializable {
             private String aqi;
             private String co;
             private String no2;
@@ -240,7 +257,7 @@ public class HeWeather5 implements Serializable{
         }
     }
 
-    public static class BasicBean implements Serializable{
+    public static class BasicBean implements Serializable {
         private String city;
         private String cnty;
         private String id;
@@ -301,7 +318,7 @@ public class HeWeather5 implements Serializable{
             this.update = update;
         }
 
-        public static class UpdateBean implements Serializable{
+        public static class UpdateBean implements Serializable {
             private String loc;
             private String utc;
 
@@ -323,7 +340,7 @@ public class HeWeather5 implements Serializable{
         }
     }
 
-    public static class NowBean implements Serializable{
+    public static class NowBean implements Serializable, MultiItemEntity {
         /**
          * code : 101
          * txt : 多云
@@ -409,7 +426,12 @@ public class HeWeather5 implements Serializable{
             this.wind = wind;
         }
 
-        public static class CondBean implements Serializable{
+        @Override
+        public int getItemType() {
+            return TYPE_NOW;
+        }
+
+        public static class CondBean implements Serializable {
             private String code;
             private String txt;
 
@@ -430,7 +452,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class WindBean implements Serializable{
+        public static class WindBean implements Serializable {
             private String deg;
             private String dir;
             private String sc;
@@ -470,7 +492,7 @@ public class HeWeather5 implements Serializable{
         }
     }
 
-    public static class SuggestionBean implements Serializable{
+    public static class SuggestionBean implements Serializable, MultiItemEntity {
         /**
          * brf : 良
          * txt : 气象条件有利于空气污染物稀释、扩散和清除，可在室外正常活动。
@@ -584,7 +606,12 @@ public class HeWeather5 implements Serializable{
             this.uv = uv;
         }
 
-        public static class AirBean implements Serializable{
+        @Override
+        public int getItemType() {
+            return TYPE_SUGGESTION;
+        }
+
+        public static class AirBean implements Serializable {
             private String brf;
             private String txt;
 
@@ -605,7 +632,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class ComfBean implements Serializable{
+        public static class ComfBean implements Serializable {
             private String brf;
             private String txt;
 
@@ -626,7 +653,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class CwBean implements Serializable{
+        public static class CwBean implements Serializable {
             private String brf;
             private String txt;
 
@@ -647,7 +674,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class DrsgBean implements Serializable{
+        public static class DrsgBean implements Serializable {
             private String brf;
             private String txt;
 
@@ -668,7 +695,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class FluBean implements Serializable{
+        public static class FluBean implements Serializable {
             private String brf;
             private String txt;
 
@@ -689,7 +716,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class SportBean implements Serializable{
+        public static class SportBean implements Serializable {
             private String brf;
             private String txt;
 
@@ -710,7 +737,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class TravBean implements Serializable{
+        public static class TravBean implements Serializable {
             private String brf;
             private String txt;
 
@@ -731,7 +758,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class UvBean implements Serializable{
+        public static class UvBean implements Serializable {
             private String brf;
             private String txt;
 
@@ -753,7 +780,7 @@ public class HeWeather5 implements Serializable{
         }
     }
 
-    public static class DailyForecastBean implements Serializable{
+    public static class DailyForecastBean implements Serializable, MultiItemEntity {
         /**
          * mr : 14:10
          * ms : 01:11
@@ -880,7 +907,12 @@ public class HeWeather5 implements Serializable{
             this.wind = wind;
         }
 
-        public static class AstroBean implements Serializable{
+        @Override
+        public int getItemType() {
+            return TYPE_DAILYFORECAST;
+        }
+
+        public static class AstroBean implements Serializable {
             private String mr;
             private String ms;
             private String sr;
@@ -919,7 +951,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class CondBean implements Serializable{
+        public static class CondBean implements Serializable {
             private String code_d;
             private String code_n;
             private String txt_d;
@@ -958,7 +990,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class TmpBean implements Serializable{
+        public static class TmpBean implements Serializable {
             private String max;
             private String min;
 
@@ -979,7 +1011,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class WindBean implements Serializable{
+        public static class WindBean implements Serializable {
             private String deg;
             private String dir;
             private String sc;
@@ -1019,7 +1051,7 @@ public class HeWeather5 implements Serializable{
         }
     }
 
-    public static class HourlyForecastBean implements Serializable{
+    public static class HourlyForecastBean implements Serializable {
         /**
          * code : 305
          * txt : 小雨
@@ -1096,7 +1128,7 @@ public class HeWeather5 implements Serializable{
             this.wind = wind;
         }
 
-        public static class CondBean implements Serializable{
+        public static class CondBean implements Serializable {
             private String code;
             private String txt;
 
@@ -1117,7 +1149,7 @@ public class HeWeather5 implements Serializable{
             }
         }
 
-        public static class WindBean implements Serializable{
+        public static class WindBean implements Serializable {
             private String deg;
             private String dir;
             private String sc;
@@ -1155,5 +1187,16 @@ public class HeWeather5 implements Serializable{
                 this.spd = spd;
             }
         }
+    }
+
+    @Override
+    public Object clone() {
+        HeWeather5 o = null;
+        try {
+            o = (HeWeather5) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
     }
 }
