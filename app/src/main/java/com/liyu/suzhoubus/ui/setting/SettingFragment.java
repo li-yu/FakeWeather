@@ -5,9 +5,11 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 
-import com.bumptech.glide.Glide;
+import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.liyu.suzhoubus.App;
 import com.liyu.suzhoubus.BuildConfig;
 import com.liyu.suzhoubus.R;
@@ -28,11 +30,11 @@ import rx.schedulers.Schedulers;
  */
 
 public class SettingFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener,
-        Preference.OnPreferenceChangeListener {
+        Preference.OnPreferenceChangeListener, ColorChooserDialog.ColorCallback {
 
     private ListPreference weatherShareType;
     private Preference clearCache;
-    private Preference about;
+    private Preference theme;
     private CheckBoxPreference weatherAlert;
 
     @Override
@@ -42,17 +44,17 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
         weatherShareType = (ListPreference) findPreference(SettingsUtil.WEATHER_SHARE_TYPE);
         clearCache = findPreference(SettingsUtil.CLEAR_CACHE);
-        about = findPreference(SettingsUtil.ABOUT);
+        theme = findPreference(SettingsUtil.THEME);
         weatherAlert = (CheckBoxPreference) findPreference(SettingsUtil.WEATHER_ALERT);
 
         weatherShareType.setSummary(weatherShareType.getValue());
         clearCache.setSummary(FileSizeUtil.getAutoFileOrFilesSize(App.getAppCacheDir() + "/NetCache"));
-        about.setSummary("v" + BuildConfig.VERSION_NAME);
+        theme.setSummary(getActivity().getResources().getStringArray(R.array.color_name)[SettingsUtil.getTheme()]);
 
         weatherAlert.setOnPreferenceChangeListener(this);
         weatherShareType.setOnPreferenceChangeListener(this);
         clearCache.setOnPreferenceClickListener(this);
-        about.setOnPreferenceClickListener(this);
+        theme.setOnPreferenceClickListener(this);
 
     }
 
@@ -87,9 +89,20 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                             Snackbar.make(getView(), "缓存已清除 (*^__^*)", Snackbar.LENGTH_SHORT).show();
                         }
                     });
-        } else if (preference == about) {
-
+        } else if (preference == theme) {
+            new ColorChooserDialog.Builder((SettingActivity) getActivity(), R.string.theme)
+                    .customColors(R.array.colors, null)
+                    .doneButton(R.string.done)
+                    .cancelButton(R.string.cancel)
+                    .allowUserColorInput(false)
+                    .allowUserColorInputAlpha(false)
+                    .show();
         }
         return true;
+    }
+
+    @Override
+    public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
+
     }
 }

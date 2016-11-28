@@ -41,7 +41,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:textStyle="bold"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="14sp"/>
             </RelativeLayout>
 

@@ -15,10 +15,10 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="系统">
         <Preference
+            android:key="theme_color"
+            android:title="主题色"/>
+        <Preference
             android:key="clear_cache"
             android:title="清除缓存"/>
-        <Preference
-            android:key="about"
-            android:title="关于"/>
     </PreferenceCategory>
 </PreferenceScreen>

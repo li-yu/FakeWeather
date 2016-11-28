@@ -12,8 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.liyu.suzhoubus.R;
+import com.liyu.suzhoubus.utils.SettingsUtil;
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+    protected Toolbar toolbar;
 
     protected abstract
     @LayoutRes
@@ -30,6 +33,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initTheme();
         setContentView(getLayoutId());
         initToolBar();
         initViews(savedInstanceState);
@@ -37,7 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void initToolBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
@@ -69,6 +73,40 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         //这里对于运行时权限的授权或者阻止暂不做处理
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void initTheme(){
+        int themeIndex = SettingsUtil.getTheme();
+        switch (themeIndex){
+            case 0:
+                setTheme(R.style.LapisBlueTheme);
+                break;
+            case 1:
+                setTheme(R.style.PaleDogwoodTheme);
+                break;
+            case 2:
+                setTheme(R.style.GreeneryTheme);
+                break;
+            case 3:
+                setTheme(R.style.PrimroseYellowTheme);
+                break;
+            case 4:
+                setTheme(R.style.FlameTheme);
+                break;
+            case 5:
+                setTheme(R.style.IslandParadiseTheme);
+                break;
+            case 6:
+                setTheme(R.style.KaleTheme);
+                break;
+            case 7:
+                setTheme(R.style.PinkYarrowTheme);
+                break;
+            case 8:
+                setTheme(R.style.NiagaraTheme);
+                break;
+
+        }
     }
 
     protected void hideSystemUI() {

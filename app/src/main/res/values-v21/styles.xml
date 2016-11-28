@@ -1,12 +1,68 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
 
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+    <style name="LapisBlueTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/lapis_blue</item>
+        <item name="colorPrimaryDark">@color/lapis_blue</item>
+        <item name="colorAccent">@color/lapis_blue</item>
+    </style>
+
+    <style name="PaleDogwoodTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/pale_dogwood</item>
+        <item name="colorPrimaryDark">@color/pale_dogwood</item>
+        <item name="colorAccent">@color/pale_dogwood</item>
+    </style>
+
+    <style name="GreeneryTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/greenery</item>
+        <item name="colorPrimaryDark">@color/greenery</item>
+        <item name="colorAccent">@color/greenery</item>
+    </style>
+
+    <style name="PrimroseYellowTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/primrose_yellow</item>
+        <item name="colorPrimaryDark">@color/primrose_yellow</item>
+        <item name="colorAccent">@color/primrose_yellow</item>
+    </style>
+
+    <style name="FlameTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/flame</item>
+        <item name="colorPrimaryDark">@color/flame</item>
+        <item name="colorAccent">@color/flame</item>
+    </style>
+
+    <style name="IslandParadiseTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/island_paradise</item>
+        <item name="colorPrimaryDark">@color/island_paradise</item>
+        <item name="colorAccent">@color/island_paradise</item>
+    </style>
+
+    <style name="KaleTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/kale</item>
+        <item name="colorPrimaryDark">@color/kale</item>
+        <item name="colorAccent">@color/kale</item>
+    </style>
+
+    <style name="PinkYarrowTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/pink_yarrow</item>
+        <item name="colorPrimaryDark">@color/pink_yarrow</item>
+        <item name="colorAccent">@color/pink_yarrow</item>
+    </style>
+
+    <style name="NiagaraTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/niagara</item>
+        <item name="colorPrimaryDark">@color/niagara</item>
+        <item name="colorAccent">@color/niagara</item>
     </style>
 
 </resources>
