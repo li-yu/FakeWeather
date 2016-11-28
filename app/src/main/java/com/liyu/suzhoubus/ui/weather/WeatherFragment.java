@@ -78,7 +78,7 @@ public class WeatherFragment extends BaseContentFragment {
                     new RxPermissions(getActivity()).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Action1<Boolean>() {
                         @Override
                         public void call(Boolean result) {
-                            if (result){
+                            if (result) {
                                 shareWeather();
                             }
                         }
@@ -107,11 +107,11 @@ public class WeatherFragment extends BaseContentFragment {
 
     @Override
     protected void lazyFetchData() {
-
+        showRefreshing(true);
         HeWeather5 cacheWeather = (HeWeather5) mCache.getAsObject(CACHE_WEAHTHER_NAME);
         if (cacheWeather != null) {
             showWeather(cacheWeather);
-            refreshLayout.setRefreshing(false);
+            showRefreshing(false);
             return;
         }
 
@@ -123,12 +123,12 @@ public class WeatherFragment extends BaseContentFragment {
                 .subscribe(new Observer<BaseWeatherResponse<HeWeather5>>() {
                     @Override
                     public void onCompleted() {
-                        refreshLayout.setRefreshing(false);
+                        showRefreshing(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        refreshLayout.setRefreshing(false);
+                        showRefreshing(false);
                         Snackbar.make(getView(), "获取天气失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -175,50 +175,9 @@ public class WeatherFragment extends BaseContentFragment {
             return;
         String shareType = SettingsUtil.getWeatherShareType();
         if (shareType.equals("纯文本"))
-            ShareUtils.shareText(getActivity(), getShareMessage(currentWeather));
+            ShareUtils.shareText(getActivity(), WeatherUtil.getShareMessage(currentWeather));
         else if (shareType.equals("仿锤子便签"))
-            ShareActivity.start(getActivity(), getShareMessage(currentWeather));
-    }
-
-    private String getShareMessage(HeWeather5 weather) {
-        StringBuffer message = new StringBuffer();
-        message.append("苏州天气：");
-        message.append("\r\n");
-        message.append(weather.getBasic().getUpdate().getLoc());
-        message.append(" 发布：");
-        message.append("\r\n");
-        message.append("此时此刻：");
-        message.append(weather.getNow().getCond().getTxt());
-        message.append("，");
-        message.append(weather.getNow().getTmp() + "℃");
-        message.append("。");
-        message.append("\r\n");
-        message.append("空气质量：PM2.5 → " + weather.getAqi().getCity().getPm25());
-        message.append("，");
-        message.append(weather.getAqi().getCity().getQlty());
-        message.append("。");
-        message.append("\r\n");
-        message.append("今日天气：");
-        message.append(weather.getDaily_forecast().get(0).getTmp().getMin() + "℃ ～ ");
-        message.append(weather.getDaily_forecast().get(0).getTmp().getMax() + "℃");
-        message.append("，");
-        message.append(weather.getDaily_forecast().get(0).getCond().getTxt_d());
-        message.append("，");
-        message.append(weather.getDaily_forecast().get(0).getWind().getDir());
-        message.append(weather.getDaily_forecast().get(0).getWind().getSc());
-        message.append("级。");
-        message.append("\r\n");
-        message.append("明日天气：");
-        message.append(weather.getDaily_forecast().get(1).getTmp().getMin() + "℃ ～ ");
-        message.append(weather.getDaily_forecast().get(1).getTmp().getMax() + "℃");
-        message.append("，");
-        message.append(weather.getDaily_forecast().get(1).getCond().getTxt_d());
-        message.append("，");
-        message.append(weather.getDaily_forecast().get(1).getWind().getDir());
-        message.append(weather.getDaily_forecast().get(1).getWind().getSc());
-        message.append("级。");
-
-        return message.toString();
+            ShareActivity.start(getActivity(), WeatherUtil.getShareMessage(currentWeather));
     }
 
 }

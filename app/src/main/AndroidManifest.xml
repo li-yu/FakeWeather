@@ -59,9 +59,13 @@
 
         <activity android:name=".ui.ShareActivity">
         </activity>
-        <activity android:name=".ui.setting.SettingActivity"
+        <activity
+            android:name=".ui.setting.SettingActivity"
             android:label="设置">
         </activity>
+        <activity
+            android:name=".ui.AboutActivity"
+            android:label="关于"></activity>
     </application>
 
 </manifest>

@@ -27,4 +27,13 @@ public abstract class BaseContentFragment extends BaseFragment {
     protected void initViews() {
         initRefreshLayout();
     }
+
+    protected void showRefreshing(final boolean refresh){
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(refresh);
+            }
+        });
+    }
 }

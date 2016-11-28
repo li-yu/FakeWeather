@@ -116,6 +116,9 @@ public class MainActivity extends BaseActivity {
                                 case R.id.navigation_item_settings:
                                     startActivity(new Intent(MainActivity.this, SettingActivity.class));
                                     break;
+                                case R.id.navigation_item_about:
+                                    startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                                    break;
                             }
                         }
                     });

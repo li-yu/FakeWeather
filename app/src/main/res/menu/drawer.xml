@@ -29,6 +29,11 @@
                 android:id="@+id/navigation_item_settings"
                 android:icon="@drawable/ic_settings_white_24dp"
                 android:title="设置"/>
+
+            <item
+                android:id="@+id/navigation_item_about"
+                android:icon="@drawable/ic_info_outline_white_24dp"
+                android:title="关于"/>
         </menu>
     </item>
 

@@ -92,4 +92,45 @@ public class WeatherUtil {
         return (HeWeather5.DailyForecastBean) ACache.get(App.getContext())
                 .getAsObject(TimeUtils.getPreviousDay(TimeUtils.getCurTimeString(TimeUtils.DATE_SDF), 1));
     }
+
+    public static String getShareMessage(HeWeather5 weather) {
+        StringBuffer message = new StringBuffer();
+        message.append("苏州天气：");
+        message.append("\r\n");
+        message.append(weather.getBasic().getUpdate().getLoc());
+        message.append(" 发布：");
+        message.append("\r\n");
+        message.append("此时此刻：");
+        message.append(weather.getNow().getCond().getTxt());
+        message.append("，");
+        message.append(weather.getNow().getTmp() + "℃");
+        message.append("。");
+        message.append("\r\n");
+        message.append("空气质量：PM2.5 → " + weather.getAqi().getCity().getPm25());
+        message.append("，");
+        message.append(weather.getAqi().getCity().getQlty());
+        message.append("。");
+        message.append("\r\n");
+        message.append("今日天气：");
+        message.append(weather.getDaily_forecast().get(0).getTmp().getMin() + "℃ ～ ");
+        message.append(weather.getDaily_forecast().get(0).getTmp().getMax() + "℃");
+        message.append("，");
+        message.append(weather.getDaily_forecast().get(0).getCond().getTxt_d());
+        message.append("，");
+        message.append(weather.getDaily_forecast().get(0).getWind().getDir());
+        message.append(weather.getDaily_forecast().get(0).getWind().getSc());
+        message.append("级。");
+        message.append("\r\n");
+        message.append("明日天气：");
+        message.append(weather.getDaily_forecast().get(1).getTmp().getMin() + "℃ ～ ");
+        message.append(weather.getDaily_forecast().get(1).getTmp().getMax() + "℃");
+        message.append("，");
+        message.append(weather.getDaily_forecast().get(1).getCond().getTxt_d());
+        message.append("，");
+        message.append(weather.getDaily_forecast().get(1).getWind().getDir());
+        message.append(weather.getDaily_forecast().get(1).getWind().getSc());
+        message.append("级。");
+
+        return message.toString();
+    }
 }

@@ -70,7 +70,6 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     @Override
     public boolean onPreferenceClick(Preference preference) {
         if (preference == clearCache) {
-//            Glide.get(getActivity()).clearDiskCache();
             Observable
                     .just(RxFiles.delete(new File(App.getAppCacheDir() + "/NetCache")))
                     .filter(new Func1<Boolean, Boolean>() {
