@@ -1,12 +1,12 @@
 package com.liyu.suzhoubus.utils;
 
+
 import com.google.gson.reflect.TypeToken;
 import com.liyu.suzhoubus.App;
 import com.liyu.suzhoubus.http.RetrofitManager;
 import com.liyu.suzhoubus.model.HeWeather5;
 import com.liyu.suzhoubus.model.WeatherBean;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -64,8 +64,8 @@ public class WeatherUtil {
             is.read(buffer);
             is.close();
             return new String(buffer, "utf-8");
-
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

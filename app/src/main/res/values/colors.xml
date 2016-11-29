@@ -5,6 +5,7 @@
     <color name="colorAccent">@color/kale</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="transparent">#00ffffff</color>
 
     <color name="lapis_blue">#014284</color>
     <color name="pale_dogwood">#ECCAC0</color>
