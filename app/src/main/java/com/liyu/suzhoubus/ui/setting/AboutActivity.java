@@ -1,4 +1,4 @@
-package com.liyu.suzhoubus.ui;
+package com.liyu.suzhoubus.ui.setting;
 
 import android.os.Bundle;
 import android.widget.TextView;

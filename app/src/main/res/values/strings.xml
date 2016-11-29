@@ -7,6 +7,7 @@
     <string name="cancel">取消</string>
     <string name="bus_nearby_line">附近线路</string>
     <string name="bus_nearby_station">附近站台</string>
+    <string name="bus_favorites">我的收藏</string>
 
     <string-array name="share_type">
         <item>纯文本</item>

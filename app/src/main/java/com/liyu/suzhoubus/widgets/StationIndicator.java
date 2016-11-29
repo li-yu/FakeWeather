@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.utils.SizeUtils;
+import com.liyu.suzhoubus.utils.ThemeUtil;
 
 /**
  * Created by liyu on 2016/8/23.
@@ -38,7 +39,7 @@ public class StationIndicator extends View {
 
         paint = new Paint();
         TypedArray mTypedArray = context.obtainStyledAttributes(attrs, R.styleable.IndicatorItem);
-        color = mTypedArray.getColor(R.styleable.IndicatorItem_indicatorColor, context.getResources().getColor(R.color.colorPrimary));
+        color = mTypedArray.getColor(R.styleable.IndicatorItem_indicatorColor, ThemeUtil.getThemeColor(context, R.attr.colorPrimary));
         roundWidth = mTypedArray.getDimension(R.styleable.IndicatorItem_indicatorRingWidth, SizeUtils.dp2px(context, 3));
         isChecked = mTypedArray.getBoolean(R.styleable.IndicatorItem_indicatorChecked, false);
         innerCircle = mTypedArray.getDimension(R.styleable.IndicatorItem_indicatorInnerCircle, SizeUtils.dp2px(context, 4));

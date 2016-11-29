@@ -15,7 +15,6 @@ import com.liyu.suzhoubus.http.ApiFactory;
 import com.liyu.suzhoubus.http.BaseWeatherResponse;
 import com.liyu.suzhoubus.model.HeWeather5;
 import com.liyu.suzhoubus.ui.MainActivity;
-import com.liyu.suzhoubus.ui.ShareActivity;
 import com.liyu.suzhoubus.ui.base.BaseContentFragment;
 import com.liyu.suzhoubus.ui.weather.adapter.WeatherAdapter;
 import com.liyu.suzhoubus.utils.ACache;

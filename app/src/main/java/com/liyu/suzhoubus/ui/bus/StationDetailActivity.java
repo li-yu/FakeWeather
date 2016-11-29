@@ -3,6 +3,7 @@ package com.liyu.suzhoubus.ui.bus;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -15,6 +16,7 @@ import com.liyu.suzhoubus.location.RxLocation;
 import com.liyu.suzhoubus.model.BusLineStation;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.ui.bus.adapter.LineStationAdapter;
+import com.liyu.suzhoubus.utils.ThemeUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +39,7 @@ public class StationDetailActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
     private LineStationAdapter adapter;
+    private SwipeRefreshLayout refreshLayout;
 
     public static void start(Context context, String name, String code) {
         Intent intent = new Intent(context, StationDetailActivity.class);
@@ -59,6 +62,14 @@ public class StationDetailActivity extends BaseActivity {
     protected void initViews(Bundle savedInstanceState) {
         setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getIntent().getStringExtra(KEY_EXTRA_NAME));
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refeshLayout);
+        refreshLayout.setColorSchemeResources(ThemeUtil.getCurrentColorPrimary(this));
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+            }
+        });
         recyclerView = (RecyclerView) findViewById(R.id.rv_station_line);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LineStationAdapter(R.layout.item_bus_line, null);
@@ -67,6 +78,7 @@ public class StationDetailActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
+        showRefreshing(true);
         final String code = getIntent().getStringExtra(KEY_EXTRA_CODE);
         RxLocation
                 .get()
@@ -88,12 +100,12 @@ public class StationDetailActivity extends BaseActivity {
                 .subscribe(new Observer<BaseBusResponse<BusLineStation>>() {
                     @Override
                     public void onCompleted() {
-
+                        showRefreshing(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        showRefreshing(false);
                     }
 
                     @Override
@@ -101,5 +113,14 @@ public class StationDetailActivity extends BaseActivity {
                         adapter.setNewData(listBaseBusResponse.data.getList());
                     }
                 });
+    }
+
+    private void showRefreshing(final boolean refresh) {
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(refresh);
+            }
+        });
     }
 }

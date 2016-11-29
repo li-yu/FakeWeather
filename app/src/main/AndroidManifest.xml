@@ -57,14 +57,14 @@
             android:name=".service.GirlService"
             android:enabled="true"/>
 
-        <activity android:name=".ui.ShareActivity">
+        <activity android:name=".ui.weather.ShareActivity">
         </activity>
         <activity
             android:name=".ui.setting.SettingActivity"
             android:label="设置">
         </activity>
         <activity
-            android:name=".ui.AboutActivity"
+            android:name=".ui.setting.AboutActivity"
             android:label="关于"></activity>
     </application>
 

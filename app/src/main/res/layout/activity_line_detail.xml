@@ -103,11 +103,29 @@
         app:layout_anchorGravity="bottom|right|end"
         app:rippleColor="@color/black"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_line_search"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_refesh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_refresh"
+        app:borderWidth="0dp"
+        app:layout_anchor="@+id/rv_line_search"
+        app:layout_anchorGravity="end|bottom"
+        app:layout_behavior="com.liyu.suzhoubus.widgets.FloatingActionButtonScrollBehavior"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refeshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F2F7FA"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_line_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F2F7FA"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -11,7 +11,6 @@ import android.support.design.widget.Snackbar;
 
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.liyu.suzhoubus.App;
-import com.liyu.suzhoubus.BuildConfig;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.utils.FileSizeUtil;
 import com.liyu.suzhoubus.utils.RxFiles;
@@ -49,7 +48,13 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
         weatherShareType.setSummary(weatherShareType.getValue());
         clearCache.setSummary(FileSizeUtil.getAutoFileOrFilesSize(App.getAppCacheDir() + "/NetCache"));
-        theme.setSummary(getActivity().getResources().getStringArray(R.array.color_name)[SettingsUtil.getTheme()]);
+        String[] colorNames = getActivity().getResources().getStringArray(R.array.color_name);
+        int currentThemeIndex = SettingsUtil.getTheme();
+        if (currentThemeIndex >= colorNames.length) {
+            theme.setSummary("自定义色");
+        } else {
+            theme.setSummary(colorNames[currentThemeIndex]);
+        }
 
         weatherAlert.setOnPreferenceChangeListener(this);
         weatherShareType.setOnPreferenceChangeListener(this);

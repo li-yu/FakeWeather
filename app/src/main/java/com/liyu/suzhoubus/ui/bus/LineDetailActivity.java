@@ -5,22 +5,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.liyu.suzhoubus.R;
+import com.liyu.suzhoubus.event.BusFavoritesEvent;
 import com.liyu.suzhoubus.http.ApiFactory;
 import com.liyu.suzhoubus.http.BaseBusResponse;
 import com.liyu.suzhoubus.http.api.BusController;
 import com.liyu.suzhoubus.model.BusLineDetail;
+import com.liyu.suzhoubus.model.FavoritesBusBean;
 import com.liyu.suzhoubus.model.StandInfoBean;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.ui.bus.adapter.LineDetailAdapter;
 import com.liyu.suzhoubus.utils.RxDataBase;
+import com.liyu.suzhoubus.utils.ThemeUtil;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
 
 import java.util.HashMap;
@@ -52,10 +56,14 @@ public class LineDetailActivity extends BaseActivity {
     private TextView tvLineInfoSTime;
     private TextView tvLineInfoETime;
     private TextView tvLineInfoTotal;
-    private FloatingActionButton fab;
+    private FloatingActionButton fabLike;
+    private FloatingActionButton fabRefresh;
+    private SwipeRefreshLayout refreshLayout;
 
     private boolean isFavorite = false;
     private String guid;
+    private String name;
+    private String desc;
 
     public static void start(Context context, String guid, String name, String desc) {
         Intent intent = new Intent(context, LineDetailActivity.class);
@@ -78,9 +86,21 @@ public class LineDetailActivity extends BaseActivity {
     @Override
     protected void initViews(Bundle savedInstanceState) {
         setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getIntent().getStringExtra(KEY_EXTRA_NAME));
-        getSupportActionBar().setSubtitle(getIntent().getStringExtra(KEY_EXTRA_DESC));
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        guid = getIntent().getStringExtra(KEY_EXTRA_GUID);
+        name = getIntent().getStringExtra(KEY_EXTRA_NAME);
+        desc = getIntent().getStringExtra(KEY_EXTRA_DESC);
+        getSupportActionBar().setTitle(name);
+        getSupportActionBar().setSubtitle(desc);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refeshLayout);
+        refreshLayout.setColorSchemeResources(ThemeUtil.getCurrentColorPrimary(this));
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+            }
+        });
+        fabLike = (FloatingActionButton) findViewById(R.id.fab);
+        fabRefresh = (FloatingActionButton) findViewById(R.id.fab_refesh);
         tvLineInfoName = (TextView) findViewById(R.id.tv_info_name);
         tvLineInfodirection = (TextView) findViewById(R.id.tv_info_direction);
         tvLineInfoSTime = (TextView) findViewById(R.id.tv_info_stime);
@@ -90,7 +110,7 @@ public class LineDetailActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LineDetailAdapter(R.layout.item_bus_line_detail, null);
         recyclerView.setAdapter(adapter);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fabLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 isFavorite = !isFavorite;
@@ -98,15 +118,28 @@ public class LineDetailActivity extends BaseActivity {
                 values.put("isFavorite", isFavorite);
                 DataSupport.updateAll(BusLineDetail.class, values, "LGUID = ?", guid);
                 showFabStatus(isFavorite);
+                FavoritesBusBean favoritesBusBean = new FavoritesBusBean();
+                favoritesBusBean.setLGUID(guid);
+                favoritesBusBean.setLName(name);
+                favoritesBusBean.setLDirection(desc);
+                BusFavoritesEvent event = new BusFavoritesEvent(favoritesBusBean);
+                event.setFavorite(isFavorite);
+                EventBus.getDefault().post(event);
+            }
+        });
+        fabRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadData();
             }
         });
     }
 
     @Override
     protected void loadData() {
-        tvLineInfoName.setText(getIntent().getStringExtra(KEY_EXTRA_NAME));
-        tvLineInfodirection.setText(getIntent().getStringExtra(KEY_EXTRA_DESC));
-        guid = getIntent().getStringExtra(KEY_EXTRA_GUID);
+        showRefreshing(true);
+        tvLineInfoName.setText(name);
+        tvLineInfodirection.setText(desc);
         RxDataBase.getFirst(BusLineDetail.class, "LGUID = ?", guid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Action1<BusLineDetail>() {
@@ -141,18 +174,16 @@ public class LineDetailActivity extends BaseActivity {
                 .subscribe(new Observer<BaseBusResponse<BusLineDetail>>() {
                     @Override
                     public void onCompleted() {
-
+                        showRefreshing(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        showRefreshing(false);
                     }
 
                     @Override
                     public void onNext(BaseBusResponse<BusLineDetail> response) {
-//                        tvLineInfoName.setText(response.data.getLName());
-//                        tvLineInfodirection.setText(response.data.getLDirection());
                         tvLineInfoSTime.setText("首班车: " + response.data.getLFStdFTime());
                         tvLineInfoETime.setText("末班车: " + response.data.getLFStdETime());
                         tvLineInfoTotal.setText("总计: " + response.data.getStandInfo().size() + " 站");
@@ -170,9 +201,18 @@ public class LineDetailActivity extends BaseActivity {
     private void showFabStatus(boolean isFavorite) {
         this.isFavorite = isFavorite;
         if (isFavorite) {
-            fab.setImageResource(R.drawable.ic_star_white_24dp);
+            fabLike.setImageResource(R.drawable.ic_star_white_24dp);
         } else {
-            fab.setImageResource(R.drawable.ic_star_border_white_24dp);
+            fabLike.setImageResource(R.drawable.ic_star_border_white_24dp);
         }
+    }
+
+    private void showRefreshing(final boolean refresh) {
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(refresh);
+            }
+        });
     }
 }

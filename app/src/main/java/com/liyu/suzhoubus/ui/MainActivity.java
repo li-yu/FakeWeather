@@ -11,17 +11,22 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.liyu.suzhoubus.AppGlobal;
 import com.liyu.suzhoubus.R;
+import com.liyu.suzhoubus.event.ThemeChangedEvent;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.ui.bus.BusFragment;
 import com.liyu.suzhoubus.ui.gank.GankFragment;
+import com.liyu.suzhoubus.ui.setting.AboutActivity;
 import com.liyu.suzhoubus.ui.setting.SettingActivity;
 import com.liyu.suzhoubus.ui.weather.WeatherFragment;
 import com.liyu.suzhoubus.utils.RxDrawer;
 import com.liyu.suzhoubus.utils.SimpleSubscriber;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -62,6 +67,12 @@ public class MainActivity extends BaseActivity {
             currentFragmentTag = savedInstanceState.getString(AppGlobal.CURRENT_INDEX);
             switchContent(currentFragmentTag);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(AppGlobal.CURRENT_INDEX, currentFragmentTag);
     }
 
     @Override
@@ -165,4 +176,23 @@ public class MainActivity extends BaseActivity {
         invalidateOptionsMenu();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onThemeChanged(ThemeChangedEvent event) {
+        this.recreate();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }

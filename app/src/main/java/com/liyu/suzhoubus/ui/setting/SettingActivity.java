@@ -4,12 +4,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
-import android.view.View;
 
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.liyu.suzhoubus.R;
+import com.liyu.suzhoubus.event.ThemeChangedEvent;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.utils.SettingsUtil;
+import com.liyu.suzhoubus.utils.ThemeUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class SettingActivity extends BaseActivity implements ColorChooserDialog.ColorCallback {
 
@@ -35,7 +38,12 @@ public class SettingActivity extends BaseActivity implements ColorChooserDialog.
 
     @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
-        this.recreate();
+        if (selectedColor == ThemeUtil.getThemeColor(this, R.attr.colorPrimary))
+            return;
+        toolbar.setBackgroundColor(selectedColor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(selectedColor);
+        }
         if (selectedColor == getResources().getColor(R.color.lapis_blue)) {
             setTheme(R.style.LapisBlueTheme);
             SettingsUtil.setTheme(0);
@@ -64,5 +72,7 @@ public class SettingActivity extends BaseActivity implements ColorChooserDialog.
             setTheme(R.style.NiagaraTheme);
             SettingsUtil.setTheme(8);
         }
+        getFragmentManager().beginTransaction().replace(R.id.contentLayout, new SettingFragment()).commit();
+        EventBus.getDefault().post(new ThemeChangedEvent(selectedColor));
     }
 }

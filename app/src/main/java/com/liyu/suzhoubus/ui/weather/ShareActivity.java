@@ -1,4 +1,4 @@
-package com.liyu.suzhoubus.ui;
+package com.liyu.suzhoubus.ui.weather;
 
 import android.content.Context;
 import android.content.Intent;

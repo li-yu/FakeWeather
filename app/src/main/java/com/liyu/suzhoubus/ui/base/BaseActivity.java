@@ -1,10 +1,8 @@
 package com.liyu.suzhoubus.ui.base;
 
 import android.os.Bundle;
-import android.print.PageRange;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -69,12 +67,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        //这里对于运行时权限的授权或者阻止暂不做处理
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
     private void initTheme(){
         int themeIndex = SettingsUtil.getTheme();
         switch (themeIndex){
@@ -124,4 +116,5 @@ public abstract class BaseActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
+
 }

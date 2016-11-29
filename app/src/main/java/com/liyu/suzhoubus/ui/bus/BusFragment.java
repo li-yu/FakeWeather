@@ -174,6 +174,13 @@ public class BusFragment extends BaseFragment {
         newfragment.setArguments(data);
         adapter.addFrag(newfragment, getString(R.string.bus_nearby_station));
 
+        newfragment = new FavoritesFragment();
+        data = new Bundle();
+        data.putInt("id", 3);
+        data.putString("title", getString(R.string.bus_favorites));
+        newfragment.setArguments(data);
+        adapter.addFrag(newfragment, getString(R.string.bus_favorites));
+
         viewPager.setAdapter(adapter);
 
     }
