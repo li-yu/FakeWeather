@@ -1,6 +1,8 @@
 package com.liyu.suzhoubus.ui.setting;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -16,6 +18,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.liyu.suzhoubus.BuildConfig;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
+import com.liyu.suzhoubus.utils.DeviceUtil;
 import com.liyu.suzhoubus.utils.SimpleSubscriber;
 import com.liyu.suzhoubus.utils.ThemeUtil;
 
@@ -93,5 +96,37 @@ public class AboutActivity extends BaseActivity {
     @Override
     protected void loadData() {
 
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_web_home:
+                openWeb("http://liyuyu.cn");
+                break;
+            case R.id.btn_feedback:
+                sendEmail();
+                break;
+            case R.id.btn_check_update:
+                break;
+            case R.id.btn_share_app:
+                break;
+        }
+    }
+
+    private void openWeb(String url) {
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
+    private void sendEmail() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto","me@liyuyu.cn", null));
+        intent.putExtra(Intent.EXTRA_EMAIL, "me@liyuyu.cn");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "反馈");
+        intent.putExtra(Intent.EXTRA_TEXT, DeviceUtil.getAllInfo() + "\n");
+        startActivity(Intent.createChooser(intent, "反馈"));
     }
 }
