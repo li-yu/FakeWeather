@@ -56,7 +56,7 @@ public class FavoritesAdapter extends BaseQuickAdapter<FavoritesBusBean, BaseVie
                         add(deletedPosition, deletedItem);
                         setFavorite(deletedItem, true);
                     }
-                }).show();
+                }).setActionTextColor(mContext.getResources().getColor(R.color.actionColor)).show();
                 return true;
             }
         });

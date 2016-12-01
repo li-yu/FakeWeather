@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
-import com.liyu.suzhoubus.utils.RxFiles;
+import com.liyu.suzhoubus.utils.RxImage;
 import com.liyu.suzhoubus.utils.ShareUtils;
 import com.liyu.suzhoubus.utils.ToastUtil;
 
@@ -54,7 +54,7 @@ public class ShareActivity extends BaseActivity {
         scrollView.post(new Runnable() {
             @Override
             public void run() {
-                RxFiles.saveText2ImageObservable(ShareActivity.this, scrollView).observeOn(AndroidSchedulers.mainThread())
+                RxImage.saveText2ImageObservable(ShareActivity.this, scrollView).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<Uri>() {
                             @Override
                             public void onCompleted() {

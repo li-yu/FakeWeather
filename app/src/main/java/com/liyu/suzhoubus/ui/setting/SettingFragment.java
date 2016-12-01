@@ -5,19 +5,15 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.liyu.suzhoubus.App;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.utils.FileSizeUtil;
-import com.liyu.suzhoubus.utils.RxFiles;
+import com.liyu.suzhoubus.utils.FileUtil;
 import com.liyu.suzhoubus.utils.SettingsUtil;
 import com.liyu.suzhoubus.utils.SimpleSubscriber;
-
-import java.io.File;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -29,7 +25,7 @@ import rx.schedulers.Schedulers;
  */
 
 public class SettingFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener,
-        Preference.OnPreferenceChangeListener, ColorChooserDialog.ColorCallback {
+        Preference.OnPreferenceChangeListener {
 
     private ListPreference weatherShareType;
     private Preference clearCache;
@@ -47,7 +43,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         weatherAlert = (CheckBoxPreference) findPreference(SettingsUtil.WEATHER_ALERT);
 
         weatherShareType.setSummary(weatherShareType.getValue());
-        clearCache.setSummary(FileSizeUtil.getAutoFileOrFilesSize(App.getAppCacheDir() + "/NetCache"));
+        clearCache.setSummary(FileSizeUtil.getAutoFileOrFilesSize(FileUtil.getInternalCacheDir(App.getContext()), FileUtil.getExternalCacheDir(App.getContext())));
         String[] colorNames = getActivity().getResources().getStringArray(R.array.color_name);
         int currentThemeIndex = SettingsUtil.getTheme();
         if (currentThemeIndex >= colorNames.length) {
@@ -78,11 +74,11 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     public boolean onPreferenceClick(Preference preference) {
         if (preference == clearCache) {
             Observable
-                    .just(RxFiles.delete(new File(App.getAppCacheDir() + "/NetCache")))
-                    .filter(new Func1<Boolean, Boolean>() {
+                    .just(FileUtil.delete(FileUtil.getInternalCacheDir(App.getContext())))
+                    .map(new Func1<Boolean, Boolean>() {
                         @Override
-                        public Boolean call(Boolean aBoolean) {
-                            return aBoolean;
+                        public Boolean call(Boolean result) {
+                            return result && FileUtil.delete(FileUtil.getExternalCacheDir(App.getContext()));
                         }
                     })
                     .subscribeOn(Schedulers.io())
@@ -90,7 +86,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                     .subscribe(new SimpleSubscriber<Boolean>() {
                         @Override
                         public void onNext(Boolean aBoolean) {
-                            clearCache.setSummary(FileSizeUtil.getAutoFileOrFilesSize(App.getAppCacheDir() + "/NetCache"));
+                            clearCache.setSummary(FileSizeUtil.getAutoFileOrFilesSize(FileUtil.getInternalCacheDir(App.getContext()), FileUtil.getExternalCacheDir(App.getContext())));
                             Snackbar.make(getView(), "缓存已清除 (*^__^*)", Snackbar.LENGTH_SHORT).show();
                         }
                     });
@@ -104,10 +100,5 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                     .show();
         }
         return true;
-    }
-
-    @Override
-    public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
-
     }
 }

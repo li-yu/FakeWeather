@@ -77,7 +77,7 @@ public class NearbyLineFragment extends BaseContentFragment {
                             public void onClick(View view) {
                                 lazyFetchData();
                             }
-                        }).show();
+                        }).setActionTextColor(getActivity().getResources().getColor(R.color.actionColor)).show();
                     }
 
                     @Override
@@ -88,7 +88,7 @@ public class NearbyLineFragment extends BaseContentFragment {
                                 public void onClick(View view) {
                                     lazyFetchData();
                                 }
-                            }).show();
+                            }).setActionTextColor(getActivity().getResources().getColor(R.color.actionColor)).show();
                             return;
                         }
                         adapter.setNewData(busLineNearbyBaseBusResponse.data.getLine());

@@ -13,10 +13,9 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
-import com.jakewharton.rxbinding.view.RxMenuItem;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
-import com.liyu.suzhoubus.utils.RxFiles;
+import com.liyu.suzhoubus.utils.RxImage;
 import com.liyu.suzhoubus.utils.ShareUtils;
 import com.liyu.suzhoubus.utils.ToastUtil;
 
@@ -24,7 +23,6 @@ import java.io.IOException;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by liyu on 2016/11/3.
@@ -36,9 +34,10 @@ public class PictureActivity extends BaseActivity {
     public static final String EXTRA_IMAGE_TITLE = "image_title";
     public static final String TRANSIT_PIC = "picture";
 
-    ImageView mImageView;
+    private ImageView mImageView;
 
-    String mImageUrl, mImageTitle;
+    private String mImageUrl;
+    private String mImageTitle;
 
     public static Intent newIntent(Context context, String url, String desc) {
         Intent intent = new Intent(context, PictureActivity.class);
@@ -95,7 +94,7 @@ public class PictureActivity extends BaseActivity {
         super.onOptionsItemSelected(item);
         int id = item.getItemId();
         if (id == R.id.menu_share) {
-            RxFiles.saveImageAndGetPathObservable(this, mImageUrl, mImageTitle)
+            RxImage.saveImageAndGetPathObservable(this, mImageUrl, mImageTitle)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<Uri>() {
                         @Override
@@ -114,7 +113,7 @@ public class PictureActivity extends BaseActivity {
                         }
                     });
         } else if (id == R.id.menu_save) {
-            RxFiles.saveImageAndGetPathObservable(this, mImageUrl, mImageTitle)
+            RxImage.saveImageAndGetPathObservable(this, mImageUrl, mImageTitle)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<Uri>() {
                         @Override
@@ -129,13 +128,13 @@ public class PictureActivity extends BaseActivity {
 
                         @Override
                         public void onNext(Uri uri) {
-                            ToastUtil.showLong("图片成功保存至: " + RxFiles.getRealFilePath(PictureActivity.this, uri));
+                            ToastUtil.showLong("图片成功保存至: " + RxImage.getRealFilePath(PictureActivity.this, uri));
                         }
                     });
 
         } else if (id == R.id.menu_wallpaper) {
             final WallpaperManager wm = WallpaperManager.getInstance(this);
-            RxFiles.saveImageAndGetPathObservable(this, mImageUrl, mImageTitle)
+            RxImage.saveImageAndGetPathObservable(this, mImageUrl, mImageTitle)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<Uri>() {
                         @Override

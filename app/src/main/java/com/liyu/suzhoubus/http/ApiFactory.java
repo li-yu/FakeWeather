@@ -1,5 +1,6 @@
 package com.liyu.suzhoubus.http;
 
+import com.liyu.suzhoubus.http.api.AppController;
 import com.liyu.suzhoubus.http.api.BusController;
 import com.liyu.suzhoubus.http.api.GankController;
 import com.liyu.suzhoubus.http.api.WeatherController;
@@ -13,6 +14,7 @@ public class ApiFactory {
     private static BusController busController;
     private static GankController gankController;
     private static WeatherController weatherController;
+    private static AppController appController;
 
     public static BusController getBusController() {
         if (busController == null) {
@@ -41,6 +43,14 @@ public class ApiFactory {
         return weatherController;
     }
 
+    public static AppController getAppController() {
+        if (appController == null) {
+            synchronized (monitor) {
+                appController = RetrofitManager.getInstance().create(AppController.class);
+            }
+        }
+        return appController;
+    }
 
     public static void reset() {
         busController = null;

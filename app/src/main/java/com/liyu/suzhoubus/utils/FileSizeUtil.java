@@ -64,6 +64,25 @@ public class FileSizeUtil {
         return Formatter.formatFileSize(App.getContext(), blockSize);
     }
 
+    public static String getAutoFileOrFilesSize(String... filePaths) {
+        long totalSize = 0;
+        for (String filePath : filePaths) {
+            File file = new File(filePath);
+            long blockSize = 0;
+            try {
+                if (file.isDirectory()) {
+                    blockSize = getFileSizes(file);
+                } else {
+                    blockSize = getFileSize(file);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            totalSize = totalSize + blockSize;
+        }
+        return Formatter.formatFileSize(App.getContext(), totalSize);
+    }
+
 
     /**
      * 获取指定文件大小

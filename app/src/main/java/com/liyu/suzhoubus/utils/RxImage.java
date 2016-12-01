@@ -33,20 +33,7 @@ import rx.schedulers.Schedulers;
  * Created by liyu on 2016/11/17.
  */
 
-public class RxFiles {
-
-    public static Observable<File> mkdirsIfNotExists(final File file) {
-        return Observable.defer(new Func0<Observable<File>>() {
-            @Override
-            public Observable<File> call() {
-                if (file.mkdirs() || file.isDirectory()) {
-                    return Observable.just(file);
-                } else {
-                    return Observable.error(new IOException("Failed to mkdirs " + file.getPath()));
-                }
-            }
-        });
-    }
+public class RxImage {
 
     public static Observable<Uri> saveImageAndGetPathObservable(final Activity context, final String url, final String title) {
 
@@ -208,23 +195,6 @@ public class RxFiles {
         final Canvas canvas = new Canvas(bitmap);
         scrollView.draw(canvas);
         return bitmap;
-    }
-
-    public static boolean delete(File file) {
-        if (file.isFile()) {
-            return file.delete();
-        }
-        if (file.isDirectory()) {
-            File[] childFiles = file.listFiles();
-            if (childFiles == null || childFiles.length == 0) {
-                return file.delete();
-            }
-            for (File childFile : childFiles) {
-                delete(childFile);
-            }
-            return file.delete();
-        }
-        return false;
     }
 
 }

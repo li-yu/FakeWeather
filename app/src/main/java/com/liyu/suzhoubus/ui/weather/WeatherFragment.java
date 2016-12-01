@@ -133,7 +133,7 @@ public class WeatherFragment extends BaseContentFragment {
                             public void onClick(View view) {
                                 lazyFetchData();
                             }
-                        }).show();
+                        }).setActionTextColor(getActivity().getResources().getColor(R.color.actionColor)).show();
                     }
 
                     @Override

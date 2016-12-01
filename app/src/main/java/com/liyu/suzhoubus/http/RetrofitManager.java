@@ -3,6 +3,7 @@ package com.liyu.suzhoubus.http;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.liyu.suzhoubus.App;
+import com.liyu.suzhoubus.utils.FileUtil;
 import com.liyu.suzhoubus.utils.NetUtils;
 
 import java.io.File;
@@ -56,7 +57,7 @@ public class RetrofitManager {
     }
 
     private static OkHttpClient getNewClient() {
-        File cacheFile = new File(App.getAppCacheDir(), "/NetCache");
+        File cacheFile = new File(FileUtil.getAppCacheDir(App.getContext()), "/HttpCache");
         Cache cache = new Cache(cacheFile, 1024 * 1024 * 100);
         Interceptor cacheInterceptor = new Interceptor() {
             @Override

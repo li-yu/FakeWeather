@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
  */
 
 public class NetUtils {
+
     public static Boolean isNetworkReachable(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
