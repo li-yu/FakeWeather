@@ -137,13 +137,14 @@ public class WeatherFragment extends BaseContentFragment {
                     }
 
                     @Override
-                    public void onNext(BaseWeatherResponse<HeWeather5> listBaseWeatherResponse) {
-                        if (listBaseWeatherResponse == null || listBaseWeatherResponse.HeWeather5.size() == 0) {
+                    public void onNext(BaseWeatherResponse<HeWeather5> response) {
+                        if (response == null || response.HeWeather5.size() == 0
+                                || !response.HeWeather5.get(0).getStatus().equals("ok")) {
                             return;
                         }
-                        showWeather(listBaseWeatherResponse.HeWeather5.get(0));
-                        mCache.put(CACHE_WEAHTHER_NAME, listBaseWeatherResponse.HeWeather5.get(0), 10 * 60);
-                        WeatherUtil.saveDailyHistory(listBaseWeatherResponse.HeWeather5.get(0));
+                        showWeather(response.HeWeather5.get(0));
+                        mCache.put(CACHE_WEAHTHER_NAME, response.HeWeather5.get(0), 10 * 60);
+                        WeatherUtil.saveDailyHistory(response.HeWeather5.get(0));
                     }
                 });
     }

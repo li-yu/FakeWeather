@@ -21,6 +21,7 @@ public class LocationClient {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         option.setCoorType("bd09ll");
+        option.setIsNeedAddress(true);
         //设置百度定位参数
         realClient.setLocOption(option);
     }
