@@ -42,6 +42,7 @@ import rx.schedulers.Schedulers;
 
 public class AboutActivity extends BaseActivity {
 
+    private TextView tvVersion;
     private ImageSwitcher imageSwitcher;
     private String[] imageUrls = {
             "http://7xp1a1.com1.z0.glb.clouddn.com/liyu01.png",
@@ -63,6 +64,8 @@ public class AboutActivity extends BaseActivity {
     @Override
     protected void initViews(Bundle savedInstanceState) {
         setDisplayHomeAsUpEnabled(true);
+        tvVersion = (TextView) findViewById(R.id.tv_app_version);
+        tvVersion.setText("v" + BuildConfig.VERSION_NAME);
         imageSwitcher = (ImageSwitcher) findViewById(R.id.imageSwitcher);
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override

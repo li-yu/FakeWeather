@@ -82,8 +82,20 @@ public class NearbyStationFragment extends BaseContentFragment {
                     }
 
                     @Override
-                    public void onNext(BaseBusResponse<BusLineNearby> busLineNearbyBaseBusResponse) {
-                        adapter.setNewData(busLineNearbyBaseBusResponse.data.getStation());
+                    public void onNext(BaseBusResponse<BusLineNearby> response) {
+                        if (response.data.getStation() == null || response.data.getStation().size() == 0) {
+                            Snackbar.make(getView(), "方圆一公里没有公交 -_- !", Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("哎", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                        }
+                                    })
+                                    .setActionTextColor(getActivity().getResources().getColor(R.color.actionColor))
+                                    .show();
+                            return;
+                        }
+                        adapter.setNewData(response.data.getStation());
                     }
                 });
     }

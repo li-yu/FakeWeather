@@ -81,17 +81,20 @@ public class NearbyLineFragment extends BaseContentFragment {
                     }
 
                     @Override
-                    public void onNext(BaseBusResponse<BusLineNearby> busLineNearbyBaseBusResponse) {
-                        if (busLineNearbyBaseBusResponse.data.getLine() == null || busLineNearbyBaseBusResponse.data.getLine().size() == 0) {
-                            Snackbar.make(getView(), "获取线路信息失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    lazyFetchData();
-                                }
-                            }).setActionTextColor(getActivity().getResources().getColor(R.color.actionColor)).show();
+                    public void onNext(BaseBusResponse<BusLineNearby> response) {
+                        if (response.data.getLine() == null || response.data.getLine().size() == 0) {
+                            Snackbar.make(getView(), "方圆一公里没有公交 -_- !", Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("哎", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                        }
+                                    })
+                                    .setActionTextColor(getActivity().getResources().getColor(R.color.actionColor))
+                                    .show();
                             return;
                         }
-                        adapter.setNewData(busLineNearbyBaseBusResponse.data.getLine());
+                        adapter.setNewData(response.data.getLine());
                     }
                 });
     }

@@ -28,7 +28,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         Preference.OnPreferenceChangeListener {
 
     private ListPreference weatherShareType;
-    private Preference clearCache;
+    private Preference cleanCache;
     private Preference theme;
     private CheckBoxPreference weatherAlert;
 
@@ -38,12 +38,12 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         addPreferencesFromResource(R.xml.setting);
 
         weatherShareType = (ListPreference) findPreference(SettingsUtil.WEATHER_SHARE_TYPE);
-        clearCache = findPreference(SettingsUtil.CLEAR_CACHE);
+        cleanCache = findPreference(SettingsUtil.CLEAR_CACHE);
         theme = findPreference(SettingsUtil.THEME);
         weatherAlert = (CheckBoxPreference) findPreference(SettingsUtil.WEATHER_ALERT);
 
         weatherShareType.setSummary(weatherShareType.getValue());
-        clearCache.setSummary(FileSizeUtil.getAutoFileOrFilesSize(FileUtil.getInternalCacheDir(App.getContext()), FileUtil.getExternalCacheDir(App.getContext())));
+        cleanCache.setSummary(FileSizeUtil.getAutoFileOrFilesSize(FileUtil.getInternalCacheDir(App.getContext()), FileUtil.getExternalCacheDir(App.getContext())));
         String[] colorNames = getActivity().getResources().getStringArray(R.array.color_name);
         int currentThemeIndex = SettingsUtil.getTheme();
         if (currentThemeIndex >= colorNames.length) {
@@ -54,7 +54,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
         weatherAlert.setOnPreferenceChangeListener(this);
         weatherShareType.setOnPreferenceChangeListener(this);
-        clearCache.setOnPreferenceClickListener(this);
+        cleanCache.setOnPreferenceClickListener(this);
         theme.setOnPreferenceClickListener(this);
 
     }
@@ -72,7 +72,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        if (preference == clearCache) {
+        if (preference == cleanCache) {
             Observable
                     .just(FileUtil.delete(FileUtil.getInternalCacheDir(App.getContext())))
                     .map(new Func1<Boolean, Boolean>() {
@@ -86,7 +86,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                     .subscribe(new SimpleSubscriber<Boolean>() {
                         @Override
                         public void onNext(Boolean aBoolean) {
-                            clearCache.setSummary(FileSizeUtil.getAutoFileOrFilesSize(FileUtil.getInternalCacheDir(App.getContext()), FileUtil.getExternalCacheDir(App.getContext())));
+                            cleanCache.setSummary(FileSizeUtil.getAutoFileOrFilesSize(FileUtil.getInternalCacheDir(App.getContext()), FileUtil.getExternalCacheDir(App.getContext())));
                             Snackbar.make(getView(), "缓存已清除 (*^__^*)", Snackbar.LENGTH_SHORT).show();
                         }
                     });

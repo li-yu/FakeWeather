@@ -12,7 +12,7 @@ public class SettingsUtil {
     public static final String WEATHER_SHARE_TYPE = "weather_share_type";//天气分享形式
     public static final String WEATHER_ALERT = "weather_alert";//灾害预警
     public static final String THEME = "theme_color";//主题
-    public static final String CLEAR_CACHE = "clear_cache";//清空缓存
+    public static final String CLEAR_CACHE = "clean_cache";//清空缓存
 
     public static void setWeatherShareType(String type) {
         SPUtil.put(App.getContext(), WEATHER_SHARE_TYPE, type);

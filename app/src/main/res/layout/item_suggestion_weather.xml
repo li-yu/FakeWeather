@@ -28,7 +28,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_air"
+                android:src="@drawable/ic_comfort"
                 />
 
             <LinearLayout
@@ -68,7 +68,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_sport"
+                android:src="@drawable/ic_sports"
                 />
 
             <LinearLayout
@@ -108,7 +108,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_car"
+                android:src="@drawable/ic_wash_car"
                 />
 
             <LinearLayout

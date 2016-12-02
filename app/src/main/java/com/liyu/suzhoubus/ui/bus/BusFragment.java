@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
-import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.http.ApiFactory;
 import com.liyu.suzhoubus.http.BaseBusResponse;
@@ -116,7 +115,7 @@ public class BusFragment extends BaseFragment {
         MenuItemCompat.setOnActionExpandListener(search, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                popupWindow.showAsDropDown(searchView);
+                popupWindow.showAsDropDown(mToolbar);
                 return true;
             }
 

@@ -18,7 +18,7 @@
             android:key="theme_color"
             android:title="主题色"/>
         <Preference
-            android:key="clear_cache"
+            android:key="clean_cache"
             android:title="清除缓存"/>
     </PreferenceCategory>
 </PreferenceScreen>
