@@ -14,9 +14,9 @@ import java.util.List;
  * Created by liyu on 2016/11/1.
  */
 
-public class LineStationAdapter extends BaseQuickAdapter<BusLineStation.ListBean, BaseViewHolder> {
+public class StationDetailAdapter extends BaseQuickAdapter<BusLineStation.ListBean, BaseViewHolder> {
 
-    public LineStationAdapter(int layoutResId, List<BusLineStation.ListBean> data) {
+    public StationDetailAdapter(int layoutResId, List<BusLineStation.ListBean> data) {
         super(layoutResId, data);
     }
 

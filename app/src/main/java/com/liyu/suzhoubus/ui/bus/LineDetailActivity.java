@@ -201,9 +201,9 @@ public class LineDetailActivity extends BaseActivity {
     private void showFabStatus(boolean isFavorite) {
         this.isFavorite = isFavorite;
         if (isFavorite) {
-            fabLike.setImageResource(R.drawable.ic_star_white_24dp);
+            fabLike.setImageResource(R.drawable.ic_favorite);
         } else {
-            fabLike.setImageResource(R.drawable.ic_star_border_white_24dp);
+            fabLike.setImageResource(R.drawable.ic_favorite_not);
         }
     }
 

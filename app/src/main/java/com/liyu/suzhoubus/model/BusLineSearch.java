@@ -7,7 +7,7 @@ import java.util.List;
  * Created by liyu on 2016/10/31.
  */
 
-public class BusLineShort implements Serializable {
+public class BusLineSearch implements Serializable {
 
 
     /**

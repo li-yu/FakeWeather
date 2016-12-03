@@ -12,7 +12,6 @@ import com.liyu.suzhoubus.http.BaseBusResponse;
 import com.liyu.suzhoubus.location.RxLocation;
 import com.liyu.suzhoubus.model.BusLineNearby;
 import com.liyu.suzhoubus.ui.base.BaseContentFragment;
-import com.liyu.suzhoubus.ui.bus.adapter.LineNearbyAdapter;
 import com.liyu.suzhoubus.ui.bus.adapter.StationNearbyAdapter;
 
 import java.util.HashMap;

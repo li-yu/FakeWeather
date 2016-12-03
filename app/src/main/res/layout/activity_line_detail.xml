@@ -97,7 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_star_border_white_24dp"
+        android:src="@drawable/ic_favorite_not"
         app:fabSize="mini"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right|end"

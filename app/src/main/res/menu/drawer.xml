@@ -7,18 +7,18 @@
 
         <item
             android:id="@+id/navigation_item_2"
-            android:icon="@drawable/ic_wb_sunny_white_24dp"
+            android:icon="@drawable/ic_weather"
             android:checked="true"
             android:title="天气" />
 
         <item
             android:id="@+id/navigation_item_1"
-            android:icon="@drawable/ic_directions_bus_white_24dp"
+            android:icon="@drawable/ic_bus"
             android:title="公交" />
 
         <item
             android:id="@+id/navigation_item_3"
-            android:icon="@drawable/ic_redeem_white_24dp"
+            android:icon="@drawable/ic_gank"
             android:title="福利" />
 
     </group>
@@ -27,12 +27,12 @@
         <menu>
             <item
                 android:id="@+id/navigation_item_settings"
-                android:icon="@drawable/ic_settings_white_24dp"
+                android:icon="@drawable/ic_settings"
                 android:title="设置"/>
 
             <item
                 android:id="@+id/navigation_item_about"
-                android:icon="@drawable/ic_info_outline_white_24dp"
+                android:icon="@drawable/ic_about"
                 android:title="关于"/>
         </menu>
     </item>

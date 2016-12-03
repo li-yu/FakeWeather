@@ -24,10 +24,10 @@ import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.http.ApiFactory;
 import com.liyu.suzhoubus.http.BaseBusResponse;
-import com.liyu.suzhoubus.model.BusLineShort;
+import com.liyu.suzhoubus.model.BusLineSearch;
 import com.liyu.suzhoubus.ui.MainActivity;
 import com.liyu.suzhoubus.ui.base.BaseFragment;
-import com.liyu.suzhoubus.ui.bus.adapter.LineAdapter;
+import com.liyu.suzhoubus.ui.bus.adapter.LineSearchAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class BusFragment extends BaseFragment {
     private SearchView searchView;
     private PopupWindow popupWindow;
     private RecyclerView recyclerView;
-    private LineAdapter searchAdapter;
+    private LineSearchAdapter searchAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -87,14 +87,14 @@ public class BusFragment extends BaseFragment {
                         return charSequence.toString().trim().length() > 0;
                     }
                 })
-                .switchMap(new Func1<CharSequence, Observable<BaseBusResponse<BusLineShort>>>() {
+                .switchMap(new Func1<CharSequence, Observable<BaseBusResponse<BusLineSearch>>>() {
                     @Override
-                    public Observable<BaseBusResponse<BusLineShort>> call(CharSequence charSequence) {
+                    public Observable<BaseBusResponse<BusLineSearch>> call(CharSequence charSequence) {
                         return ApiFactory.getBusController().searchLine(charSequence.toString()).subscribeOn(Schedulers.io());
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BaseBusResponse<BusLineShort>>() {
+                .subscribe(new Observer<BaseBusResponse<BusLineSearch>>() {
                     @Override
                     public void onCompleted() {
 
@@ -106,7 +106,7 @@ public class BusFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onNext(BaseBusResponse<BusLineShort> listBaseBusResponse) {
+                    public void onNext(BaseBusResponse<BusLineSearch> listBaseBusResponse) {
                         searchAdapter.setNewData(listBaseBusResponse.data.getList());
                         popupWindow.showAsDropDown(searchView);
                     }
@@ -129,7 +129,7 @@ public class BusFragment extends BaseFragment {
         View contentView = inflater.inflate(R.layout.fragment_line_search, null);
         recyclerView = (RecyclerView) contentView.findViewById(R.id.rv_line_search);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        searchAdapter = new LineAdapter(R.layout.item_bus_line_search, null);
+        searchAdapter = new LineSearchAdapter(R.layout.item_bus_line_search, null);
         recyclerView.setAdapter(searchAdapter);
         popupWindow = new PopupWindow(contentView, LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);

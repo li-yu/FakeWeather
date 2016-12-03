@@ -150,9 +150,6 @@ public class WeatherFragment extends BaseContentFragment {
     }
 
     private void showWeather(HeWeather5 weather) {
-        if (weather == null || !weather.getStatus().equals("ok")) {
-            return;
-        }
         currentWeather = weather;
         tvNowWeatherString.setText(weather.getNow().getCond().getTxt());
         tvAqi.setText(weather.getAqi() == null ? "" : weather.getAqi().getCity().getQlty());

@@ -15,7 +15,7 @@ import com.liyu.suzhoubus.http.api.BusController;
 import com.liyu.suzhoubus.location.RxLocation;
 import com.liyu.suzhoubus.model.BusLineStation;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
-import com.liyu.suzhoubus.ui.bus.adapter.LineStationAdapter;
+import com.liyu.suzhoubus.ui.bus.adapter.StationDetailAdapter;
 import com.liyu.suzhoubus.utils.ThemeUtil;
 
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class StationDetailActivity extends BaseActivity {
     public static final String KEY_EXTRA_NAME = "NAME";
 
     private RecyclerView recyclerView;
-    private LineStationAdapter adapter;
+    private StationDetailAdapter adapter;
     private SwipeRefreshLayout refreshLayout;
 
     public static void start(Context context, String name, String code) {
@@ -72,7 +72,7 @@ public class StationDetailActivity extends BaseActivity {
         });
         recyclerView = (RecyclerView) findViewById(R.id.rv_station_line);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new LineStationAdapter(R.layout.item_bus_line, null);
+        adapter = new StationDetailAdapter(R.layout.item_bus_line, null);
         recyclerView.setAdapter(adapter);
     }
 
@@ -109,8 +109,8 @@ public class StationDetailActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onNext(BaseBusResponse<BusLineStation> listBaseBusResponse) {
-                        adapter.setNewData(listBaseBusResponse.data.getList());
+                    public void onNext(BaseBusResponse<BusLineStation> response) {
+                        adapter.setNewData(response.data.getList());
                     }
                 });
     }
