@@ -56,7 +56,7 @@ public class WeatherAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, B
                     tvTime.setText(TimeUtils.date2String(TimeUtils.string2Date(now.getHourly_forecast().get(i).getDate(), sdf1), sdf2));
                     tvTemp.setText(now.getHourly_forecast().get(i).getTmp() + "℃");
                     tvPop.setText(now.getHourly_forecast().get(i).getPop() + "%");
-                    tvWind.setText(String.format("%s", now.getHourly_forecast().get(i).getWind().getSc()));
+                    tvWind.setText(String.format("%s级", now.getHourly_forecast().get(i).getWind().getSc()));
                     nowContainer.addView(view);
                 }
                 break;
