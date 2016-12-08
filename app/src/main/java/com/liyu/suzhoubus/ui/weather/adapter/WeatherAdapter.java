@@ -14,8 +14,10 @@ import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.model.HeWeather5;
 import com.liyu.suzhoubus.model.WeatherBean;
 import com.liyu.suzhoubus.utils.SimpleSubscriber;
+import com.liyu.suzhoubus.utils.SizeUtils;
 import com.liyu.suzhoubus.utils.TimeUtils;
 import com.liyu.suzhoubus.utils.WeatherUtil;
+import com.liyu.suzhoubus.widgets.WeatherChartView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -32,6 +34,8 @@ public class WeatherAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, B
     private SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
     private SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
+    private boolean showWeatherChart = true;
+
     public WeatherAdapter(List<MultiItemEntity> data) {
         super(data);
         addItemType(HeWeather5.TYPE_NOW, R.layout.item_weather_container);
@@ -41,7 +45,7 @@ public class WeatherAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, B
     }
 
     @Override
-    protected void convert(BaseViewHolder holder, MultiItemEntity multiItemEntity) {
+    protected void convert(final BaseViewHolder holder, MultiItemEntity multiItemEntity) {
         switch (holder.getItemViewType()) {
             case HeWeather5.TYPE_NOW:
                 HeWeather5 now = (HeWeather5) multiItemEntity;
@@ -72,50 +76,72 @@ public class WeatherAdapter extends BaseMultiItemQuickAdapter<MultiItemEntity, B
             case HeWeather5.TYPE_DAILYFORECAST:
                 HeWeather5 weather5 = (HeWeather5) multiItemEntity;
                 LinearLayout container = holder.getView(R.id.contentLayout);
-                container.removeAllViews();
-                HeWeather5.DailyForecastBean yesterday = WeatherUtil.getYesterday();
-                if (yesterday != null) {
-                    weather5.getDaily_forecast().add(0, yesterday);
+                if (showWeatherChart) {
+                    container.setPadding(0, SizeUtils.dp2px(mContext, 16), 0, SizeUtils.dp2px(mContext, 16));
+                    container.removeAllViews();
+                    container.addView(getChartView(weather5));
+                } else {
+                    container.removeAllViews();
+                    setDetailsView(container, weather5);
                 }
-                for (int i = 0; i < weather5.getDaily_forecast().size(); i++) {
-                    View view = View.inflate(mContext, R.layout.item_daily_weather, null);
-                    TextView tvTemp = (TextView) view.findViewById(R.id.tv_day_temp);
-                    TextView tvWeek = (TextView) view.findViewById(R.id.tv_day_week);
-                    TextView tvInfo = (TextView) view.findViewById(R.id.tv_day_info);
-                    final ImageView ivWeek = (ImageView) view.findViewById(R.id.iv_day_weather);
-                    if (yesterday != null) {
-                        if (i == 0) {
-                            tvWeek.setText("昨天");
-                        } else if (i == 1) {
-                            tvWeek.setText("今天");
-                        } else if (i == 2) {
-                            tvWeek.setText("明天");
-                        } else {
-                            tvWeek.setText(TimeUtils.getWeek(weather5.getDaily_forecast().get(i).getDate(), TimeUtils.DATE_SDF));
-                        }
-                    } else {
-                        if (i == 0) {
-                            tvWeek.setText("今天");
-                        } else if (i == 1) {
-                            tvWeek.setText("明天");
-                        } else {
-                            tvWeek.setText(TimeUtils.getWeek(weather5.getDaily_forecast().get(i).getDate(), TimeUtils.DATE_SDF));
-                        }
+                container.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showWeatherChart = !showWeatherChart;
+                        notifyItemChanged(holder.getAdapterPosition());
                     }
-
-                    tvTemp.setText(String.format(("%s℃ - %s℃"), weather5.getDaily_forecast().get(i).getTmp().getMin(), weather5.getDaily_forecast().get(i).getTmp().getMax()));
-                    tvInfo.setText(String.format("%s，降雨几率：%s%%，%s %s 级", weather5.getDaily_forecast().get(i).getCond().getTxt_d(), weather5.getDaily_forecast().get(i).getPop(), weather5.getDaily_forecast().get(i).getWind().getDir(), weather5.getDaily_forecast().get(i).getWind().getSc()));
-
-                    WeatherUtil.getWeatherDict(weather5.getDaily_forecast().get(i).getCond().getCode_d()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
-                        @Override
-                        public void onNext(WeatherBean weatherBean) {
-                            Glide.with(mContext).load(weatherBean.getIcon()).diskCacheStrategy(DiskCacheStrategy.ALL).into(ivWeek);
-                        }
-                    });
-                    container.addView(view);
-                }
-
+                });
                 break;
+        }
+    }
+
+    private WeatherChartView getChartView(HeWeather5 weather5) {
+        WeatherChartView chartView = new WeatherChartView(mContext);
+        chartView.setWeather5(weather5);
+        return chartView;
+    }
+
+    private void setDetailsView(LinearLayout container, HeWeather5 weather5) {
+        HeWeather5.DailyForecastBean yesterday = WeatherUtil.getYesterday();
+        if (yesterday != null) {
+            weather5.getDaily_forecast().add(0, yesterday);
+        }
+        for (int i = 0; i < weather5.getDaily_forecast().size(); i++) {
+            View view = View.inflate(mContext, R.layout.item_daily_weather, null);
+            TextView tvTemp = (TextView) view.findViewById(R.id.tv_day_temp);
+            TextView tvWeek = (TextView) view.findViewById(R.id.tv_day_week);
+            TextView tvInfo = (TextView) view.findViewById(R.id.tv_day_info);
+            final ImageView ivWeek = (ImageView) view.findViewById(R.id.iv_day_weather);
+            if (yesterday != null) {
+                if (i == 0) {
+                    tvWeek.setText("昨天");
+                } else if (i == 1) {
+                    tvWeek.setText("今天");
+                } else if (i == 2) {
+                    tvWeek.setText("明天");
+                } else {
+                    tvWeek.setText(TimeUtils.getWeek(weather5.getDaily_forecast().get(i).getDate(), TimeUtils.DATE_SDF));
+                }
+            } else {
+                if (i == 0) {
+                    tvWeek.setText("今天");
+                } else if (i == 1) {
+                    tvWeek.setText("明天");
+                } else {
+                    tvWeek.setText(TimeUtils.getWeek(weather5.getDaily_forecast().get(i).getDate(), TimeUtils.DATE_SDF));
+                }
+            }
+
+            tvTemp.setText(String.format(("%s℃ - %s℃"), weather5.getDaily_forecast().get(i).getTmp().getMin(), weather5.getDaily_forecast().get(i).getTmp().getMax()));
+            tvInfo.setText(String.format("%s，降雨几率：%s%%，%s %s 级", weather5.getDaily_forecast().get(i).getCond().getTxt_d(), weather5.getDaily_forecast().get(i).getPop(), weather5.getDaily_forecast().get(i).getWind().getDir(), weather5.getDaily_forecast().get(i).getWind().getSc()));
+
+            WeatherUtil.getWeatherDict(weather5.getDaily_forecast().get(i).getCond().getCode_d()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
+                @Override
+                public void onNext(WeatherBean weatherBean) {
+                    Glide.with(mContext).load(weatherBean.getIcon()).diskCacheStrategy(DiskCacheStrategy.ALL).into(ivWeek);
+                }
+            });
+            container.addView(view);
         }
     }
 
