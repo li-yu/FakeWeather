@@ -7,16 +7,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.liyu.suzhoubus.R;
-import com.liyu.suzhoubus.event.GankEvent;
+import com.liyu.suzhoubus.event.JiandanEvent;
 import com.liyu.suzhoubus.http.ApiFactory;
 import com.liyu.suzhoubus.http.BaseGankResponse;
+import com.liyu.suzhoubus.http.BaseJiandanResponse;
 import com.liyu.suzhoubus.model.Gank;
+import com.liyu.suzhoubus.model.JiandanXXOO;
 import com.liyu.suzhoubus.service.GirlService;
+import com.liyu.suzhoubus.service.XXOOService;
 import com.liyu.suzhoubus.ui.MainActivity;
 import com.liyu.suzhoubus.ui.base.BaseFragment;
-import com.liyu.suzhoubus.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,10 +35,10 @@ import rx.schedulers.Schedulers;
  * Created by liyu on 2016/10/31.
  */
 
-public class GankFragment extends BaseFragment {
+public class JiandanFragment extends BaseFragment {
 
     private RecyclerView recyclerView;
-    private GankAdapter adapter;
+    private JiandanAdapter adapter;
     private int currentIndex = 1;
 
     @Override
@@ -45,7 +48,7 @@ public class GankFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
-        adapter = new GankAdapter(R.layout.item_gank, null);
+        adapter = new JiandanAdapter(R.layout.item_gank, null);
         adapter.openLoadAnimation();
         recyclerView = findView(R.id.rv_gank);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -53,11 +56,36 @@ public class GankFragment extends BaseFragment {
         recyclerView.setAdapter(adapter);
         adapter.setEmptyView(new ProgressBar(getActivity()));
         adapter.setLoadingView(new ProgressBar(getActivity()));
-        adapter.openLoadMore(10);
+        adapter.openLoadMore(25);
         adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
                 getGirlFromServer();
+            }
+        });
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                switch (newState) {
+                    case 2:
+                        Glide.with(getActivity()).pauseRequests();
+
+                        break;
+                    case 0:
+                        Glide.with(getActivity()).resumeRequests();
+
+                        break;
+                    case 1:
+                        Glide.with(getActivity()).resumeRequests();
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
             }
         });
     }
@@ -70,10 +98,10 @@ public class GankFragment extends BaseFragment {
     private void getGirlFromServer() {
         ApiFactory
                 .getGankController()
-                .getGank(String.valueOf(currentIndex))
+                .getXXOO(currentIndex)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BaseGankResponse<List<Gank>>>() {
+                .subscribe(new Observer<BaseJiandanResponse>() {
                     @Override
                     public void onCompleted() {
 
@@ -81,7 +109,7 @@ public class GankFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-                        Snackbar.make(getView(), "获取福利失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
+                        Snackbar.make(getView(), "获取XXOO失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 lazyFetchData();
@@ -90,19 +118,20 @@ public class GankFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onNext(BaseGankResponse<List<Gank>> response) {
+                    public void onNext(BaseJiandanResponse baseJiandanResponse) {
                         currentIndex++;
-                        GirlService.start(getActivity(), response.results);
+//                        updateXXOOs(new JiandanEvent(baseJiandanResponse.comments));
+                        XXOOService.start(getActivity(), baseJiandanResponse.comments);
                     }
                 });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateGirls(GankEvent event) {
+    public void updateXXOOs(JiandanEvent event) {
         if (adapter.getData() == null || adapter.getData().size() == 0) {
-            adapter.setNewData(event.getGanks());
+            adapter.setNewData(event.getXxoos());
         } else {
-            adapter.addData(adapter.getData().size(), event.getGanks());
+            adapter.addData(adapter.getData().size(), event.getXxoos());
         }
     }
 

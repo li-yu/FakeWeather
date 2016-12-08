@@ -21,6 +21,7 @@ import com.liyu.suzhoubus.event.ThemeChangedEvent;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.ui.bus.BusFragment;
 import com.liyu.suzhoubus.ui.gank.GankFragment;
+import com.liyu.suzhoubus.ui.gank.GirlsFragment;
 import com.liyu.suzhoubus.ui.setting.AboutActivity;
 import com.liyu.suzhoubus.ui.setting.SettingActivity;
 import com.liyu.suzhoubus.ui.weather.WeatherFragment;
@@ -162,7 +163,7 @@ public class MainActivity extends BaseActivity {
                     foundFragment = new WeatherFragment();
                     break;
                 case FRAGMENT_TAG_GANK:
-                    foundFragment = new GankFragment();
+                    foundFragment = new GirlsFragment();
                     break;
             }
         }

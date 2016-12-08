@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
 import com.liyu.suzhoubus.R;
@@ -75,7 +76,7 @@ public class PictureActivity extends BaseActivity {
         mImageUrl = getIntent().getStringExtra(EXTRA_IMAGE_URL);
         mImageTitle = getIntent().getStringExtra(EXTRA_IMAGE_TITLE);
         ViewCompat.setTransitionName(mImageView, TRANSIT_PIC);
-        Glide.with(this).load(mImageUrl).diskCacheStrategy(DiskCacheStrategy.SOURCE).crossFade(0)
+        Glide.with(this).load(mImageUrl).diskCacheStrategy(DiskCacheStrategy.SOURCE).priority(Priority.IMMEDIATE).crossFade(0)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(mImageView);
     }
 

@@ -56,6 +56,9 @@
         <service
             android:name=".service.GirlService"
             android:enabled="true"/>
+        <service
+            android:name=".service.XXOOService"
+            android:enabled="true"/>
 
         <activity android:name=".ui.weather.ShareActivity">
         </activity>
