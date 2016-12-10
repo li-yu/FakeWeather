@@ -108,7 +108,7 @@ public class WeatherChartView extends LinearLayout {
             WeatherUtil.getWeatherDict(dailyForecastList.get(i).getCond().getCode_d()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
                 @Override
                 public void onNext(WeatherBean weatherBean) {
-                    Glide.with(getContext()).load(weatherBean.getIcon()).diskCacheStrategy(DiskCacheStrategy.ALL).into(ivIcon);
+                    Glide.with(getContext()).load(weatherBean.getIcon()).diskCacheStrategy(DiskCacheStrategy.ALL).dontTransform().into(ivIcon);
                 }
             });
             minTemp.add(Integer.valueOf(dailyForecastList.get(i).getTmp().getMin()));

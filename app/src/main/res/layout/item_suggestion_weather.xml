@@ -91,6 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:maxLines="2"
+                    android:minLines="2"
                     android:text="气象条件有利于空气污染物稀释、扩散和清除，可在室外正常活动"
                     android:textSize="10sp"/>
 
@@ -131,6 +132,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:maxLines="2"
+                    android:minLines="2"
                     android:text="气象条件有利于空气污染物稀释、扩散和清除，可在室外正常活动"
                     android:textSize="10sp"/>
 

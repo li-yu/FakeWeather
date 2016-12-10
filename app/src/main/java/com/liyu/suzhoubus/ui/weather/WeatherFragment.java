@@ -164,6 +164,7 @@ public class WeatherFragment extends BaseContentFragment {
 
     private void showWeather(HeWeather5 weather) {
         currentWeather = weather;
+        tvCityName.setText(weather.getBasic().getCity());
         tvNowWeatherString.setText(weather.getNow().getCond().getTxt());
         tvAqi.setText(weather.getAqi() == null ? "" : weather.getAqi().getCity().getQlty());
         tvNowTemp.setText(String.format("%s℃", weather.getNow().getTmp()));
