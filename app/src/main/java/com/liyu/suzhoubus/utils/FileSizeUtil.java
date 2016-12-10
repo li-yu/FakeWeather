@@ -95,6 +95,7 @@ public class FileSizeUtil {
             FileInputStream fis = null;
             fis = new FileInputStream(file);
             size = fis.available();
+            fis.close();
         } else {
             file.createNewFile();
             Log.e("获取文件大小", "文件不存在!");

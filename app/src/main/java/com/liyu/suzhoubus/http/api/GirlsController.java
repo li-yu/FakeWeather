@@ -16,9 +16,9 @@ import rx.Observable;
  * Created by liyu on 2016/10/31.
  */
 
-public interface GankController {
+public interface GirlsController {
 
-    @GET("http://gank.io/api/data/%E7%A6%8F%E5%88%A9/10/{page}")
+    @GET("http://gank.io/api/data/%E7%A6%8F%E5%88%A9/20/{page}")
     Observable<BaseGankResponse<List<Gank>>> getGank(@Path("page") String page);
 
     @GET("http://i.jandan.net/?oxwlxojflwblxbsapi=jandan.get_ooxx_comments")

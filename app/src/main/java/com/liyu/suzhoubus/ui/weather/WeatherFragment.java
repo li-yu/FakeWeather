@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.http.ApiFactory;
@@ -156,14 +157,19 @@ public class WeatherFragment extends BaseContentFragment {
         tvNowTemp.setText(String.format("%s℃", weather.getNow().getTmp()));
         String updateTime = TimeUtils.string2String(weather.getBasic().getUpdate().getLoc(), new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()), new SimpleDateFormat("HH:mm", Locale.getDefault()));
         tvUpdateTime.setText(String.format("截止 %s", updateTime));
+
         List<MultiItemEntity> weather5s = new ArrayList<>();
+
         HeWeather5 nowWeather = (HeWeather5) weather.clone();
         nowWeather.setItemType(HeWeather5.TYPE_NOW);
         weather5s.add(nowWeather);
+
         weather5s.add(weather.getSuggestion());
+
         HeWeather5 dailyWeather = (HeWeather5) weather.clone();
         dailyWeather.setItemType(HeWeather5.TYPE_DAILYFORECAST);
         weather5s.add(dailyWeather);
+
         adapter.setNewData(weather5s);
     }
 

@@ -49,15 +49,12 @@
             android:enabled="true"/>
 
         <activity
-            android:name=".ui.gank.PictureActivity"
+            android:name=".ui.girl.PictureActivity"
             android:label=""
             android:theme="@style/PictureTheme"/>
 
         <service
             android:name=".service.GirlService"
-            android:enabled="true"/>
-        <service
-            android:name=".service.XXOOService"
             android:enabled="true"/>
 
         <activity android:name=".ui.weather.ShareActivity">

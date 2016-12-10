@@ -28,7 +28,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class WeatherChartView extends LinearLayout {
 
-    private HeWeather5 weather5;
+    private List<HeWeather5.DailyForecastBean> dailyForecastList = new ArrayList<>();
 
     LinearLayout.LayoutParams cellParams;
     LinearLayout.LayoutParams rowParams;
@@ -51,25 +51,29 @@ public class WeatherChartView extends LinearLayout {
     }
 
     private void letItGo() {
+        removeAllViews();
         LinearLayout dateTitleView = new LinearLayout(getContext());
         dateTitleView.setLayoutParams(rowParams);
         dateTitleView.setOrientation(HORIZONTAL);
         dateTitleView.removeAllViews();
+
         LinearLayout iconView = new LinearLayout(getContext());
         iconView.setLayoutParams(rowParams);
         iconView.setOrientation(HORIZONTAL);
         iconView.removeAllViews();
+
         LinearLayout weatherStrView = new LinearLayout(getContext());
         weatherStrView.setLayoutParams(rowParams);
         weatherStrView.setOrientation(HORIZONTAL);
         weatherStrView.removeAllViews();
+
         List<Integer> minTemp = new ArrayList<>();
         List<Integer> maxTemp = new ArrayList<>();
         HeWeather5.DailyForecastBean yesterday = WeatherUtil.getYesterday();
         if (yesterday != null) {
-            weather5.getDaily_forecast().add(0, yesterday);
+            dailyForecastList.add(0, yesterday);
         }
-        for (int i = 0; i < weather5.getDaily_forecast().size(); i++) {
+        for (int i = 0; i < dailyForecastList.size(); i++) {
             TextView tvDate = new TextView(getContext());
             tvDate.setGravity(Gravity.CENTER);
             tvDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
@@ -89,7 +93,7 @@ public class WeatherChartView extends LinearLayout {
                 } else if (i == 2) {
                     tvDate.setText("明天");
                 } else {
-                    tvDate.setText(TimeUtils.getWeek(weather5.getDaily_forecast().get(i).getDate(), TimeUtils.DATE_SDF));
+                    tvDate.setText(TimeUtils.getWeek(dailyForecastList.get(i).getDate(), TimeUtils.DATE_SDF));
                 }
             } else {
                 if (i == 0) {
@@ -97,18 +101,18 @@ public class WeatherChartView extends LinearLayout {
                 } else if (i == 1) {
                     tvDate.setText("明天");
                 } else {
-                    tvDate.setText(TimeUtils.getWeek(weather5.getDaily_forecast().get(i).getDate(), TimeUtils.DATE_SDF));
+                    tvDate.setText(TimeUtils.getWeek(dailyForecastList.get(i).getDate(), TimeUtils.DATE_SDF));
                 }
             }
-            tvWeather.setText(weather5.getDaily_forecast().get(i).getCond().getTxt_d());
-            WeatherUtil.getWeatherDict(weather5.getDaily_forecast().get(i).getCond().getCode_d()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
+            tvWeather.setText(dailyForecastList.get(i).getCond().getTxt_d());
+            WeatherUtil.getWeatherDict(dailyForecastList.get(i).getCond().getCode_d()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
                 @Override
                 public void onNext(WeatherBean weatherBean) {
                     Glide.with(getContext()).load(weatherBean.getIcon()).diskCacheStrategy(DiskCacheStrategy.ALL).into(ivIcon);
                 }
             });
-            minTemp.add(Integer.valueOf(weather5.getDaily_forecast().get(i).getTmp().getMin()));
-            maxTemp.add(Integer.valueOf(weather5.getDaily_forecast().get(i).getTmp().getMax()));
+            minTemp.add(Integer.valueOf(dailyForecastList.get(i).getTmp().getMin()));
+            maxTemp.add(Integer.valueOf(dailyForecastList.get(i).getTmp().getMax()));
             weatherStrView.addView(tvWeather, cellParams);
             dateTitleView.addView(tvDate, cellParams);
             iconView.addView(ivIcon, cellParams);
@@ -123,7 +127,8 @@ public class WeatherChartView extends LinearLayout {
     }
 
     public void setWeather5(HeWeather5 weather5) {
-        this.weather5 = weather5;
+        dailyForecastList.clear();
+        dailyForecastList.addAll(weather5.getDaily_forecast());
         letItGo();
     }
 }

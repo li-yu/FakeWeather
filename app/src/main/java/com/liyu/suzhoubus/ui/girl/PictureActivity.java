@@ -1,4 +1,4 @@
-package com.liyu.suzhoubus.ui.gank;
+package com.liyu.suzhoubus.ui.girl;
 
 import android.app.WallpaperManager;
 import android.content.Context;
@@ -78,6 +78,7 @@ public class PictureActivity extends BaseActivity {
         ViewCompat.setTransitionName(mImageView, TRANSIT_PIC);
         Glide.with(this).load(mImageUrl).diskCacheStrategy(DiskCacheStrategy.SOURCE).priority(Priority.IMMEDIATE).crossFade(0)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(mImageView);
+        hideOrShowToolbar();
     }
 
     private void hideOrShowToolbar() {

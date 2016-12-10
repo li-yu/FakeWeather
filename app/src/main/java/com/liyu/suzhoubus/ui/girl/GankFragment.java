@@ -1,27 +1,24 @@
-package com.liyu.suzhoubus.ui.gank;
+package com.liyu.suzhoubus.ui.girl;
 
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ProgressBar;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.liyu.suzhoubus.R;
-import com.liyu.suzhoubus.event.GankEvent;
+import com.liyu.suzhoubus.event.GirlsComingEvent;
 import com.liyu.suzhoubus.http.ApiFactory;
 import com.liyu.suzhoubus.http.BaseGankResponse;
 import com.liyu.suzhoubus.model.Gank;
+import com.liyu.suzhoubus.model.Girl;
 import com.liyu.suzhoubus.service.GirlService;
-import com.liyu.suzhoubus.ui.MainActivity;
-import com.liyu.suzhoubus.ui.base.BaseFragment;
-import com.liyu.suzhoubus.utils.ToastUtil;
+import com.liyu.suzhoubus.ui.base.BaseContentFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observer;
@@ -32,11 +29,12 @@ import rx.schedulers.Schedulers;
  * Created by liyu on 2016/10/31.
  */
 
-public class GankFragment extends BaseFragment {
+public class GankFragment extends BaseContentFragment {
 
     private RecyclerView recyclerView;
-    private GankAdapter adapter;
-    private int currentIndex = 1;
+    private GirlsAdapter adapter;
+    private int currentPage = 1;
+    private boolean isLoading = false;
 
     @Override
     protected int getLayoutId() {
@@ -45,64 +43,77 @@ public class GankFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
-        adapter = new GankAdapter(R.layout.item_gank, null);
-        adapter.openLoadAnimation();
+        super.initViews();
+        adapter = new GirlsAdapter(getActivity(), null);
         recyclerView = findView(R.id.rv_gank);
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        adapter.setEmptyView(new ProgressBar(getActivity()));
-        adapter.setLoadingView(new ProgressBar(getActivity()));
-        adapter.openLoadMore(10);
-        adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onLoadMoreRequested() {
-                getGirlFromServer();
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1) && !isLoading) {
+                    isLoading = true;
+                    getGirlFromServer();
+                }
             }
         });
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     protected void lazyFetchData() {
+        currentPage = 1;
+        adapter.setNewData(null);
         getGirlFromServer();
     }
 
     private void getGirlFromServer() {
+        showRefreshing(true);
         ApiFactory
-                .getGankController()
-                .getGank(String.valueOf(currentIndex))
+                .getGirlsController()
+                .getGank(String.valueOf(currentPage))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<BaseGankResponse<List<Gank>>>() {
                     @Override
                     public void onCompleted() {
-
+                        isLoading = false;
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Snackbar.make(getView(), "获取福利失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
+                        isLoading = false;
+                        showRefreshing(false);
+                        Snackbar.make(getView(), "获取Gank妹纸失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                lazyFetchData();
+                                getGirlFromServer();
                             }
                         }).setActionTextColor(getActivity().getResources().getColor(R.color.actionColor)).show();
                     }
 
                     @Override
                     public void onNext(BaseGankResponse<List<Gank>> response) {
-                        currentIndex++;
-                        GirlService.start(getActivity(), response.results);
+                        currentPage++;
+                        List<Girl> girls = new ArrayList<>();
+                        for (Gank gank : response.results) {
+                            girls.add(new Girl(gank.getUrl()));
+                        }
+                        GirlService.start(getActivity(), GirlsComingEvent.GIRLS_FROM_GANK, girls);
                     }
                 });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateGirls(GankEvent event) {
+    public void girlIsComing(GirlsComingEvent event) {
+        if (event.getFrom() != GirlsComingEvent.GIRLS_FROM_GANK)
+            return;
+        showRefreshing(false);
         if (adapter.getData() == null || adapter.getData().size() == 0) {
-            adapter.setNewData(event.getGanks());
+            adapter.setNewData(event.getGirls());
         } else {
-            adapter.addData(adapter.getData().size(), event.getGanks());
+            adapter.addData(adapter.getData().size(), event.getGirls());
         }
     }
 

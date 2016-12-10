@@ -2,7 +2,7 @@ package com.liyu.suzhoubus.http;
 
 import com.liyu.suzhoubus.http.api.AppController;
 import com.liyu.suzhoubus.http.api.BusController;
-import com.liyu.suzhoubus.http.api.GankController;
+import com.liyu.suzhoubus.http.api.GirlsController;
 import com.liyu.suzhoubus.http.api.WeatherController;
 
 /**
@@ -12,7 +12,7 @@ public class ApiFactory {
     protected static final Object monitor = new Object();
 
     private static BusController busController;
-    private static GankController gankController;
+    private static GirlsController girlsController;
     private static WeatherController weatherController;
     private static AppController appController;
 
@@ -25,13 +25,13 @@ public class ApiFactory {
         return busController;
     }
 
-    public static GankController getGankController() {
-        if (gankController == null) {
+    public static GirlsController getGirlsController() {
+        if (girlsController == null) {
             synchronized (monitor) {
-                gankController = RetrofitManager.getInstance().create(GankController.class);
+                girlsController = RetrofitManager.getInstance().create(GirlsController.class);
             }
         }
-        return gankController;
+        return girlsController;
     }
 
     public static WeatherController getWeatherController() {
@@ -54,7 +54,7 @@ public class ApiFactory {
 
     public static void reset() {
         busController = null;
-        gankController = null;
+        girlsController = null;
         weatherController = null;
     }
 

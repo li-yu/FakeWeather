@@ -16,6 +16,7 @@ import com.liyu.suzhoubus.utils.SettingsUtil;
 import com.liyu.suzhoubus.utils.SimpleSubscriber;
 
 import rx.Observable;
+import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -43,7 +44,6 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         weatherAlert = (CheckBoxPreference) findPreference(SettingsUtil.WEATHER_ALERT);
 
         weatherShareType.setSummary(weatherShareType.getValue());
-        cleanCache.setSummary(FileSizeUtil.getAutoFileOrFilesSize(FileUtil.getInternalCacheDir(App.getContext()), FileUtil.getExternalCacheDir(App.getContext())));
         String[] colorNames = getActivity().getResources().getStringArray(R.array.color_name);
         int currentThemeIndex = SettingsUtil.getTheme();
         if (currentThemeIndex >= colorNames.length) {
@@ -56,6 +56,24 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         weatherShareType.setOnPreferenceChangeListener(this);
         cleanCache.setOnPreferenceClickListener(this);
         theme.setOnPreferenceClickListener(this);
+
+        String[] cachePaths = new String[]{FileUtil.getInternalCacheDir(App.getContext()), FileUtil.getExternalCacheDir(App.getContext())};
+        Observable
+                .just(cachePaths)
+                .map(new Func1<String[], String>() {
+                    @Override
+                    public String call(String[] strings) {
+                        return FileSizeUtil.getAutoFileOrFilesSize(strings);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SimpleSubscriber<String>() {
+                    @Override
+                    public void onNext(String s) {
+                        cleanCache.setSummary(s);
+                    }
+                });
 
     }
 

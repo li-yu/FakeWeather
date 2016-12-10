@@ -1,7 +1,6 @@
 package com.liyu.suzhoubus.ui;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -12,16 +11,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.liyu.suzhoubus.AppGlobal;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.event.ThemeChangedEvent;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.ui.bus.BusFragment;
-import com.liyu.suzhoubus.ui.gank.GankFragment;
-import com.liyu.suzhoubus.ui.gank.GirlsFragment;
+import com.liyu.suzhoubus.ui.girl.GirlsFragment;
 import com.liyu.suzhoubus.ui.setting.AboutActivity;
 import com.liyu.suzhoubus.ui.setting.SettingActivity;
 import com.liyu.suzhoubus.ui.weather.WeatherFragment;

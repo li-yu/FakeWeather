@@ -1,46 +1,19 @@
-package com.liyu.suzhoubus.ui.gank;
+package com.liyu.suzhoubus.ui.girl;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 
-import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.liyu.suzhoubus.R;
-import com.liyu.suzhoubus.http.ApiFactory;
-import com.liyu.suzhoubus.http.BaseBusResponse;
-import com.liyu.suzhoubus.model.BusLineSearch;
 import com.liyu.suzhoubus.ui.MainActivity;
 import com.liyu.suzhoubus.ui.base.BaseFragment;
-import com.liyu.suzhoubus.ui.bus.FavoritesFragment;
-import com.liyu.suzhoubus.ui.bus.NearbyLineFragment;
-import com.liyu.suzhoubus.ui.bus.NearbyStationFragment;
-import com.liyu.suzhoubus.ui.bus.adapter.LineSearchAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by liyu on 2016/10/31.

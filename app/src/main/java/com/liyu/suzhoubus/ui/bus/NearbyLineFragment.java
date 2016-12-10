@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.baidu.location.BDLocation;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.http.ApiFactory;
 import com.liyu.suzhoubus.http.BaseBusResponse;
