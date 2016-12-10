@@ -11,11 +11,6 @@
         android:layout_height="@dimen/app_bar_height"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <!--由于CollapsingToolbarLayout 的 特点，应用的标题文字在收缩和展开状态是会自动过渡的。如果你想要在展开状态改变标题文字的位置，
-        你可以这样做：通过应用的 margin 的4个属性，
-        就是：app:expandedTitleMargin, app:expandedTitleMarginBottom, app:expandedTitleMarginEnd 以及 app:expandedTitleMarginStart
-        或者如果你想要在折叠和展开状态时改变文本的显示。你可以这样来简单的实现：
-        设置 TextAppearance，分别通过 app:collapsedTitleTextAppearance 和 app:expandedTitleTextAppearance 来设置。-->
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
@@ -24,7 +19,6 @@
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleTextAppearance="@style/textToolbarTitle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-            <!-- contentScrim 这个属性是设置折叠后Toolbar的颜色-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -92,12 +86,24 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refeshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_line_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F2F7FA"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_favorite_not"
+        app:srcCompat="@drawable/ic_favorite_not"
         app:fabSize="mini"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right|end"
@@ -110,23 +116,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_refresh"
+        app:srcCompat="@drawable/ic_refresh"
         app:borderWidth="0dp"
         app:layout_anchor="@+id/rv_line_search"
         app:layout_anchorGravity="end|bottom"
         app:layout_behavior="com.liyu.suzhoubus.widgets.FloatingActionButtonScrollBehavior"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refeshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_line_search"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#F2F7FA"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawablePadding="8dp"
-            android:drawableStart="@drawable/ic_time"
+            android:drawableStart="@drawable/ic_time_compat"
             android:gravity="center|left"
             android:maxLines="1"
             android:text="18:00"/>
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawablePadding="8dp"
-            android:drawableStart="@drawable/ic_temp"
+            android:drawableStart="@drawable/ic_temp_compat"
             android:gravity="center|left"
             android:maxLines="1"
             android:text="11℃"/>
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawablePadding="8dp"
-            android:drawableStart="@drawable/ic_rain"
+            android:drawableStart="@drawable/ic_rain_compat"
             android:gravity="center|left"
             android:maxLines="1"
             android:text="45%"/>
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawablePadding="8dp"
-            android:drawableStart="@drawable/ic_wind_dir"
+            android:drawableStart="@drawable/ic_wind_dir_compat"
             android:gravity="center|left"
             android:maxLines="1"
             android:text="西北风"/>

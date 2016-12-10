@@ -3,7 +3,7 @@ package com.liyu.suzhoubus;
 import android.app.Application;
 import android.content.Context;
 
-import org.litepal.LitePalApplication;
+import org.litepal.LitePal;
 
 /**
  * Created by liyu on 2016/11/2.
@@ -17,7 +17,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
-        LitePalApplication.initialize(this);
+        LitePal.initialize(this);
 
     }
 

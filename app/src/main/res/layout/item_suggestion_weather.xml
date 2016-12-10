@@ -28,7 +28,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_comfort"
+                android:src="@drawable/ic_comfort_compat"
                 />
 
             <LinearLayout
@@ -50,6 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:maxLines="2"
+                    android:minLines="2"
                     android:text="气象条件有利于空气污染物稀释、扩散和清除，可在室外正常活动"
                     android:textSize="10sp"/>
 
@@ -68,7 +69,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_sports"
+                android:src="@drawable/ic_sports_compat"
                 />
 
             <LinearLayout
@@ -108,7 +109,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_wash_car"
+                android:src="@drawable/ic_wash_car_compat"
                 />
 
             <LinearLayout
@@ -137,6 +138,5 @@
         </LinearLayout>
 
     </LinearLayout>
-    >
 
 </android.support.v7.widget.CardView>

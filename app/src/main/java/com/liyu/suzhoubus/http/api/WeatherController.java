@@ -5,6 +5,7 @@ import com.liyu.suzhoubus.model.HeWeather5;
 
 
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -14,6 +15,6 @@ import rx.Observable;
 
 public interface WeatherController {
 
-    @GET("https://free-api.heweather.com/v5/weather?city=%E8%8B%8F%E5%B7%9E&key=b478f335a5114ba3b6013f6dd92bd422")
-    Observable<BaseWeatherResponse<HeWeather5>> getWeather();
+    @GET("https://free-api.heweather.com/v5/weather?key=b478f335a5114ba3b6013f6dd92bd422")
+    Observable<BaseWeatherResponse<HeWeather5>> getWeather(@Query("city") String city);
 }

@@ -5,15 +5,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.baidu.location.BDLocation;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.http.ApiFactory;
 import com.liyu.suzhoubus.http.BaseWeatherResponse;
+import com.liyu.suzhoubus.location.RxLocation;
 import com.liyu.suzhoubus.model.HeWeather5;
 import com.liyu.suzhoubus.ui.MainActivity;
 import com.liyu.suzhoubus.ui.base.BaseContentFragment;
@@ -30,9 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -67,7 +71,7 @@ public class WeatherFragment extends BaseContentFragment {
         super.initViews();
         mCache = ACache.get(getActivity());
         mToolbar = findView(R.id.toolbar);
-        mToolbar.setTitle("苏州天气");
+        mToolbar.setTitle("天气");
         ((MainActivity) getActivity()).initDrawer(mToolbar);
         mToolbar.inflateMenu(R.menu.menu_weather);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -91,7 +95,6 @@ public class WeatherFragment extends BaseContentFragment {
         tvCityName = findView(R.id.tv_city_name);
         tvNowWeatherString = findView(R.id.tv_weather_string);
         tvNowTemp = findView(R.id.tv_temp);
-        tvCityName.setText("苏州");
         tvUpdateTime = findView(R.id.tv_update_time);
         tvAqi = findView(R.id.tv_weather_aqi);
 
@@ -115,10 +118,18 @@ public class WeatherFragment extends BaseContentFragment {
             return;
         }
 
-        ApiFactory
-                .getWeatherController()
-                .getWeather()
-                .subscribeOn(Schedulers.io())
+        RxLocation.get().locate(getActivity())
+                .flatMap(new Func1<BDLocation, Observable<BaseWeatherResponse<HeWeather5>>>() {
+                    @Override
+                    public Observable<BaseWeatherResponse<HeWeather5>> call(BDLocation bdLocation) {
+                        String city = TextUtils.isEmpty(bdLocation.getCity()) ? "苏州" : bdLocation.getCity().replace("市", "");
+                        tvCityName.setText(city);
+                        return ApiFactory
+                                .getWeatherController()
+                                .getWeather(city)
+                                .subscribeOn(Schedulers.io());
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<BaseWeatherResponse<HeWeather5>>() {
                     @Override
@@ -148,6 +159,7 @@ public class WeatherFragment extends BaseContentFragment {
                         WeatherUtil.saveDailyHistory(response.HeWeather5.get(0));
                     }
                 });
+
     }
 
     private void showWeather(HeWeather5 weather) {
