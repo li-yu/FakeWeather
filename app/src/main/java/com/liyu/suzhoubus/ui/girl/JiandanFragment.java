@@ -13,6 +13,7 @@ import com.liyu.suzhoubus.model.Girl;
 import com.liyu.suzhoubus.model.JiandanXXOO;
 import com.liyu.suzhoubus.service.GirlService;
 import com.liyu.suzhoubus.ui.base.BaseContentFragment;
+import com.liyu.suzhoubus.ui.girl.adapter.GirlsAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

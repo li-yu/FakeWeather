@@ -1,4 +1,4 @@
-package com.liyu.suzhoubus.ui.girl;
+package com.liyu.suzhoubus.ui.girl.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.model.Girl;
+import com.liyu.suzhoubus.ui.girl.PictureActivity;
 import com.liyu.suzhoubus.widgets.RatioImageView;
 
 import java.util.List;

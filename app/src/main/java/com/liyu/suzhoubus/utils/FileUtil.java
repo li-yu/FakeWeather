@@ -1,9 +1,17 @@
 package com.liyu.suzhoubus.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 
+import com.liyu.suzhoubus.App;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import rx.Observable;
 import rx.functions.Func0;
@@ -64,16 +72,121 @@ public class FileUtil {
         return false;
     }
 
-    public static Observable<File> mkdirsIfNotExists(final File file) {
-        return Observable.defer(new Func0<Observable<File>>() {
-            @Override
-            public Observable<File> call() {
-                if (file.mkdirs() || file.isDirectory()) {
-                    return Observable.just(file);
-                } else {
-                    return Observable.error(new IOException("Failed to mkdirs " + file.getPath()));
+    public static String getFolderName(String filePath) {
+
+        if (TextUtils.isEmpty(filePath)) {
+            return filePath;
+        }
+
+        int filePosi = filePath.lastIndexOf(File.separator);
+        return (filePosi == -1) ? "" : filePath.substring(0, filePosi);
+    }
+
+    public static boolean makeDirs(String filePath) {
+        String folderName = getFolderName(filePath);
+        if (TextUtils.isEmpty(folderName)) {
+            return false;
+        }
+
+        File folder = new File(folderName);
+        return (folder.exists() && folder.isDirectory()) ? true : folder.mkdirs();
+    }
+
+    public static boolean writeFile(String filePath, String content, boolean append) {
+        if (TextUtils.isEmpty(content)) {
+            return false;
+        }
+
+        FileWriter fileWriter = null;
+        try {
+            makeDirs(filePath);
+            fileWriter = new FileWriter(filePath, append);
+            fileWriter.write(content);
+            fileWriter.write("\r\n");
+            fileWriter.write("\r\n");
+            fileWriter.close();
+            return true;
+        } catch (IOException e) {
+            Log.e("IOException occurred. ", e.getMessage(), e);
+            return false;
+        } finally {
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    Log.e("IOException occurred. ", e.getMessage(), e);
                 }
             }
-        });
+        }
+    }
+
+    public static String readFile(String filePath) {
+        File file = new File(filePath);
+        StringBuilder fileContent = new StringBuilder("");
+        if (file == null || !file.isFile()) {
+            return null;
+        }
+
+        BufferedReader reader = null;
+        try {
+            InputStreamReader is = new InputStreamReader(new FileInputStream(file));
+            reader = new BufferedReader(is);
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                if (!fileContent.toString().equals("")) {
+                    fileContent.append("\r\n");
+                }
+                fileContent.append(line);
+            }
+            reader.close();
+            return fileContent.toString();
+        } catch (IOException e) {
+            Log.e("IOException occurred. ", e.getMessage(), e);
+            return "";
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    Log.e("IOException occurred. ", e.getMessage(), e);
+                }
+            }
+        }
+    }
+
+    public static void writeLogCrashContent(final String content) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FileUtil.writeFile(getFileDir("Log") + "/crash.log", TimeUtils.getCurTimeString() + " : " + content, true);
+            }
+        }).start();
+    }
+
+    public static File getCrashLog() {
+        return new File(getFileDir("Log/crash.log"));
+    }
+
+    public static String getFileDir(String filePath) {
+        String dir;
+        if (isExistSDCard()) {
+            dir = App.getContext().getExternalFilesDir("").getAbsolutePath();
+        } else {
+            dir = App.getContext().getFilesDir().getAbsolutePath();
+        }
+
+        if (TextUtils.isEmpty(filePath))
+            return dir;
+        else {
+            if (filePath.startsWith(File.separator)) {
+                dir += filePath;
+            } else
+                dir += File.separator + filePath;
+
+
+            FileUtil.makeDirs(dir);
+
+            return dir;
+        }
     }
 }

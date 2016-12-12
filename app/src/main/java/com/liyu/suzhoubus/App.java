@@ -18,6 +18,9 @@ public class App extends Application {
         super.onCreate();
         mContext = getApplicationContext();
         LitePal.initialize(this);
+        if (!BuildConfig.DEBUG) {
+            AppExceptionHandler.getInstance().setCrashHanler(this);
+        }
 
     }
 

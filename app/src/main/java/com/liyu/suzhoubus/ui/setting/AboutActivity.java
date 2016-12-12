@@ -2,9 +2,10 @@ package com.liyu.suzhoubus.ui.setting;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.liyu.suzhoubus.BuildConfig;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.http.ApiFactory;
@@ -25,10 +27,14 @@ import com.liyu.suzhoubus.http.BaseAppResponse;
 import com.liyu.suzhoubus.model.UpdateInfo;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.utils.DeviceUtil;
+import com.liyu.suzhoubus.utils.FileUtil;
 import com.liyu.suzhoubus.utils.ShareUtils;
 import com.liyu.suzhoubus.utils.SimpleSubscriber;
 
+import java.io.File;
+import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -36,6 +42,8 @@ import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static com.liyu.suzhoubus.utils.FileUtil.getFileDir;
 
 /**
  * Created by liyu on 2016/11/28.
@@ -114,7 +122,7 @@ public class AboutActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_web_home:
-                openWeb("http://liyuyu.cn");
+//                openWeb("http://liyuyu.cn");
                 break;
             case R.id.btn_feedback:
                 feedBack();
@@ -123,7 +131,7 @@ public class AboutActivity extends BaseActivity {
                 checkUpdate();
                 break;
             case R.id.btn_share_app:
-                ShareUtils.shareText(this, "推荐一个应用，下载地址 http://liyuyu.cn");
+                ShareUtils.shareText(this, "来不及了，赶紧上车！下载地址 http://liyuyu.cn");
                 break;
         }
     }
@@ -148,7 +156,7 @@ public class AboutActivity extends BaseActivity {
                 "mailto", "me@liyuyu.cn", null));
         intent.putExtra(Intent.EXTRA_EMAIL, "me@liyuyu.cn");
         intent.putExtra(Intent.EXTRA_SUBJECT, "反馈");
-        intent.putExtra(Intent.EXTRA_TEXT, DeviceUtil.getAllInfo() + "\n");
+        intent.putExtra(Intent.EXTRA_TEXT, FileUtil.readFile(getFileDir("Log/crash.log")));
         startActivity(Intent.createChooser(intent, "反馈"));
     }
 
