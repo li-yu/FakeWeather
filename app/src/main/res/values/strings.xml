@@ -14,6 +14,18 @@
         <item>仿锤子便签</item>
     </string-array>
 
+    <string-array name="bus_refresh_item">
+        <item>5 秒</item>
+        <item>10 秒</item>
+        <item>30 秒</item>
+    </string-array>
+
+    <string-array name="bus_refresh_value">
+        <item>5</item>
+        <item>10</item>
+        <item>30</item>
+    </string-array>
+
     <string-array name="color_name">
         <item>青石色</item>
         <item>山茱萸</item>

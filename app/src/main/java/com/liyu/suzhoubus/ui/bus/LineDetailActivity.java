@@ -22,6 +22,7 @@ import com.liyu.suzhoubus.model.StandInfoBean;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.ui.bus.adapter.LineDetailAdapter;
 import com.liyu.suzhoubus.utils.RxDataBase;
+import com.liyu.suzhoubus.utils.SettingsUtil;
 import com.liyu.suzhoubus.utils.ThemeUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,9 +31,11 @@ import org.litepal.crud.DataSupport;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -64,6 +67,10 @@ public class LineDetailActivity extends BaseActivity {
     private String guid;
     private String name;
     private String desc;
+
+    private boolean isAutoRefresh = false;
+    private Observable<Long> autoRefreshObservable;
+    private Subscription subscription;
 
     public static void start(Context context, String guid, String name, String desc) {
         Intent intent = new Intent(context, LineDetailActivity.class);
@@ -131,6 +138,30 @@ public class LineDetailActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 loadData();
+            }
+        });
+        final int autoFreq = SettingsUtil.getBusRefreshFreq();
+        autoRefreshObservable = Observable.interval(autoFreq, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread());
+
+        fabRefresh.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (isAutoRefresh) {
+                    fabRefresh.setImageResource(R.drawable.ic_refresh);
+                    if (!subscription.isUnsubscribed())
+                        subscription.unsubscribe();
+                } else {
+                    showAutoRefreshFabStatus(autoFreq);
+                    subscription = autoRefreshObservable.subscribe(new Action1<Long>() {
+                        @Override
+                        public void call(Long aLong) {
+                            loadData();
+                        }
+                    });
+                }
+                isAutoRefresh = !isAutoRefresh;
+                return true;
             }
         });
     }
@@ -207,6 +238,16 @@ public class LineDetailActivity extends BaseActivity {
         }
     }
 
+    private void showAutoRefreshFabStatus(int freq) {
+        if (freq == 5) {
+            fabRefresh.setImageResource(R.drawable.ic_refresh_5);
+        } else if (freq == 10) {
+            fabRefresh.setImageResource(R.drawable.ic_refresh_10);
+        } else if (freq == 30) {
+            fabRefresh.setImageResource(R.drawable.ic_refresh_30);
+        }
+    }
+
     private void showRefreshing(final boolean refresh) {
         refreshLayout.post(new Runnable() {
             @Override
@@ -214,5 +255,12 @@ public class LineDetailActivity extends BaseActivity {
                 refreshLayout.setRefreshing(refresh);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (subscription != null && !subscription.isUnsubscribed())
+            subscription.unsubscribe();
     }
 }

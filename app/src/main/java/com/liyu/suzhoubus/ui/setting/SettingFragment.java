@@ -1,7 +1,6 @@
 package com.liyu.suzhoubus.ui.setting;
 
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -16,7 +15,6 @@ import com.liyu.suzhoubus.utils.SettingsUtil;
 import com.liyu.suzhoubus.utils.SimpleSubscriber;
 
 import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -29,9 +27,9 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         Preference.OnPreferenceChangeListener {
 
     private ListPreference weatherShareType;
+    private ListPreference busRefreshFreq;
     private Preference cleanCache;
     private Preference theme;
-    private CheckBoxPreference weatherAlert;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,11 +37,12 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         addPreferencesFromResource(R.xml.setting);
 
         weatherShareType = (ListPreference) findPreference(SettingsUtil.WEATHER_SHARE_TYPE);
+        busRefreshFreq = (ListPreference) findPreference(SettingsUtil.BUS_REFRESH_FREQ);
         cleanCache = findPreference(SettingsUtil.CLEAR_CACHE);
         theme = findPreference(SettingsUtil.THEME);
-        weatherAlert = (CheckBoxPreference) findPreference(SettingsUtil.WEATHER_ALERT);
 
         weatherShareType.setSummary(weatherShareType.getValue());
+        busRefreshFreq.setSummary(String.format("%s 秒，长按『刷新』按钮即可开启自动模式。", busRefreshFreq.getValue()));
         String[] colorNames = getActivity().getResources().getStringArray(R.array.color_name);
         int currentThemeIndex = SettingsUtil.getTheme();
         if (currentThemeIndex >= colorNames.length) {
@@ -52,8 +51,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
             theme.setSummary(colorNames[currentThemeIndex]);
         }
 
-        weatherAlert.setOnPreferenceChangeListener(this);
         weatherShareType.setOnPreferenceChangeListener(this);
+        busRefreshFreq.setOnPreferenceChangeListener(this);
         cleanCache.setOnPreferenceClickListener(this);
         theme.setOnPreferenceClickListener(this);
 
@@ -79,11 +78,12 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object o) {
-        if (preference == weatherAlert) {
-            SettingsUtil.setWeatherAlert((Boolean) o);
-        } else if (preference == weatherShareType) {
+        if (preference == weatherShareType) {
             weatherShareType.setSummary((String) o);
             SettingsUtil.setWeatherShareType((String) o);
+        } else if (preference == busRefreshFreq) {
+            busRefreshFreq.setSummary(String.format("%s 秒，长按『刷新』按钮即可开启自动模式。", (String) o));
+            SettingsUtil.setBusRefreshFreq(Integer.parseInt((String) o));
         }
         return true;
     }

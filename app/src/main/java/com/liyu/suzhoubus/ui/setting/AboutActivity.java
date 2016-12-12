@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -50,6 +51,8 @@ public class AboutActivity extends BaseActivity {
             "http://7xp1a1.com1.z0.glb.clouddn.com/liyu03.png",
             "http://7xp1a1.com1.z0.glb.clouddn.com/liyu04.png",
             "http://7xp1a1.com1.z0.glb.clouddn.com/liyu05.png"};
+
+    private Subscription subscription;
 
     @Override
     protected int getLayoutId() {
@@ -98,7 +101,7 @@ public class AboutActivity extends BaseActivity {
                 loadImage();
             }
         });
-        Observable.interval(5, TimeUnit.SECONDS)
+        subscription = Observable.interval(5, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SimpleSubscriber<Long>() {
                     @Override
@@ -131,6 +134,13 @@ public class AboutActivity extends BaseActivity {
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(uri);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!subscription.isUnsubscribed())
+            subscription.unsubscribe();
     }
 
     private void feedBack() {

@@ -2,18 +2,25 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="天气">
         <ListPreference
-            android:key="weather_share_type"
-            android:title="分享形式"
+            android:defaultValue="纯文本"
+            android:dialogTitle="天气分享形式"
             android:entries="@array/share_type"
             android:entryValues="@array/share_type"
-            android:defaultValue="纯文本"
-            android:dialogTitle="天气分享形式"/>
-        <CheckBoxPreference
-            android:key="weather_alert"
-            android:title="灾害预警"
-            android:summary="每小时请求一次"/>
+            android:key="weather_share_type"
+            android:title="分享形式"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="系统">
+
+    <PreferenceCategory android:title="公交">
+        <ListPreference
+            android:defaultValue="10"
+            android:dialogTitle="线路自动刷新周期"
+            android:entries="@array/bus_refresh_item"
+            android:entryValues="@array/bus_refresh_value"
+            android:key="bus_refresh_freq"
+            android:title="自动刷新"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="通用">
         <Preference
             android:key="theme_color"
             android:title="主题色"/>
