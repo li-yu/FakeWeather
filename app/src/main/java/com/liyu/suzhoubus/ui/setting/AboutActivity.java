@@ -131,7 +131,7 @@ public class AboutActivity extends BaseActivity {
                 checkUpdate();
                 break;
             case R.id.btn_share_app:
-                ShareUtils.shareText(this, "来不及了，赶紧上车！下载地址 http://liyuyu.cn");
+                ShareUtils.shareText(this, "来不及了，赶紧上车！");
                 break;
         }
     }
