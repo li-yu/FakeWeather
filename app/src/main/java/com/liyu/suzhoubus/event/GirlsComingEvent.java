@@ -13,6 +13,8 @@ public class GirlsComingEvent {
 
     public static final int GIRLS_FROM_GANK = 0;
     public static final int GIRLS_FROM_JIANDAN = 1;
+    public static final int GIRLS_FROM_MZITU = 2;
+    public static final int GIRLS_FROM_MZITU_ZIPAI = 3;
 
     private List<Girl> girls;
     private int from;

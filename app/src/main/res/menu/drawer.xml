@@ -3,7 +3,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <group android:checkableBehavior="single">
+    <group
+        android:checkableBehavior="single">
 
         <item
             android:id="@+id/navigation_item_2"
@@ -15,6 +16,11 @@
             android:id="@+id/navigation_item_1"
             android:icon="@drawable/ic_bus"
             android:title="公交" />
+
+        <item
+            android:id="@+id/navigation_item_4"
+            android:icon="@drawable/ic_reading"
+            android:title="闲读" />
 
         <item
             android:id="@+id/navigation_item_3"

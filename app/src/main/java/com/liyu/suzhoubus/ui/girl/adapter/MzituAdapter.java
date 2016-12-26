@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.liyu.suzhoubus.R;
 import com.liyu.suzhoubus.model.Girl;
+import com.liyu.suzhoubus.ui.girl.MzituPictureActivity;
 import com.liyu.suzhoubus.ui.girl.PictureActivity;
 import com.liyu.suzhoubus.widgets.RatioImageView;
 
@@ -23,13 +25,13 @@ import java.util.List;
  * Created by liyu on 2016/12/9.
  */
 
-public class GirlsAdapter extends RecyclerView.Adapter<GirlsAdapter.GirlViewHolder> {
+public class MzituAdapter extends RecyclerView.Adapter<MzituAdapter.GirlViewHolder> {
 
     private List<Girl> girls;
     private Context context;
     private LayoutInflater inflater;
 
-    public GirlsAdapter(Context context, List<Girl> list) {
+    public MzituAdapter(Context context, List<Girl> list) {
         this.context = context;
         this.girls = list;
         this.inflater = LayoutInflater.from(context);
@@ -49,8 +51,8 @@ public class GirlsAdapter extends RecyclerView.Adapter<GirlsAdapter.GirlViewHold
         this.notifyItemRangeInserted(position, data.size());
     }
 
-    private void startPictureActivity(View transitView, int position) {
-        Intent intent = PictureActivity.newIntent(context, getData(), position);
+    private void startPictureActivity(Girl girl, View transitView) {
+        Intent intent = PictureActivity.newIntent(context, girl.getUrl(), "");
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 (Activity) context, transitView, PictureActivity.TRANSIT_PIC);
         try {
@@ -69,13 +71,22 @@ public class GirlsAdapter extends RecyclerView.Adapter<GirlsAdapter.GirlViewHold
     }
 
     @Override
-    public void onBindViewHolder(final GirlViewHolder holder, final int position) {
+    public void onBindViewHolder(final GirlViewHolder holder, int position) {
         final Girl girl = girls.get(position);
-        holder.iv.setOriginalSize(girl.getWidth(), girl.getHeight());
+        if (girl.getHeight() != 0) {
+            holder.iv.setOriginalSize(girl.getWidth(), girl.getHeight());
+        } else {
+            holder.iv.setOriginalSize(236, 354);
+        }
         holder.iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startPictureActivity(view, position);
+                if (TextUtils.isEmpty(girl.getLink())) {
+                    startPictureActivity(girl, holder.iv);
+                } else {
+                    Intent intent = MzituPictureActivity.newIntent(context, girl.getLink(), "");
+                    context.startActivity(intent);
+                }
             }
         });
         Glide.with(context).load(girl.getUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ic_glide_holder).crossFade(500).into(holder.iv);

@@ -8,7 +8,4 @@ public class AppGlobal {
 
     public static final String CURRENT_INDEX = "currentIndex";
 
-    public static String latitude = "";
-    public static String longitude = "";
-
 }

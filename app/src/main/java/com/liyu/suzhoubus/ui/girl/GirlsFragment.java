@@ -25,7 +25,7 @@ public class GirlsFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_bus;
+        return R.layout.fragment_tab_viewpager;
     }
 
     @Override
@@ -46,32 +46,55 @@ public class GirlsFragment extends BaseFragment {
         ViewPager viewPager = findView(R.id.viewPager);
         setupViewPager(viewPager);
         viewPager.setOffscreenPageLimit(viewPager.getAdapter().getCount());
-        // 设置ViewPager的数据等
         tabLayout.setupWithViewPager(viewPager);
-        //适合很多tab
-        //tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        //tab均分,适合少的tab
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        //tab均分,适合少的tab,TabLayout.GRAVITY_CENTER
-        //tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        Bundle data;
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         Fragment newfragment = new GankFragment();
-        Bundle data = new Bundle();
-        data.putInt("id", 1);
-        data.putString("title", "Gank");
-        newfragment.setArguments(data);
         adapter.addFrag(newfragment, "Gank");
 
         newfragment = new JiandanFragment();
-        data = new Bundle();
-        data.putInt("id", 2);
-        data.putString("title", "煎蛋");
-        newfragment.setArguments(data);
         adapter.addFrag(newfragment, "煎蛋");
+
+        newfragment = new MzituFragment();
+        data = new Bundle();
+        data.putString("url", "http://www.mzitu.com/hot");
+        newfragment.setArguments(data);
+        adapter.addFrag(newfragment, "最热");
+
+        newfragment = new MzituFragment();
+        data = new Bundle();
+        data.putString("url", "http://www.mzitu.com/xinggan");
+        newfragment.setArguments(data);
+        adapter.addFrag(newfragment, "性感妹子");
+
+        newfragment = new MzituFragment();
+        data = new Bundle();
+        data.putString("url", "http://www.mzitu.com/japan");
+        newfragment.setArguments(data);
+        adapter.addFrag(newfragment, "日本妹子");
+
+        newfragment = new MzituFragment();
+        data = new Bundle();
+        data.putString("url", "http://www.mzitu.com/taiwan");
+        newfragment.setArguments(data);
+        adapter.addFrag(newfragment, "台湾妹子");
+
+        newfragment = new MzituFragment();
+        data = new Bundle();
+        data.putString("url", "http://www.mzitu.com/mm");
+        newfragment.setArguments(data);
+        adapter.addFrag(newfragment, "清纯妹子");
+
+        newfragment = new MzituZiPaiFragment();
+        data = new Bundle();
+        data.putString("url", "http://www.mzitu.com/share");
+        newfragment.setArguments(data);
+        adapter.addFrag(newfragment, "妹子自拍");
 
         viewPager.setAdapter(adapter);
 

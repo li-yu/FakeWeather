@@ -36,7 +36,8 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="E6rdq6U1vjjmTTglEtdX6fFbYTejWKEq"/>
 
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -44,9 +45,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.bus.LineDetailActivity"/>
+        <activity android:name=".ui.bus.LineDetailActivity"
+                  android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.bus.StationDetailActivity"/>
+        <activity android:name=".ui.bus.StationDetailActivity"
+                  android:screenOrientation="portrait"/>
 
         <service
             android:name="com.baidu.location.f"
@@ -55,21 +58,35 @@
         <activity
             android:name=".ui.girl.PictureActivity"
             android:label=""
-            android:theme="@style/PictureTheme"/>
+            android:theme="@style/PictureTheme"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".service.GirlService"
             android:enabled="true"/>
 
-        <activity android:name=".ui.weather.ShareActivity"/>
+        <activity android:name=".ui.weather.ShareActivity"
+                  android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.setting.SettingActivity"
-            android:label="设置"/>
+            android:label="设置"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.setting.AboutActivity"
-            android:label="关于"/>
+            android:label="关于"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".ui.girl.MzituPictureActivity"
+            android:label="图集"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
 
     </application>
 

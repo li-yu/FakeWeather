@@ -33,7 +33,7 @@ public class RetrofitManager {
     private RetrofitManager() {
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://liyuyu.cn/")
-                .client(getNewClient())
+                .client(httpClient())
                 .addConverterFactory(GsonConverterFactory.create(gson()))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
@@ -56,7 +56,7 @@ public class RetrofitManager {
         return retrofit.create(service);
     }
 
-    private static OkHttpClient getNewClient() {
+    private static OkHttpClient httpClient() {
         File cacheFile = new File(FileUtil.getAppCacheDir(App.getContext()), "/HttpCache");
         Cache cache = new Cache(cacheFile, 1024 * 1024 * 100);
         Interceptor cacheInterceptor = new Interceptor() {

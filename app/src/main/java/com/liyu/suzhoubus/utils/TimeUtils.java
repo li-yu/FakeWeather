@@ -614,10 +614,11 @@ public class TimeUtils {
     public static boolean isBefore(String d1, String d2, SimpleDateFormat sdf) {
         try {
             return sdf.parse(d1).before(sdf.parse(d2));
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
+
     /**
      * 获取某个日期的前几天的日期
      *
@@ -639,6 +640,10 @@ public class TimeUtils {
 
         String previousDay = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
         return previousDay;
+    }
+
+    public static String getSystemTime() {
+        return String.valueOf(System.currentTimeMillis());
     }
 
 }

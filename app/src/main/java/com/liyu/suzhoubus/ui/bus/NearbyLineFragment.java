@@ -20,6 +20,7 @@ import java.util.Map;
 
 import rx.Observable;
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -32,6 +33,7 @@ public class NearbyLineFragment extends BaseContentFragment {
 
     private RecyclerView recyclerView;
     private LineNearbyAdapter adapter;
+    private Subscription subscription;
 
     @Override
     protected int getLayoutId() {
@@ -52,7 +54,7 @@ public class NearbyLineFragment extends BaseContentFragment {
     @Override
     protected void lazyFetchData() {
         refreshLayout.setRefreshing(true);
-        RxLocation.get().locate(getActivity())
+        subscription = RxLocation.get().locate(getActivity())
                 .flatMap(new Func1<BDLocation, Observable<BaseBusResponse<BusLineNearby>>>() {
                     @Override
                     public Observable<BaseBusResponse<BusLineNearby>> call(BDLocation bdLocation) {
@@ -98,6 +100,13 @@ public class NearbyLineFragment extends BaseContentFragment {
                         adapter.setNewData(response.data.getLine());
                     }
                 });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (subscription != null && !subscription.isUnsubscribed())
+            subscription.unsubscribe();
     }
 
 }

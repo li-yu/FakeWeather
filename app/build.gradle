@@ -7,8 +7,8 @@ android {
         applicationId "com.liyu.suzhoubus"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.2.0"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -42,4 +42,6 @@ dependencies {
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.0@aar'
     compile 'com.afollestad.material-dialogs:core:0.9.1.0'
     compile 'com.afollestad.material-dialogs:commons:0.9.1.0'
+    compile 'org.jsoup:jsoup:1.10.1'
+    compile 'com.thefinestartist:finestwebview:1.2.7'
 }

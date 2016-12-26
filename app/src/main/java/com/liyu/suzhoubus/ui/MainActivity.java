@@ -18,6 +18,7 @@ import com.liyu.suzhoubus.event.ThemeChangedEvent;
 import com.liyu.suzhoubus.ui.base.BaseActivity;
 import com.liyu.suzhoubus.ui.bus.BusFragment;
 import com.liyu.suzhoubus.ui.girl.GirlsFragment;
+import com.liyu.suzhoubus.ui.reading.ReadingFragment;
 import com.liyu.suzhoubus.ui.setting.AboutActivity;
 import com.liyu.suzhoubus.ui.setting.SettingActivity;
 import com.liyu.suzhoubus.ui.weather.WeatherFragment;
@@ -41,6 +42,7 @@ public class MainActivity extends BaseActivity {
     private static final String FRAGMENT_TAG_BUS = "bus";
     private static final String FRAGMENT_TAG_WEATHER = "weeather";
     private static final String FRAGMENT_TAG_GANK = "gank";
+    private static final String FRAGMENT_TAG_READING = "reading";
 
     @Override
     protected int getLayoutId() {
@@ -124,6 +126,10 @@ public class MainActivity extends BaseActivity {
                                     menuItem.setChecked(true);
                                     switchContent(FRAGMENT_TAG_GANK);
                                     break;
+                                case R.id.navigation_item_4:
+                                    menuItem.setChecked(true);
+                                    switchContent(FRAGMENT_TAG_READING);
+                                    break;
                                 case R.id.navigation_item_settings:
                                     startActivity(new Intent(MainActivity.this, SettingActivity.class));
                                     break;
@@ -160,6 +166,9 @@ public class MainActivity extends BaseActivity {
                     break;
                 case FRAGMENT_TAG_GANK:
                     foundFragment = new GirlsFragment();
+                    break;
+                case FRAGMENT_TAG_READING:
+                    foundFragment = new ReadingFragment();
                     break;
             }
         }

@@ -54,7 +54,7 @@ public class BusFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_bus;
+        return R.layout.fragment_tab_viewpager;
     }
 
     @Override

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -36,6 +37,7 @@ public class GankFragment extends BaseContentFragment {
     private GirlsAdapter adapter;
     private int currentPage = 1;
     private boolean isLoading = false;
+    private Subscription subscription;
 
     @Override
     protected int getLayoutId() {
@@ -71,7 +73,7 @@ public class GankFragment extends BaseContentFragment {
 
     private void getGirlFromServer() {
         showRefreshing(true);
-        ApiFactory
+        subscription = ApiFactory
                 .getGirlsController()
                 .getGank(String.valueOf(currentPage))
                 .subscribeOn(Schedulers.io())
@@ -130,6 +132,8 @@ public class GankFragment extends BaseContentFragment {
     public void onDestroy() {
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
+        if (subscription != null && !subscription.isUnsubscribed())
+            subscription.unsubscribe();
         super.onDestroy();
     }
 }

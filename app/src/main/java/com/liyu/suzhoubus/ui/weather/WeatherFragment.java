@@ -34,6 +34,7 @@ import java.util.Locale;
 
 import rx.Observable;
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -60,6 +61,8 @@ public class WeatherFragment extends BaseContentFragment {
     private ACache mCache;
 
     private HeWeather5 currentWeather;
+
+    private Subscription subscription;
 
     @Override
     protected int getLayoutId() {
@@ -118,7 +121,7 @@ public class WeatherFragment extends BaseContentFragment {
             return;
         }
 
-        RxLocation.get().locate(getActivity())
+        subscription = RxLocation.get().locate(getActivity())
                 .flatMap(new Func1<BDLocation, Observable<BaseWeatherResponse<HeWeather5>>>() {
                     @Override
                     public Observable<BaseWeatherResponse<HeWeather5>> call(BDLocation bdLocation) {
@@ -194,6 +197,13 @@ public class WeatherFragment extends BaseContentFragment {
             ShareUtils.shareText(getActivity(), WeatherUtil.getShareMessage(currentWeather));
         else if (shareType.equals("仿锤子便签"))
             ShareActivity.start(getActivity(), WeatherUtil.getShareMessage(currentWeather));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (subscription != null && !subscription.isUnsubscribed())
+            subscription.unsubscribe();
     }
 
 }

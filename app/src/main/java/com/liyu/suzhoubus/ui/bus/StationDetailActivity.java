@@ -23,6 +23,7 @@ import java.util.Map;
 
 import rx.Observable;
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -40,6 +41,7 @@ public class StationDetailActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private StationDetailAdapter adapter;
     private SwipeRefreshLayout refreshLayout;
+    private Subscription subscription;
 
     public static void start(Context context, String name, String code) {
         Intent intent = new Intent(context, StationDetailActivity.class);
@@ -80,7 +82,7 @@ public class StationDetailActivity extends BaseActivity {
     protected void loadData() {
         showRefreshing(true);
         final String code = getIntent().getStringExtra(KEY_EXTRA_CODE);
-        RxLocation
+        subscription = RxLocation
                 .get()
                 .locate(this)
                 .flatMap(new Func1<BDLocation, Observable<BaseBusResponse<BusLineStation>>>() {
@@ -122,5 +124,12 @@ public class StationDetailActivity extends BaseActivity {
                 refreshLayout.setRefreshing(refresh);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (subscription != null && !subscription.isUnsubscribed())
+            subscription.unsubscribe();
     }
 }
