@@ -13,6 +13,7 @@ import com.liyu.suzhoubus.utils.FileSizeUtil;
 import com.liyu.suzhoubus.utils.FileUtil;
 import com.liyu.suzhoubus.utils.SettingsUtil;
 import com.liyu.suzhoubus.utils.SimpleSubscriber;
+import com.liyu.suzhoubus.utils.TTSManager;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,6 +29,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
     private ListPreference weatherShareType;
     private ListPreference busRefreshFreq;
+    private ListPreference ttsVoiceType;
     private Preference cleanCache;
     private Preference theme;
 
@@ -38,10 +40,12 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
         weatherShareType = (ListPreference) findPreference(SettingsUtil.WEATHER_SHARE_TYPE);
         busRefreshFreq = (ListPreference) findPreference(SettingsUtil.BUS_REFRESH_FREQ);
+        ttsVoiceType = (ListPreference) findPreference(SettingsUtil.TTS_VOICE_TYPE);
         cleanCache = findPreference(SettingsUtil.CLEAR_CACHE);
         theme = findPreference(SettingsUtil.THEME);
 
         weatherShareType.setSummary(weatherShareType.getValue());
+        ttsVoiceType.setSummary(ttsVoiceType.getEntry());
         busRefreshFreq.setSummary(String.format("%s 秒，长按『刷新』按钮即可开启自动模式。", busRefreshFreq.getValue()));
         String[] colorNames = getActivity().getResources().getStringArray(R.array.color_name);
         int currentThemeIndex = SettingsUtil.getTheme();
@@ -53,6 +57,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
         weatherShareType.setOnPreferenceChangeListener(this);
         busRefreshFreq.setOnPreferenceChangeListener(this);
+        ttsVoiceType.setOnPreferenceChangeListener(this);
         cleanCache.setOnPreferenceClickListener(this);
         theme.setOnPreferenceClickListener(this);
 
@@ -84,6 +89,10 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         } else if (preference == busRefreshFreq) {
             busRefreshFreq.setSummary(String.format("%s 秒，长按『刷新』按钮即可开启自动模式。", (String) o));
             SettingsUtil.setBusRefreshFreq(Integer.parseInt((String) o));
+        } else if (preference == ttsVoiceType) {
+            ttsVoiceType.setSummary(ttsVoiceType.getEntries()[ttsVoiceType.findIndexOfValue((String) o)]);
+            SettingsUtil.setTtsVoiceType((String) o);
+            TTSManager.destroy();
         }
         return true;
     }

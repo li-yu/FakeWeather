@@ -1,7 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".ui.girl.PictureActivity">
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_tts"
+        android:icon="@drawable/ic_speaker_1"
+        android:title="播报"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_share_white"

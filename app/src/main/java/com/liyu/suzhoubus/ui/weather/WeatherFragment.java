@@ -23,6 +23,7 @@ import com.liyu.suzhoubus.ui.weather.adapter.WeatherAdapter;
 import com.liyu.suzhoubus.utils.ACache;
 import com.liyu.suzhoubus.utils.SettingsUtil;
 import com.liyu.suzhoubus.utils.ShareUtils;
+import com.liyu.suzhoubus.utils.TTSManager;
 import com.liyu.suzhoubus.utils.TimeUtils;
 import com.liyu.suzhoubus.utils.WeatherUtil;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -62,6 +63,8 @@ public class WeatherFragment extends BaseContentFragment {
 
     private HeWeather5 currentWeather;
 
+    private TTSManager ttsManager;
+
     private Subscription subscription;
 
     @Override
@@ -90,6 +93,9 @@ public class WeatherFragment extends BaseContentFragment {
                             }
                         }
                     });
+                    return true;
+                } else if (id == R.id.menu_tts) {
+                    TTSManager.getInstance(getActivity()).speak(WeatherUtil.getShareMessage(currentWeather), null);
                     return true;
                 }
                 return false;

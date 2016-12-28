@@ -24,6 +24,7 @@ import com.liyu.suzhoubus.ui.setting.SettingActivity;
 import com.liyu.suzhoubus.ui.weather.WeatherFragment;
 import com.liyu.suzhoubus.utils.RxDrawer;
 import com.liyu.suzhoubus.utils.SimpleSubscriber;
+import com.liyu.suzhoubus.utils.TTSManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -202,6 +203,7 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
+        TTSManager.destroy();
         super.onDestroy();
     }
 }

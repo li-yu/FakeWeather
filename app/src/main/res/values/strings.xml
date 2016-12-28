@@ -47,4 +47,24 @@
     <string name="menu_action_openwith">其他方式打开</string>
 
     <string name="copied_to_clipboard">已复制到粘贴板</string>
+
+    <string-array name="tts_voice_item">
+        <item>小燕（女声，普通话）</item>
+        <item>小宇（男声，普通话）</item>
+        <item>小妍（女声，普通话）</item>
+        <item>小琪（女声，普通话）</item>
+        <item>小峰（男声，普通话）</item>
+        <item>小梅（女声，粤语）</item>
+        <item>小莉（女声，台湾普通话）</item>
+    </string-array>
+
+    <string-array name="tts_voice_value">
+        <item>xiaoyan</item>
+        <item>xiaoyu</item>
+        <item>vixy</item>
+        <item>xiaoqi</item>
+        <item>vixf</item>
+        <item>xiaomei</item>
+        <item>xiaolin</item>
+    </string-array>
 </resources>
