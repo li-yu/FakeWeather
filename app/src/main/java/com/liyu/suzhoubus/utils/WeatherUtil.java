@@ -100,7 +100,7 @@ public class WeatherUtil {
         message.append(weather.getBasic().getUpdate().getLoc());
         message.append(" 发布：");
         message.append("\r\n");
-        message.append("此时此刻：");
+        message.append("此刻：");
         message.append(weather.getNow().getCond().getTxt());
         message.append("，");
         message.append(weather.getNow().getTmp() + "℃");
@@ -111,8 +111,8 @@ public class WeatherUtil {
         message.append(weather.getAqi().getCity().getQlty());
         message.append("。");
         message.append("\r\n");
-        message.append("今日天气：");
-        message.append(weather.getDaily_forecast().get(0).getTmp().getMin() + "℃ ～ ");
+        message.append("今天：");
+        message.append(weather.getDaily_forecast().get(0).getTmp().getMin() + "℃ - ");
         message.append(weather.getDaily_forecast().get(0).getTmp().getMax() + "℃");
         message.append("，");
         message.append(weather.getDaily_forecast().get(0).getCond().getTxt_d());
@@ -121,8 +121,8 @@ public class WeatherUtil {
         message.append(weather.getDaily_forecast().get(0).getWind().getSc());
         message.append("级。");
         message.append("\r\n");
-        message.append("明日天气：");
-        message.append(weather.getDaily_forecast().get(1).getTmp().getMin() + "℃ ～ ");
+        message.append("明天：");
+        message.append(weather.getDaily_forecast().get(1).getTmp().getMin() + "℃ - ");
         message.append(weather.getDaily_forecast().get(1).getTmp().getMax() + "℃");
         message.append("，");
         message.append(weather.getDaily_forecast().get(1).getCond().getTxt_d());

@@ -30,6 +30,7 @@ import com.liyu.suzhoubus.utils.DeviceUtil;
 import com.liyu.suzhoubus.utils.FileUtil;
 import com.liyu.suzhoubus.utils.ShareUtils;
 import com.liyu.suzhoubus.utils.SimpleSubscriber;
+import com.liyu.suzhoubus.utils.UpdateUtil;
 
 import java.io.File;
 import java.util.List;
@@ -128,7 +129,7 @@ public class AboutActivity extends BaseActivity {
                 feedBack();
                 break;
             case R.id.btn_check_update:
-                checkUpdate();
+                UpdateUtil.check(AboutActivity.this, false);
                 break;
             case R.id.btn_share_app:
                 ShareUtils.shareText(this, "来不及了，赶紧上车！");
@@ -160,43 +161,4 @@ public class AboutActivity extends BaseActivity {
         startActivity(Intent.createChooser(intent, "反馈"));
     }
 
-    private void checkUpdate() {
-        ApiFactory.getAppController().checkUpdate().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<BaseAppResponse<UpdateInfo>>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Snackbar.make(AboutActivity.this.getWindow().getDecorView().getRootView(), "已是最新版本! (*^__^*)", Snackbar.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNext(final BaseAppResponse<UpdateInfo> response) {
-                if (response != null && response.results != null) {
-                    if (response.results.getVersionCode() <= BuildConfig.VERSION_CODE) {
-                        Snackbar.make(findViewById(R.id.coordinator_about), "已是最新版本! (*^__^*)", Snackbar.LENGTH_SHORT).show();
-                        return;
-                    }
-                    AlertDialog.Builder builder = new AlertDialog.Builder(AboutActivity.this);
-                    builder.setCancelable(false);
-                    builder.setTitle("发现新版本")
-                            .setMessage(String.format("版本号: %s\n\n更新时间: %s\n\n更新内容: %s",
-                                    response.results.getVersionName(),
-                                    response.results.getUpdateTime(),
-                                    response.results.getInformation()));
-                    builder.setNegativeButton("取消", null);
-                    builder.setPositiveButton("下载", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            openWeb(response.results.getUrl());
-                        }
-                    });
-                    builder.show();
-
-                }
-            }
-        });
-    }
 }

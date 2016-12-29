@@ -25,6 +25,7 @@ import com.liyu.suzhoubus.ui.weather.WeatherFragment;
 import com.liyu.suzhoubus.utils.RxDrawer;
 import com.liyu.suzhoubus.utils.SimpleSubscriber;
 import com.liyu.suzhoubus.utils.TTSManager;
+import com.liyu.suzhoubus.utils.UpdateUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -80,7 +81,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
-
+        UpdateUtil.check(MainActivity.this, true);
     }
 
     public void initDrawer(Toolbar toolbar) {
