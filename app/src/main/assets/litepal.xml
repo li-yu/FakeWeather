@@ -9,11 +9,11 @@
 
     <list>
 
-        <mapping class="com.liyu.suzhoubus.model.Gank"></mapping>
+        <mapping class="com.liyu.fakeweather.model.Gank"></mapping>
 
-        <mapping class="com.liyu.suzhoubus.model.BusLineDetail"></mapping>
+        <mapping class="com.liyu.fakeweather.model.BusLineDetail"></mapping>
 
-        <mapping class="com.liyu.suzhoubus.model.StandInfoBean"></mapping>
+        <mapping class="com.liyu.fakeweather.model.StandInfoBean"></mapping>
 
     </list>
 

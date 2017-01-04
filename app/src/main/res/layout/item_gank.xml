@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_margin="2dp">
-    <com.liyu.suzhoubus.widgets.RatioImageView
+    <com.liyu.fakeweather.widgets.RatioImageView
         android:id="@+id/iv_gank"
         android:layout_width="match_parent"
         android:layout_height="200dp"

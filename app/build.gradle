@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
     defaultConfig {
-        applicationId "com.liyu.suzhoubus"
+        applicationId "com.liyu.fakeweather"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 5

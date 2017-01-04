@@ -6,7 +6,7 @@
               android:paddingLeft="8dp"
               android:paddingRight="8dp">
 
-    <com.liyu.suzhoubus.widgets.StationIndicator
+    <com.liyu.fakeweather.widgets.StationIndicator
         android:id="@+id/bus_indicator"
         android:layout_width="0dp"
         android:layout_height="match_parent"

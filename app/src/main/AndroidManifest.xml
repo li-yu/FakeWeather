@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.liyu.suzhoubus">
+          package="com.liyu.fakeweather">
 
     <!-- 这个权限用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -25,7 +25,7 @@
     <uses-permission android:name="android.permission.SET_WALLPAPER"/>
 
     <application
-        android:name=".App"
+        android:name="com.liyu.fakeweather.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -36,7 +36,7 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="E6rdq6U1vjjmTTglEtdX6fFbYTejWKEq"/>
 
-        <activity android:name=".ui.MainActivity"
+        <activity android:name="com.liyu.fakeweather.ui.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -45,10 +45,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.bus.LineDetailActivity"
+        <activity android:name="com.liyu.fakeweather.ui.bus.LineDetailActivity"
                   android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.bus.StationDetailActivity"
+        <activity android:name="com.liyu.fakeweather.ui.bus.StationDetailActivity"
                   android:screenOrientation="portrait"/>
 
         <service
@@ -56,30 +56,30 @@
             android:enabled="true"/>
 
         <activity
-            android:name=".ui.girl.PictureActivity"
+            android:name="com.liyu.fakeweather.ui.girl.PictureActivity"
             android:label=""
             android:theme="@style/PictureTheme"
             android:screenOrientation="portrait"/>
 
         <service
-            android:name=".service.GirlService"
+            android:name="com.liyu.fakeweather.service.GirlService"
             android:enabled="true"/>
 
-        <activity android:name=".ui.weather.ShareActivity"
+        <activity android:name="com.liyu.fakeweather.ui.weather.ShareActivity"
                   android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ui.setting.SettingActivity"
+            android:name="com.liyu.fakeweather.ui.setting.SettingActivity"
             android:label="设置"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ui.setting.AboutActivity"
+            android:name="com.liyu.fakeweather.ui.setting.AboutActivity"
             android:label="关于"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ui.girl.MzituPictureActivity"
+            android:name="com.liyu.fakeweather.ui.girl.MzituPictureActivity"
             android:label="图集"
             android:screenOrientation="portrait"/>
 
