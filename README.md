@@ -18,7 +18,7 @@
 
 ### 截图 ###
 
-![screenshot](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/screenshot.png)
+![screenshot](screenshot.png)
 
 ### 特别感谢 ###
 - [就看天气](https://github.com/xcc3641/SeeWeather)提供学习参考
