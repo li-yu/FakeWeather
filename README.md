@@ -1,1 +1,49 @@
-#SuzhouBus
+## 假装看天气 ##
+这个项目的前身原本只是为了实现公交查询而练手的 App，一次偶然的机会，看到了开源项目 [就看天气](https://github.com/xcc3641/SeeWeather)，我被这单纯而简单的天气软件所吸引，所以增加了天气查询功能。工作这么多年我一直觉得，很多新的特性和技术很少在工作项目中应用到，所以有了利用空闲时间持续学习和开发的打算。后面增加了闲读和妹子图等模块，整个 App 变成了一个大杂烩，索性就叫『假装看天气』吧。
+
+整个项目未完全遵循 Material Design 风格，同时在构架和编码方面可能也不尽如人意，但作为现阶段的学习和总结，我希望可以给大家带来帮助。
+### 简介 ###
+『假装看天气』─── 天气预报 & 公交查询 & 资讯阅读 & 妹纸福利 的 Android 客户端
+
+- 天气，自动定位当前城市，获取天气信息，支持分享和 TTS 语音播报
+- 公交，定位搜索附近线路和站台，支持手动查询和收藏（仅苏州）
+- 闲读，阅读最新科技资讯，读那些值得读的
+- 福利，大量妹子图，你懂的，还不赶紧上车
+
+### 下载 ###
+[直接下载](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/FakeWeather_v1.2.2_20170104.apk)
+
+![](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/qcode.png?imageView2/0/w/120 )
+
+### 截图 ###
+![](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/screenshot.png)
+
+### 特别感谢 ###
+- [就看天气](https://github.com/xcc3641/SeeWeather)提供学习参考
+- [妹纸&gank.io](https://github.com/drakeet/Meizhi)提供学习参考
+- [馒头先生](https://github.com/oxoooo/mr-mantou-android)提供学习参考
+- [和风天气](http://www.heweather.com/)提供天气数据
+- [百度定位](http://lbsyun.baidu.com/index.php?title=android-locsdk)提供定位服务
+- [无线苏州](http://www.wisesz.com/index.shtml)提供公交数据
+- 『[Gank](http://gank.io)』『[煎蛋](http://jandan.net/)』『[妹子图](http://www.mzitu.com)』提供妹纸数据
+
+### 开源库 ###
+- [Glide](github.com/bumptech/glide)
+- [RxJava](github.com/ReactiveX/RxJava)
+- [Retrofit](github.com/square/retrofit)
+- [EventBus](github.com/greenrobot/EventBus)
+- [RxAndroid](github.com/ReactiveX/RxAndroid)
+- [SeeWeather](github.com/xcc3641/SeeWeather)
+- [RxBinding](github.com/JakeWharton/RxBinding)
+- [RxPermissions](github.com/tbruyelle/RxPermissions)
+- [material-dialogs](github.com/afollestad/material-dialogs)
+- [BaseRecyclerViewAdapterHelper](github.com/CymChad/BaseRecyclerViewAdapterHelper)
+
+### 免责声明 ###
+
+- 项目中部分图片素材来自网络，版权归属原作者，侵立删
+- 项目中所使用的 api 均搜集于网络，仅供学习和交流使用
+
+### License ###
+[Apache License
+Version 2.0](https://github.com/li-yu/FakeWeather/blob/master/LICENSE)

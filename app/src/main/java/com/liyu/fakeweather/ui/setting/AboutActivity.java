@@ -108,7 +108,7 @@ public class AboutActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_web_home:
-//                openWeb("http://liyuyu.cn");
+                openWeb("https://github.com/li-yu/FakeWeather");
                 break;
             case R.id.btn_feedback:
                 feedBack();
