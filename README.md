@@ -13,10 +13,10 @@
 ### 下载 ###
 [直接下载](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/FakeWeather_v1.2.2_20170104.apk)
 
-![](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/qcode.png?imageView2/0/w/120 )
+![qcode](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/qcode.png?imageView2/0/w/120 )
 
 ### 截图 ###
-![](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/screenshot.png)
+![screenshot](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/screenshot.png)
 
 ### 特别感谢 ###
 - [就看天气](https://github.com/xcc3641/SeeWeather)提供学习参考
