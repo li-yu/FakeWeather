@@ -10,22 +10,25 @@
 - 闲读，阅读最新科技资讯，读那些值得读的
 - 福利，大量妹子图，你懂的，还不赶紧上车
 
-### 下载 ###
+### 下载 
+
 [直接下载](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/FakeWeather_v1.2.2_20170104.apk)
 
-![qcode](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/qcode.png?imageView2/0/w/120 )
+![qcode](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/qcode.png?imageView2/0/w/120)
 
 ### 截图 ###
+
 ![screenshot](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/screenshot.png)
 
 ### 特别感谢 ###
 - [就看天气](https://github.com/xcc3641/SeeWeather)提供学习参考
 - [妹纸&gank.io](https://github.com/drakeet/Meizhi)提供学习参考
 - [馒头先生](https://github.com/oxoooo/mr-mantou-android)提供学习参考
+- [Gank](http://gank.io)提供闲读和部分妹子数据
 - [和风天气](http://www.heweather.com/)提供天气数据
 - [百度定位](http://lbsyun.baidu.com/index.php?title=android-locsdk)提供定位服务
 - [无线苏州](http://www.wisesz.com/index.shtml)提供公交数据
-- 『[Gank](http://gank.io)』『[煎蛋](http://jandan.net/)』『[妹子图](http://www.mzitu.com)』提供妹纸数据
+- 『[煎蛋](http://jandan.net/)』『[妹子图](http://www.mzitu.com)』提供妹纸数据
 
 ### 开源库 ###
 - [Glide](github.com/bumptech/glide)
