@@ -3,9 +3,11 @@ package com.liyu.fakeweather.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -22,9 +24,11 @@ import com.liyu.fakeweather.ui.reading.ReadingFragment;
 import com.liyu.fakeweather.ui.setting.AboutActivity;
 import com.liyu.fakeweather.ui.setting.SettingActivity;
 import com.liyu.fakeweather.ui.weather.WeatherFragment;
+import com.liyu.fakeweather.utils.DoubleClickExit;
 import com.liyu.fakeweather.utils.RxDrawer;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
 import com.liyu.fakeweather.utils.TTSManager;
+import com.liyu.fakeweather.utils.ToastUtil;
 import com.liyu.fakeweather.utils.UpdateUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -206,5 +210,18 @@ public class MainActivity extends BaseActivity {
             EventBus.getDefault().unregister(this);
         TTSManager.destroy();
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            if (!DoubleClickExit.check()) {
+                Snackbar.make(MainActivity.this.getWindow().getDecorView().findViewById(android.R.id.content), "再按一次退出 App!", Snackbar.LENGTH_SHORT).show();
+            } else {
+                super.onBackPressed();
+            }
+        }
     }
 }
