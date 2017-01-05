@@ -63,8 +63,6 @@ public class WeatherFragment extends BaseContentFragment {
 
     private HeWeather5 currentWeather;
 
-    private TTSManager ttsManager;
-
     private Subscription subscription;
 
     @Override

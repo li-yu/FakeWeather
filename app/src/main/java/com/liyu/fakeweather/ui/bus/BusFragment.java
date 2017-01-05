@@ -146,14 +146,8 @@ public class BusFragment extends BaseFragment {
         ViewPager viewPager = findView(R.id.viewPager);
         setupViewPager(viewPager);
         viewPager.setOffscreenPageLimit(viewPager.getAdapter().getCount());
-        // 设置ViewPager的数据等
         tabLayout.setupWithViewPager(viewPager);
-        //适合很多tab
-        //tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        //tab均分,适合少的tab
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        //tab均分,适合少的tab,TabLayout.GRAVITY_CENTER
-        //tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
     }
 
