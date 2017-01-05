@@ -120,7 +120,7 @@
         app:borderWidth="0dp"
         app:layout_anchor="@+id/rv_line_search"
         app:layout_anchorGravity="end|bottom"
-        app:layout_behavior="com.liyu.suzhoubus.widgets.FloatingActionButtonScrollBehavior"/>
+        app:layout_behavior="com.liyu.fakeweather.widgets.FloatingActionButtonScrollBehavior"/>
 
 
 </android.support.design.widget.CoordinatorLayout>
