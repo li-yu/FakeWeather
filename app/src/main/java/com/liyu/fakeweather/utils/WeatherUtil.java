@@ -95,7 +95,8 @@ public class WeatherUtil {
 
     public static String getShareMessage(HeWeather5 weather) {
         StringBuffer message = new StringBuffer();
-        message.append("苏州天气：");
+        message.append(weather.getBasic().getCity());
+        message.append("天气：");
         message.append("\r\n");
         message.append(weather.getBasic().getUpdate().getLoc());
         message.append(" 发布：");
