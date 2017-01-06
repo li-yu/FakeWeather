@@ -7,8 +7,8 @@ android {
         applicationId "com.liyu.fakeweather"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 8
-        versionName "1.2.4"
+        versionCode 9
+        versionName "1.2.5"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {

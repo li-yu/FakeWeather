@@ -120,13 +120,14 @@ public class MzituPictureActivity extends BaseActivity {
 
             @Override
             public void onNext(List<Girl> girls) {
-                GirlService.start(MzituPictureActivity.this, GirlsComingEvent.GIRLS_FROM_MZITU, girls);
+                GirlService.start(MzituPictureActivity.this, baseUrl, girls);
             }
         });
     }
 
     @Override
     protected void loadData() {
+        showRefreshing(true);
         adapter.setNewData(null);
         getPageSubscription = Observable.just(baseUrl).subscribeOn(Schedulers.io()).map(new Func1<String, List<Girl>>() {
             @Override
@@ -155,7 +156,6 @@ public class MzituPictureActivity extends BaseActivity {
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Girl>>() {
             @Override
             public void onCompleted() {
-                showRefreshing(false);
             }
 
             @Override
@@ -183,7 +183,7 @@ public class MzituPictureActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void girlIsComing(GirlsComingEvent event) {
-        if (event.getFrom() != GirlsComingEvent.GIRLS_FROM_MZITU)
+        if (!event.getFromName().equals(baseUrl))
             return;
         showRefreshing(false);
         if (adapter.getData() == null || adapter.getData().size() == 0) {

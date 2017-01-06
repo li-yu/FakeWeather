@@ -1,12 +1,7 @@
 package com.liyu.fakeweather.ui.girl;
 
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-
-import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.model.Girl;
-import com.liyu.fakeweather.ui.base.BaseContentFragment;
-import com.liyu.fakeweather.ui.girl.adapter.MzituAdapter;
+import com.liyu.fakeweather.ui.base.BaseGirlsListFragment;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,7 +14,6 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Observer;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -28,44 +22,12 @@ import rx.schedulers.Schedulers;
  * Created by liyu on 2016/12/13.
  */
 
-public class MzituFragment extends BaseContentFragment {
-
-    private RecyclerView recyclerView;
-    private MzituAdapter adapter;
-    private int currentPage = 1;
-    private String baseUrl = "";
-    private boolean isLoading = false;
-    private Subscription subscription;
+public class MzituFragment extends BaseGirlsListFragment {
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_gank;
-    }
-
-    @Override
-    protected void initViews() {
-        super.initViews();
-        baseUrl = getArguments().getString("url");
-        recyclerView = findView(R.id.rv_gank);
-        final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new MzituAdapter(getActivity(), null);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1) && !isLoading) {
-                    isLoading = true;
-                    getMeiziFromServer();
-                }
-            }
-        });
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void getMeiziFromServer() {
+    protected void getGirlFromServer() {
         showRefreshing(true);
-        String url = baseUrl + "/page/" + currentPage;
+        String url = getArguments().getString("url") + "/page/" + currentPage;
         subscription = Observable.just(url).subscribeOn(Schedulers.io()).map(new Func1<String, List<Girl>>() {
             @Override
             public List<Girl> call(String url) {
@@ -108,19 +70,4 @@ public class MzituFragment extends BaseContentFragment {
             }
         });
     }
-
-    @Override
-    protected void lazyFetchData() {
-        currentPage = 1;
-        adapter.setNewData(null);
-        getMeiziFromServer();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (subscription != null && !subscription.isUnsubscribed())
-            subscription.unsubscribe();
-    }
-
 }

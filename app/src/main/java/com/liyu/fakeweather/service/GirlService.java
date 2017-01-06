@@ -29,16 +29,20 @@ public class GirlService extends IntentService {
         super("GirlService");
     }
 
-    public static void start(Context context, int from, List<Girl> list) {
+    public static void start(Context context, String from, List<Girl> list) {
         Intent intent = new Intent(context, GirlService.class);
         intent.putExtra(KEY_EXTRA_GIRL_FROM, from);
         intent.putExtra(KEY_EXTRA_GIRL_LIST, (Serializable) list);
         context.startService(intent);
     }
 
+    public static void stop(Context context) {
+        context.stopService(new Intent(context, GirlService.class));
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
-        int from = intent.getIntExtra(KEY_EXTRA_GIRL_FROM, GirlsComingEvent.GIRLS_FROM_GANK);
+        String from = intent.getStringExtra(KEY_EXTRA_GIRL_FROM);
         List<Girl> girls = (List<Girl>) intent.getSerializableExtra(KEY_EXTRA_GIRL_LIST);
         try {
             for (final Girl girl : girls) {
@@ -50,10 +54,10 @@ public class GirlService extends IntentService {
                         .get();
                 girl.setHeight(bitmap.getHeight());
                 girl.setWidth(bitmap.getWidth());
+                EventBus.getDefault().post(new GirlsComingEvent(from, girl));
             }
         } catch (Exception e) {
 
         }
-        EventBus.getDefault().post(new GirlsComingEvent(from, girls));
     }
 }

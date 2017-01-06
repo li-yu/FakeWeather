@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.model.Girl;
+import com.liyu.fakeweather.ui.girl.MzituPictureActivity;
 import com.liyu.fakeweather.ui.girl.PictureActivity;
 import com.liyu.fakeweather.widgets.RatioImageView;
 
@@ -71,11 +73,20 @@ public class GirlsAdapter extends RecyclerView.Adapter<GirlsAdapter.GirlViewHold
     @Override
     public void onBindViewHolder(final GirlViewHolder holder, final int position) {
         final Girl girl = girls.get(position);
-        holder.iv.setOriginalSize(girl.getWidth(), girl.getHeight());
+        if (girl.getHeight() != 0) {
+            holder.iv.setOriginalSize(girl.getWidth(), girl.getHeight());
+        } else {
+            holder.iv.setOriginalSize(236, 354);
+        }
         holder.iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startPictureActivity(view, position);
+                if (TextUtils.isEmpty(girl.getLink())) {
+                    startPictureActivity(view, position);
+                } else {
+                    Intent intent = MzituPictureActivity.newIntent(context, girl.getLink(), "");
+                    context.startActivity(intent);
+                }
             }
         });
         Glide.with(context).load(girl.getUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ic_glide_holder).crossFade(500).into(holder.iv);

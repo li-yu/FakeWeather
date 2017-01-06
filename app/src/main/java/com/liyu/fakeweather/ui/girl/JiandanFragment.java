@@ -1,29 +1,20 @@
 package com.liyu.fakeweather.ui.girl;
 
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.liyu.fakeweather.R;
-import com.liyu.fakeweather.event.GirlsComingEvent;
 import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseJiandanResponse;
 import com.liyu.fakeweather.model.Girl;
 import com.liyu.fakeweather.model.JiandanXXOO;
 import com.liyu.fakeweather.service.GirlService;
-import com.liyu.fakeweather.ui.base.BaseContentFragment;
-import com.liyu.fakeweather.ui.girl.adapter.GirlsAdapter;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.liyu.fakeweather.ui.base.BaseGirlsListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observer;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -31,47 +22,9 @@ import rx.schedulers.Schedulers;
  * Created by liyu on 2016/10/31.
  */
 
-public class JiandanFragment extends BaseContentFragment {
-
-    private RecyclerView recyclerView;
-    private GirlsAdapter adapter;
-    private int currentPage = 1;
-    private boolean isLoading = false;
-    private Subscription subscription;
-
+public class JiandanFragment extends BaseGirlsListFragment {
     @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_gank;
-    }
-
-    @Override
-    protected void initViews() {
-        super.initViews();
-        adapter = new GirlsAdapter(getActivity(), null);
-        recyclerView = findView(R.id.rv_gank);
-        final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1) && !isLoading) {
-                    isLoading = true;
-                    getGirlFromServer();
-                }
-            }
-        });
-        recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    protected void lazyFetchData() {
-        currentPage = 1;
-        adapter.setNewData(null);
-        getGirlFromServer();
-    }
-
-    private void getGirlFromServer() {
+    protected void getGirlFromServer() {
         showRefreshing(true);
         subscription = ApiFactory
                 .getGirlsController()
@@ -81,7 +34,6 @@ public class JiandanFragment extends BaseContentFragment {
                 .subscribe(new Observer<BaseJiandanResponse>() {
                     @Override
                     public void onCompleted() {
-                        isLoading = false;
                     }
 
                     @Override
@@ -99,46 +51,19 @@ public class JiandanFragment extends BaseContentFragment {
                     @Override
                     public void onNext(BaseJiandanResponse baseJiandanResponse) {
                         currentPage++;
-                        List<Girl> items = new ArrayList<>();
+                        List<Girl> girls = new ArrayList<>();
                         for (JiandanXXOO item : baseJiandanResponse.comments) {
                             for (String url : item.getPics()) {
                                 if (!url.toLowerCase().endsWith("gif")) {
                                     //gif占用内存&流量太大，pass掉
-                                    items.add(new Girl(url));
+                                    girls.add(new Girl(url));
                                 }
                             }
                         }
-                        GirlService.start(getActivity(), GirlsComingEvent.GIRLS_FROM_JIANDAN, items);
+                        sendCount = girls.size();
+                        receivedCount = 0;
+                        GirlService.start(getActivity(), JiandanFragment.this.getClass().getName(), girls);
                     }
                 });
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void girlIsComing(GirlsComingEvent event) {
-        if (event.getFrom() != GirlsComingEvent.GIRLS_FROM_JIANDAN)
-            return;
-        showRefreshing(false);
-        if (adapter.getData() == null || adapter.getData().size() == 0) {
-            adapter.setNewData(event.getGirls());
-        } else {
-            adapter.addData(adapter.getData().size(), event.getGirls());
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
-        if (subscription != null && !subscription.isUnsubscribed())
-            subscription.unsubscribe();
-        super.onDestroy();
     }
 }

@@ -2,6 +2,7 @@ package com.liyu.fakeweather.event;
 
 import com.liyu.fakeweather.model.Girl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,13 +11,18 @@ import java.util.List;
 
 public class GirlsComingEvent {
 
-    public static final int GIRLS_FROM_GANK = 0;
-    public static final int GIRLS_FROM_JIANDAN = 1;
-    public static final int GIRLS_FROM_MZITU = 2;
-    public static final int GIRLS_FROM_MZITU_ZIPAI = 3;
-
     private List<Girl> girls;
     private int from;
+
+    private String fromName;
+
+    public String getFromName() {
+        return fromName;
+    }
+
+    public void setFromName(String fromName) {
+        this.fromName = fromName;
+    }
 
     public int getFrom() {
         return from;
@@ -26,9 +32,15 @@ public class GirlsComingEvent {
         this.from = from;
     }
 
-    public GirlsComingEvent(int from, List<Girl> girls) {
+    public GirlsComingEvent(String from, List<Girl> girls) {
         this.girls = girls;
-        this.from = from;
+        this.fromName = from;
+    }
+
+    public GirlsComingEvent(String from, Girl girl) {
+        this.girls = new ArrayList<>();
+        girls.add(girl);
+        this.fromName = from;
     }
 
     public List<Girl> getGirls() {

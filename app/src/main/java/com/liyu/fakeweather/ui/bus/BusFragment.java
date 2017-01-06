@@ -1,7 +1,6 @@
 package com.liyu.fakeweather.ui.bus;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,6 +27,7 @@ import com.liyu.fakeweather.model.BusLineSearch;
 import com.liyu.fakeweather.ui.MainActivity;
 import com.liyu.fakeweather.ui.base.BaseFragment;
 import com.liyu.fakeweather.ui.bus.adapter.LineSearchAdapter;
+import com.liyu.fakeweather.utils.SimpleSubscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,17 +94,7 @@ public class BusFragment extends BaseFragment {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BaseBusResponse<BusLineSearch>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
+                .subscribe(new SimpleSubscriber<BaseBusResponse<BusLineSearch>>() {
                     @Override
                     public void onNext(BaseBusResponse<BusLineSearch> listBaseBusResponse) {
                         searchAdapter.setNewData(listBaseBusResponse.data.getList());
@@ -153,14 +143,14 @@ public class BusFragment extends BaseFragment {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        Fragment newfragment = new NearbyLineFragment();
-        adapter.addFrag(newfragment, getString(R.string.bus_nearby_line));
+        Fragment fragment = new NearbyLineFragment();
+        adapter.addFrag(fragment, getString(R.string.bus_nearby_line));
 
-        newfragment = new NearbyStationFragment();
-        adapter.addFrag(newfragment, getString(R.string.bus_nearby_station));
+        fragment = new NearbyStationFragment();
+        adapter.addFrag(fragment, getString(R.string.bus_nearby_station));
 
-        newfragment = new FavoritesFragment();
-        adapter.addFrag(newfragment, getString(R.string.bus_favorites));
+        fragment = new FavoritesFragment();
+        adapter.addFrag(fragment, getString(R.string.bus_favorites));
 
         viewPager.setAdapter(adapter);
 
@@ -193,11 +183,6 @@ public class BusFragment extends BaseFragment {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
