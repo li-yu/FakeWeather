@@ -21,6 +21,7 @@ import com.liyu.fakeweather.utils.FileUtil;
 import com.liyu.fakeweather.utils.ShareUtils;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
 import com.liyu.fakeweather.utils.UpdateUtil;
+import com.liyu.fakeweather.utils.WebUtils;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -108,7 +109,7 @@ public class AboutActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_web_home:
-                openWeb("https://github.com/li-yu/FakeWeather");
+                WebUtils.openInternal(this, "https://github.com/li-yu/FakeWeather");
                 break;
             case R.id.btn_feedback:
                 feedBack();
@@ -117,17 +118,9 @@ public class AboutActivity extends BaseActivity {
                 UpdateUtil.check(AboutActivity.this, false);
                 break;
             case R.id.btn_share_app:
-                ShareUtils.shareText(this, "来不及了，赶紧上车！");
+                ShareUtils.shareText(this, "来不及了，赶紧上车！https://github.com/li-yu/FakeWeather");
                 break;
         }
-    }
-
-    private void openWeb(String url) {
-        Uri uri = Uri.parse(url);
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setData(uri);
-        startActivity(intent);
     }
 
     @Override

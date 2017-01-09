@@ -120,7 +120,7 @@ public class FileUtil {
     public static String readFile(String filePath) {
         File file = new File(filePath);
         StringBuilder fileContent = new StringBuilder("");
-        if (file == null || !file.isFile()) {
+        if (!file.isFile()) {
             return null;
         }
 

@@ -2,8 +2,6 @@ package com.liyu.fakeweather.utils;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 
@@ -62,11 +60,7 @@ public class UpdateUtil {
                     builder.setPositiveButton("下载", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Uri uri = Uri.parse(response.results.getUrl());
-                            Intent intent = new Intent();
-                            intent.setAction(Intent.ACTION_VIEW);
-                            intent.setData(uri);
-                            activity.startActivity(intent);
+                            WebUtils.openExternal(activity, response.results.getUrl());
                         }
                     });
                     builder.show();

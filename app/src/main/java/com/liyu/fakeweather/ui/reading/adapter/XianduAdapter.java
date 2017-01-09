@@ -17,7 +17,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.model.XianduItem;
-import com.liyu.fakeweather.utils.WebviewUtils;
+import com.liyu.fakeweather.utils.WebUtils;
 
 import java.util.List;
 
@@ -64,7 +64,7 @@ public class XianduAdapter extends RecyclerView.Adapter<XianduAdapter.XianViewHo
         holder.rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WebviewUtils.open(context, item.getUrl());
+                WebUtils.openInternal(context, item.getUrl());
             }
         });
         holder.tv_name.setText(String.format("%s. %s", position + 1, item.getName()));
