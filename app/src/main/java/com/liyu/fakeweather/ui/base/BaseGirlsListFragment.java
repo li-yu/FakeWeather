@@ -63,7 +63,7 @@ public abstract class BaseGirlsListFragment extends BaseContentFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void girlIsComing(GirlsComingEvent event) {
-        if (!event.getFromName().equals(this.getClass().getName()))
+        if (!event.getFrom().equals(this.getClass().getName()))
             return;
         showRefreshing(false);
         if (adapter.getData() == null || adapter.getData().size() == 0) {

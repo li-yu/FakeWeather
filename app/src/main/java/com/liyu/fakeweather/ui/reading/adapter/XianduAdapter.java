@@ -1,9 +1,7 @@
 package com.liyu.fakeweather.ui.reading.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -66,7 +64,6 @@ public class XianduAdapter extends RecyclerView.Adapter<XianduAdapter.XianViewHo
         holder.rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                openWeb(item.getUrl());
                 WebviewUtils.open(context, item.getUrl());
             }
         });
@@ -110,11 +107,4 @@ public class XianduAdapter extends RecyclerView.Adapter<XianduAdapter.XianViewHo
 
     }
 
-    private void openWeb(String url) {
-        Uri uri = Uri.parse(url);
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setData(uri);
-        context.startActivity(intent);
-    }
 }

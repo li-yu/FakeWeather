@@ -183,7 +183,7 @@ public class MzituPictureActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void girlIsComing(GirlsComingEvent event) {
-        if (!event.getFromName().equals(baseUrl))
+        if (!event.getFrom().equals(baseUrl))
             return;
         showRefreshing(false);
         if (adapter.getData() == null || adapter.getData().size() == 0) {

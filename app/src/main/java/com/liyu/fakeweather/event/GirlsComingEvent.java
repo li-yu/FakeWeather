@@ -12,35 +12,26 @@ import java.util.List;
 public class GirlsComingEvent {
 
     private List<Girl> girls;
-    private int from;
 
-    private String fromName;
+    private String from;
 
-    public String getFromName() {
-        return fromName;
-    }
-
-    public void setFromName(String fromName) {
-        this.fromName = fromName;
-    }
-
-    public int getFrom() {
+    public String getFrom() {
         return from;
     }
 
-    public void setFrom(int from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
     public GirlsComingEvent(String from, List<Girl> girls) {
         this.girls = girls;
-        this.fromName = from;
+        this.from = from;
     }
 
     public GirlsComingEvent(String from, Girl girl) {
         this.girls = new ArrayList<>();
         girls.add(girl);
-        this.fromName = from;
+        this.from = from;
     }
 
     public List<Girl> getGirls() {
