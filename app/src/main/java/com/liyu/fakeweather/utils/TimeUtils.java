@@ -184,6 +184,8 @@ public class TimeUtils {
 
     public static final SimpleDateFormat DATE_SDF = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
+    public static final SimpleDateFormat HOUR_SDF = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
     /**
      * 将时间戳转为时间字符串
      * <p>格式为yyyy-MM-dd HH:mm:ss</p>

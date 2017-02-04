@@ -38,7 +38,10 @@
         <item>尼亚加拉</item>
     </string-array>
 
-    <string name="open_source">• 和风天气提供天气数据\n• 百度定位提供定位服务\n• 无线苏州提供公交数据\n• 『Gank』『煎蛋』『妹子图』提供妹纸数据\n• Glide: github.com/bumptech/glide\n• RxJava: github.com/ReactiveX/RxJava\n• Retrofit: github.com/square/retrofit\n• EventBus: github.com/greenrobot/EventBus\n• RxAndroid: github.com/ReactiveX/RxAndroid\n• SeeWeather: github.com/xcc3641/SeeWeather\n• RxBinding: github.com/JakeWharton/RxBinding\n• RxPermissions: github.com/tbruyelle/RxPermissions\n• material-dialogs: github.com/afollestad/material-dialogs\n• BaseRecyclerViewAdapterHelper: github.com/CymChad/BaseRecyclerViewAdapterHelper
+    <string name="open_source">• 和风天气提供天气数据\n• 百度定位提供定位服务\n• 无线苏州提供公交数据\n• 『Gank』『煎蛋』『妹子图』提供妹纸数据\n• 丰富精彩的开源世界 https://github.com/li-yu/FakeWeather/blob/master/README.md
+    </string>
+
+    <string name="contact_me">• @呵呵小小鱼\n• me@liyuyu.cn
     </string>
 
     <string name="menu_action_refresh">刷新</string>

@@ -44,20 +44,23 @@ public class GirlService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String from = intent.getStringExtra(KEY_EXTRA_GIRL_FROM);
         List<Girl> girls = (List<Girl>) intent.getSerializableExtra(KEY_EXTRA_GIRL_LIST);
-        try {
-            for (final Girl girl : girls) {
-                Bitmap bitmap = Glide.with(GirlService.this)
+        for (final Girl girl : girls) {
+            Bitmap bitmap = null;
+            try {
+                bitmap = Glide.with(GirlService.this)
                         .load(girl.getUrl())
                         .asBitmap()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                         .get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null) {
                 girl.setHeight(bitmap.getHeight());
                 girl.setWidth(bitmap.getWidth());
-                EventBus.getDefault().post(new GirlsComingEvent(from, girl));
             }
-        } catch (Exception e) {
-
+            EventBus.getDefault().post(new GirlsComingEvent(from, girl));
         }
     }
 }

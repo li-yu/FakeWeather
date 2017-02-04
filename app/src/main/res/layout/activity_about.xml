@@ -74,8 +74,8 @@
                 android:id="@+id/tv_app_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text="v1.0.0"
                 android:textColor="@color/colorTextDark"
@@ -97,14 +97,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="16dp"
-                android:textSize="14sp"
-                android:textColor="@color/colorTextDark2nd"
-                android:drawableStart="@drawable/ic_website_dark_compat"
                 android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_website_dark_compat"
+                android:gravity="left|center_vertical"
                 android:onClick="onClick"
+                android:paddingLeft="16dp"
                 android:text="项目主页"
+                android:textColor="@color/colorTextDark2nd"
+                android:textSize="14sp"
                 />
 
             <Button
@@ -112,14 +112,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="16dp"
-                android:textSize="14sp"
-                android:textColor="@color/colorTextDark2nd"
-                android:drawableStart="@drawable/ic_feedback_dark_compat"
                 android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_feedback_dark_compat"
+                android:gravity="left|center_vertical"
                 android:onClick="onClick"
+                android:paddingLeft="16dp"
                 android:text="意见反馈"
+                android:textColor="@color/colorTextDark2nd"
+                android:textSize="14sp"
                 />
 
             <Button
@@ -127,14 +127,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="16dp"
-                android:textSize="14sp"
-                android:textColor="@color/colorTextDark2nd"
-                android:drawableStart="@drawable/ic_update_dark_compat"
                 android:drawablePadding="16dp"
+                android:drawableStart="@drawable/ic_update_dark_compat"
+                android:gravity="left|center_vertical"
                 android:onClick="onClick"
+                android:paddingLeft="16dp"
                 android:text="检查更新"
+                android:textColor="@color/colorTextDark2nd"
+                android:textSize="14sp"
                 />
 
             <Button
@@ -142,14 +142,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="16dp"
-                android:textColor="@color/colorTextDark2nd"
-                android:drawableStart="@drawable/ic_share_dark_compat"
                 android:drawablePadding="16dp"
-                android:textSize="14sp"
+                android:drawableStart="@drawable/ic_share_dark_compat"
+                android:gravity="left|center_vertical"
                 android:onClick="onClick"
+                android:paddingLeft="16dp"
                 android:text="分享应用"
+                android:textColor="@color/colorTextDark2nd"
+                android:textSize="14sp"
                 />
 
             <include layout="@layout/line_gap"/>
@@ -165,10 +165,33 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:layout_marginStart="16dp"
                 android:autoLink="web"
                 android:lineSpacingExtra="6dp"
                 android:text="@string/open_source"
+                android:textColorLink="@color/colorTextDark"
+                android:textSize="12sp"
+                />
+
+            <include layout="@layout/line_gap"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="联系我"
+                android:textColor="@color/colorTextDark2nd"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="16dp"
+                android:autoLink="all"
+                android:lineSpacingExtra="6dp"
+                android:text="@string/contact_me"
                 android:textColorLink="@color/colorTextDark"
                 android:textSize="12sp"
                 />

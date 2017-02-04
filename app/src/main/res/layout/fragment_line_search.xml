@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@color/white">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_line_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F2F7FA" />
-</LinearLayout>
+        android:background="#F2F7FA"
+        android:layout_above="@+id/tv_bus_all"/>
+
+    <TextView
+        android:id="@+id/tv_bus_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="查看全部线路"
+        android:gravity="center"
+        android:background="#F2F7FA"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="?attr/colorPrimary"/>
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package com.liyu.fakeweather.ui.bus;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.liyu.fakeweather.R;
@@ -34,7 +36,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -117,6 +118,13 @@ public class BusFragment extends BaseFragment {
         });
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.fragment_line_search, null);
+        TextView tvBusAll = (TextView) contentView.findViewById(R.id.tv_bus_all);
+        tvBusAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), AllLineActivity.class));
+            }
+        });
         recyclerView = (RecyclerView) contentView.findViewById(R.id.rv_line_search);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         searchAdapter = new LineSearchAdapter(R.layout.item_bus_line_search, null);
