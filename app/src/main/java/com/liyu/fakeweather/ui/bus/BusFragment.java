@@ -202,6 +202,14 @@ public class BusFragment extends BaseFragment {
 
     private void inflateMenu() {
         mToolbar.inflateMenu(R.menu.menu_bus);
+        mToolbar.getMenu()
+                .findItem(R.id.menu_subway).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                WebUtils.openInternal(getContext(), "http://api.caoliyu.cn/szsubway/index.html");
+                return false;
+            }
+        });
     }
 
     private void initTabLayout() {
