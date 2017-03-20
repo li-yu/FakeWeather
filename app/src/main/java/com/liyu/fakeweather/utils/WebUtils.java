@@ -3,6 +3,7 @@ package com.liyu.fakeweather.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.webkit.WebSettings;
 
 import com.liyu.fakeweather.R;
 import com.thefinestartist.finestwebview.FinestWebView;
@@ -31,6 +32,9 @@ public class WebUtils {
                 .statusBarColor(context.getResources().getColor(ThemeUtil.getCurrentColorPrimary(context)))
                 .swipeRefreshColor(context.getResources().getColor(ThemeUtil.getCurrentColorPrimary(context)))
                 .showUrl(false)
+                .webViewDisplayZoomControls(true)
+                .webViewSupportZoom(true)
+                .webViewBuiltInZoomControls(true)
                 .iconDefaultColor(context.getResources().getColor(R.color.Color_White))
                 .show(url);
     }
@@ -48,4 +52,23 @@ public class WebUtils {
         intent.setData(uri);
         context.startActivity(intent);
     }
+
+    /**
+     * 加载html 片段
+     *
+     * @param context
+     * @param html
+     */
+    public static void load(Context context, String html) {
+        new FinestWebView.Builder(context)
+                .showIconMenu(false)
+                .titleColor(context.getResources().getColor(R.color.white))
+                .toolbarColor(context.getResources().getColor(ThemeUtil.getCurrentColorPrimary(context)))
+                .statusBarColor(context.getResources().getColor(ThemeUtil.getCurrentColorPrimary(context)))
+                .swipeRefreshColor(context.getResources().getColor(ThemeUtil.getCurrentColorPrimary(context)))
+                .showUrl(false)
+                .iconDefaultColor(context.getResources().getColor(R.color.Color_White))
+                .load(html, "text/html; charset=UTF-8", null);//妈卖批，加载中文乱码
+    }
+
 }

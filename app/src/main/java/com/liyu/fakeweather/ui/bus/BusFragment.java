@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -21,21 +22,31 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.andremion.counterfab.CounterFab;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseBusResponse;
 import com.liyu.fakeweather.model.BusLineSearch;
+import com.liyu.fakeweather.model.BusNotice;
 import com.liyu.fakeweather.ui.MainActivity;
 import com.liyu.fakeweather.ui.base.BaseFragment;
 import com.liyu.fakeweather.ui.bus.adapter.LineSearchAdapter;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
+import com.liyu.fakeweather.utils.WebUtils;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
+import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -70,7 +81,61 @@ public class BusFragment extends BaseFragment {
 
     @Override
     protected void lazyFetchData() {
+        ApiFactory
+                .getBusController()
+                .getBusNotices()
+                .subscribeOn(Schedulers.io())
+                .map(new Func1<BusNotice, String>() {
+                    @Override
+                    public String call(BusNotice busNotice) {
+                        try {
+                            Document doc = Jsoup.connect(busNotice.getData().getItems().getUrl()).timeout(10000).get();
+                            Element element = doc.select("div#container").first();
+                            Elements imgs = element.getElementsByTag("img");
+                            for (Element img : imgs) {
+                                img.attr("style", "max-width:100%;height:auto;");
+                            }
+                            return element.html();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onCompleted() {
 
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(final String msg) {
+                        if (!TextUtils.isEmpty(msg)) {
+                            final CounterFab counterFab = findView(R.id.fab_msg);
+                            counterFab.setVisibility(View.VISIBLE);
+                            counterFab.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    counterFab.increase();
+                                }
+                            }, 500);
+                            counterFab.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    WebUtils.load(getContext(), "<head>\n" +
+                                            "    <title>交通公告</title>\n" +
+                                            "  </head><base href=\"http://news.wisesz.cc/\" />" + msg);
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     private void initSearchView() {

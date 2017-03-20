@@ -38,5 +38,18 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
+    <com.andremion.counterfab.CounterFab
+        android:id="@+id/fab_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="8dp"
+        app:srcCompat="@drawable/ic_msg"
+        app:borderWidth="0dp"
+        app:layout_anchor="@+id/viewPager"
+        app:layout_anchorGravity="end|bottom"
+        android:visibility="invisible"
+        app:layout_behavior="com.liyu.fakeweather.widgets.FloatingActionButtonScrollBehavior"/>
+
 </android.support.design.widget.CoordinatorLayout>
 

@@ -44,4 +44,5 @@ dependencies {
     compile 'com.afollestad.material-dialogs:commons:0.9.1.0'
     compile 'org.jsoup:jsoup:1.10.1'
     compile 'com.thefinestartist:finestwebview:1.2.7'
+    compile 'com.github.andremion:counterfab:1.0.1'
 }

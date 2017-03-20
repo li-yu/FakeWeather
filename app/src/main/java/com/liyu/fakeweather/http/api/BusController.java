@@ -5,6 +5,7 @@ import com.liyu.fakeweather.model.BusLineDetail;
 import com.liyu.fakeweather.model.BusLineNearby;
 import com.liyu.fakeweather.model.BusLineSearch;
 import com.liyu.fakeweather.model.BusLineStation;
+import com.liyu.fakeweather.model.BusNotice;
 
 import java.util.Map;
 
@@ -37,5 +38,8 @@ public interface BusController {
 
     @GET("http://content.2500city.com/api18/bus/getStationInfo")
     Observable<BaseBusResponse<BusLineStation>> getStationInfo(@QueryMap Map<String, String> options);
+
+    @GET("http://bus.wisesz.mobi/v3/api/bus/tabMenu")
+    Observable<BusNotice> getBusNotices();
 
 }
