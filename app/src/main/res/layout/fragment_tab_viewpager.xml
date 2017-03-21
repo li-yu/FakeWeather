@@ -48,8 +48,7 @@
         app:borderWidth="0dp"
         app:layout_anchor="@+id/viewPager"
         app:layout_anchorGravity="end|bottom"
-        android:visibility="invisible"
-        app:layout_behavior="com.liyu.fakeweather.widgets.FloatingActionButtonScrollBehavior"/>
+        android:visibility="invisible"/>
 
 </android.support.design.widget.CoordinatorLayout>
 
