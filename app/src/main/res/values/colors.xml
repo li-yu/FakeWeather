@@ -7,6 +7,7 @@
     <color name="white">#ffffff</color>
     <color name="transparent">#00ffffff</color>
     <color name="line">#e0e0e0</color>
+    <color name="gray">#aaa</color>
     <color name="colorTextDark">#424242</color>
     <color name="colorTextDark2nd">#757575</color>
     <color name="actionColor">#FF4081</color>

@@ -15,6 +15,6 @@ import rx.Observable;
 
 public interface WeatherController {
 
-    @GET("https://free-api.heweather.com/v5/weather?key=b478f335a5114ba3b6013f6dd92bd422")
-    Observable<BaseWeatherResponse<HeWeather5>> getWeather(@Query("city") String city);
+    @GET("https://free-api.heweather.com/v5/weather")
+    Observable<BaseWeatherResponse<HeWeather5>> getWeather(@Query("key") String key, @Query("city") String city);
 }

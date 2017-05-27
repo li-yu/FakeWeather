@@ -14,4 +14,7 @@ public interface AppController {
 
     @GET("http://api.caoliyu.cn/appupdate.json")
     Observable<BaseAppResponse<UpdateInfo>> checkUpdate();
+
+    @GET("http://api.caoliyu.cn/weatherkey.json")
+    Observable<BaseAppResponse<String>> getWeatherKey();
 }

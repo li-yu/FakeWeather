@@ -28,13 +28,13 @@ public class RxLocation {
         return new RxPermissions(context).request(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_PHONE_STATE).flatMap(new Func1<Boolean, Observable<BDLocation>>() {
             @Override
             public Observable<BDLocation> call(Boolean aBoolean) {
-                return Observable.create(new LocationOnSubscribe(context));
+                return Observable.unsafeCreate(new LocationOnSubscribe(context));
             }
         });
     }
 
     public Observable<BDLocation> locateLastKnown(Context context) {
-        return Observable.create(new LocationLastKnownOnSubscribe(context));
+        return Observable.unsafeCreate(new LocationLastKnownOnSubscribe(context));
     }
 
 }

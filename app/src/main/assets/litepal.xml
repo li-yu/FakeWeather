@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
 
-    <dbname value="bus_db"></dbname>
+    <dbname value="fakeweather_db"></dbname>
 
-    <version value="5"></version>
-
-    <storage value="external"></storage>
+    <version value="1"></version>
 
     <list>
 

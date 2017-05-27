@@ -1,0 +1,13 @@
+﻿{
+    "error": false,
+    "results":
+        {
+            "app": "假装看天气",
+            "versionCode": 10,
+            "versionName": "1.2.6",
+	        "updateTime": "2017-02-04 13:14:00",
+            "information": "解决Gank妹纸图加载失败时程序异常的bug\n新增查看全部公交线路的功能！",
+            "foreUpdate": false,
+            "url":"http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/FakeWeather_v1.2.6_20170204.apk"
+        }
+}

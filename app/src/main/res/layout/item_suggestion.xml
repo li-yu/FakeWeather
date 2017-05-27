@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:background="?attr/selectableItemBackground">
+
+    <android.support.v4.widget.Space
+        android:id="@+id/spacer"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/spacer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="4dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/tvMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spacer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="14sp"/>
+
+</RelativeLayout>

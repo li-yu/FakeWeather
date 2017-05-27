@@ -10,6 +10,7 @@ import com.liyu.fakeweather.R;
 public class SettingsUtil {
 
     public static final String WEATHER_SHARE_TYPE = "weather_share_type";//天气分享形式
+    public static final String WEATHER_KEY = "weather_key";//天气key
     public static final String THEME = "theme_color";//主题
     public static final String CLEAR_CACHE = "clean_cache";//清空缓存
     public static final String BUS_REFRESH_FREQ = "bus_refresh_freq";//公交自动刷新频率
@@ -29,6 +30,14 @@ public class SettingsUtil {
 
     public static String getWeatherShareType() {
         return (String) SPUtil.get(App.getContext(), WEATHER_SHARE_TYPE, App.getContext().getResources().getStringArray(R.array.share_type)[0]);
+    }
+
+    public static void setWeatherKey(String key) {
+        SPUtil.put(App.getContext(), WEATHER_KEY, key);
+    }
+
+    public static String getWeatherKey() {
+        return (String) SPUtil.get(App.getContext(), WEATHER_KEY, "");
     }
 
     public static void setTheme(int themeIndex) {

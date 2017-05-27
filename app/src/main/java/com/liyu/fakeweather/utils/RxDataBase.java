@@ -15,7 +15,7 @@ import rx.schedulers.Schedulers;
 public class RxDataBase {
 
     public static <T extends DataSupport> void save(final T t) {
-        Observable.create(new Observable.OnSubscribe<Boolean>() {
+        Observable.unsafeCreate(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> subscriber) {
                 t.save();
@@ -26,7 +26,7 @@ public class RxDataBase {
     }
 
     public static <T extends DataSupport> void deleteThenSave(final T t, final String... condition) {
-        Observable.create(new Observable.OnSubscribe<Boolean>() {
+        Observable.unsafeCreate(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> subscriber) {
                 DataSupport.deleteAll(t.getClass(), condition);
@@ -40,7 +40,7 @@ public class RxDataBase {
     public static <T extends DataSupport> void deleteThenSave(final List<T> list) {
         if (list == null || list.size() == 0)
             return;
-        Observable.create(new Observable.OnSubscribe<Boolean>() {
+        Observable.unsafeCreate(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> subscriber) {
                 DataSupport.deleteAll(list.get(0).getClass());
@@ -52,7 +52,7 @@ public class RxDataBase {
     }
 
     public static <T extends DataSupport> void saveAll(final List<T> list) {
-        Observable.create(new Observable.OnSubscribe<Boolean>() {
+        Observable.unsafeCreate(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> subscriber) {
                 DataSupport.saveAll(list);
@@ -63,7 +63,7 @@ public class RxDataBase {
     }
 
     public static <T extends DataSupport> Observable<T> getFirst(final Class<T> clazz) {
-        return Observable.create(new Observable.OnSubscribe<T>() {
+        return Observable.unsafeCreate(new Observable.OnSubscribe<T>() {
             @Override
             public void call(Subscriber<? super T> subscriber) {
                 subscriber.onNext(DataSupport.findFirst(clazz));
@@ -73,7 +73,7 @@ public class RxDataBase {
     }
 
     public static <T extends DataSupport> Observable<List<T>> getAll(final Class<T> clazz) {
-        return Observable.create(new Observable.OnSubscribe<List<T>>() {
+        return Observable.unsafeCreate(new Observable.OnSubscribe<List<T>>() {
             @Override
             public void call(Subscriber<? super List<T>> subscriber) {
                 subscriber.onNext(DataSupport.findAll(clazz));
@@ -83,7 +83,7 @@ public class RxDataBase {
     }
 
     public static <T extends DataSupport> Observable<T> getFirst(final Class<T> clazz, final String... condition) {
-        return Observable.create(new Observable.OnSubscribe<T>() {
+        return Observable.unsafeCreate(new Observable.OnSubscribe<T>() {
             @Override
             public void call(Subscriber<? super T> subscriber) {
                 subscriber.onNext(DataSupport.where(condition).findFirst(clazz, true));
@@ -93,7 +93,7 @@ public class RxDataBase {
     }
 
     public static <T extends DataSupport> Observable<List<T>> getAll(final Class<T> clazz, final String... condition) {
-        return Observable.create(new Observable.OnSubscribe<List<T>>() {
+        return Observable.unsafeCreate(new Observable.OnSubscribe<List<T>>() {
             @Override
             public void call(Subscriber<? super List<T>> subscriber) {
                 subscriber.onNext(DataSupport.where(condition).find(clazz));

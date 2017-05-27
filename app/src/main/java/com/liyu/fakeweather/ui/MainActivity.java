@@ -28,7 +28,6 @@ import com.liyu.fakeweather.utils.DoubleClickExit;
 import com.liyu.fakeweather.utils.RxDrawer;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
 import com.liyu.fakeweather.utils.TTSManager;
-import com.liyu.fakeweather.utils.ToastUtil;
 import com.liyu.fakeweather.utils.UpdateUtil;
 
 import org.greenrobot.eventbus.EventBus;

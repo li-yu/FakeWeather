@@ -47,7 +47,7 @@ public class WeatherDetailsView extends LinearLayout {
 
     private void letItGo() {
         removeAllViews();
-        HeWeather5.DailyForecastBean yesterday = WeatherUtil.getYesterday();
+        HeWeather5.DailyForecastBean yesterday = WeatherUtil.getInstance().getYesterday();
         if (yesterday != null) {
             dailyForecastList.add(0, yesterday);
         }
@@ -80,7 +80,7 @@ public class WeatherDetailsView extends LinearLayout {
             tvTemp.setText(String.format(("%s℃ - %s℃"), dailyForecastList.get(i).getTmp().getMin(), dailyForecastList.get(i).getTmp().getMax()));
             tvInfo.setText(String.format("%s，降雨几率：%s%%，%s %s 级", dailyForecastList.get(i).getCond().getTxt_d(), dailyForecastList.get(i).getPop(), dailyForecastList.get(i).getWind().getDir(), dailyForecastList.get(i).getWind().getSc()));
 
-            WeatherUtil.getWeatherDict(dailyForecastList.get(i).getCond().getCode_d()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
+            WeatherUtil.getInstance().getWeatherDict(dailyForecastList.get(i).getCond().getCode_d()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
                 @Override
                 public void onNext(WeatherBean weatherBean) {
                     Glide.with(getContext()).load(weatherBean.getIcon()).diskCacheStrategy(DiskCacheStrategy.ALL).into(ivWeek);
