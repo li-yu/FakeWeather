@@ -52,7 +52,7 @@ public class GirlsAdapter extends RecyclerView.Adapter<GirlsAdapter.GirlViewHold
     }
 
     private void startPictureActivity(View transitView, int position) {
-        Intent intent = PictureActivity.newIntent(context, getData(), position);
+        Intent intent = PictureActivity.newIntent(context, getData().get(position).getUrl(), System.currentTimeMillis() + "");
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 (Activity) context, transitView, PictureActivity.TRANSIT_PIC);
         try {
