@@ -1,6 +1,7 @@
 package com.liyu.fakeweather.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.liyu.fakeweather.utils.SortUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  * Created by liyu on 2016/10/31.
  */
 
-public class BusLineNearby implements Serializable {
+public class BusLineNearby implements Serializable{
 
     /**
      * SCode : RBK
@@ -127,7 +128,7 @@ public class BusLineNearby implements Serializable {
         }
     }
 
-    public static class LineBean {
+    public static class LineBean implements SortUtil.Sortable {
         private String Guid;
         private String LName;
         private String LDirection;
@@ -191,6 +192,11 @@ public class BusLineNearby implements Serializable {
 
         public void setDistince_str(String Distince_str) {
             this.Distince_str = Distince_str;
+        }
+
+        @Override
+        public String sortName() {
+            return LName;
         }
     }
 }

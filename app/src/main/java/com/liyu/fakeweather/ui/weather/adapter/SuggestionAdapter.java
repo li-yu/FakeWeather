@@ -35,7 +35,10 @@ public class SuggestionAdapter extends BaseQuickAdapter<Object, BaseViewHolder> 
     protected void convert(BaseViewHolder holder, Object item) {
         int width = getScreenWidth() / 4;
         holder.itemView.setLayoutParams(new LinearLayout.LayoutParams(width, width));
-        if (item instanceof SuggestionBean.ComfBean) {
+        if (item instanceof SuggestionBean.AirBean) {
+            holder.setText(R.id.tvName, "空气");
+            holder.setText(R.id.tvMsg, ((SuggestionBean.AirBean) item).getBrf());
+        } else if (item instanceof SuggestionBean.ComfBean) {
             holder.setText(R.id.tvName, "舒适度");
             holder.setText(R.id.tvMsg, ((SuggestionBean.ComfBean) item).getBrf());
         } else if (item instanceof SuggestionBean.CwBean) {

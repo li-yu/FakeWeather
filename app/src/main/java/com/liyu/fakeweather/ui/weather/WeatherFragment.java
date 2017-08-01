@@ -211,7 +211,7 @@ public class WeatherFragment extends BaseContentFragment {
         dailyForecast.addView(getChartView(weather));
 
         List suggestion = new ArrayList();
-        suggestion.add(weather.getAqi());
+//        suggestion.add(weather.getAqi());
         suggestion.add(weather.getSuggestion().getAir());
         suggestion.add(weather.getSuggestion().getComf());
         suggestion.add(weather.getSuggestion().getCw());

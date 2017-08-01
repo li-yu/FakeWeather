@@ -13,6 +13,7 @@ import com.liyu.fakeweather.location.RxLocation;
 import com.liyu.fakeweather.model.BusLineNearby;
 import com.liyu.fakeweather.ui.base.BaseContentFragment;
 import com.liyu.fakeweather.ui.bus.adapter.LineNearbyAdapter;
+import com.liyu.fakeweather.utils.SortUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -96,6 +97,7 @@ public class NearbyLineFragment extends BaseContentFragment {
                                     .show();
                             return;
                         }
+                        SortUtil.sort(response.data.getLine());
                         adapter.setNewData(response.data.getLine());
                     }
                 });
