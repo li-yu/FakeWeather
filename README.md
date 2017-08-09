@@ -10,9 +10,13 @@
 - 闲读，阅读最新科技资讯，读那些值得读的
 - 福利，大量妹子图，你懂的，还不赶紧上车
 
+### 更新历史 
+
+[Release Notes](https://github.com/li-yu/FakeWeather/releases)
+
 ### 下载 
 
-[直接下载 v1.2.7_20170527](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/FakeWeather_v1.2.7_20170527.apk)
+[直接下载 v1.2.8_20170809](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/FakeWeather_v1.2.8_20170809.apk)
 
 ![qcode](qcode.png)
 
