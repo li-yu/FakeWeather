@@ -42,7 +42,7 @@ public class GankFragment extends BaseGirlsListFragment {
                     public void onError(Throwable e) {
                         isLoading = false;
                         showRefreshing(false);
-                        Snackbar.make(getView(), "获取Gank妹纸失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
+                        Snackbar.make(getView(), "获取 Gank 妹纸失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 getGirlFromServer();

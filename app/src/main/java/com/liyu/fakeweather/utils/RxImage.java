@@ -93,7 +93,7 @@ public class RxImage {
 
     public static Observable<Uri> saveText2ImageObservable(final Activity context, final ScrollView view) {
         return Observable
-                .create(new Observable.OnSubscribe<Bitmap>() {
+                .unsafeCreate(new Observable.OnSubscribe<Bitmap>() {
                     @Override
                     public void call(Subscriber<? super Bitmap> subscriber) {
 
@@ -185,11 +185,10 @@ public class RxImage {
 
     private static Bitmap saveScrollViewToBitmap(ScrollView scrollView) {
         int h = 0;
-        Bitmap bitmap = null;
         for (int i = 0; i < scrollView.getChildCount(); i++) {
             h += scrollView.getChildAt(i).getHeight();
         }
-        bitmap = Bitmap.createBitmap(scrollView.getWidth(), h,
+        Bitmap bitmap = Bitmap.createBitmap(scrollView.getWidth(), h,
                 Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
         scrollView.draw(canvas);

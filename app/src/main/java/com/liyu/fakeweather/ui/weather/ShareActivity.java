@@ -20,8 +20,6 @@ public class ShareActivity extends BaseActivity {
 
     private static final String EXTRA_SHARE_MESSAGE = "share_message";
 
-    private String shareMessage = "";
-
     private ScrollView scrollView;
     private TextView tv;
 
@@ -49,7 +47,7 @@ public class ShareActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
-        shareMessage = getIntent().getStringExtra(EXTRA_SHARE_MESSAGE);
+        String shareMessage = getIntent().getStringExtra(EXTRA_SHARE_MESSAGE);
         tv.setText(shareMessage);
         scrollView.post(new Runnable() {
             @Override

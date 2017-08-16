@@ -238,10 +238,11 @@ public class WeatherFragment extends BaseContentFragment {
         if (currentWeather == null)
             return;
         String shareType = SettingsUtil.getWeatherShareType();
-        if (shareType.equals("纯文本"))
-            ShareUtils.shareText(getActivity(), WeatherUtil.getInstance().getShareMessage(currentWeather));
-        else if (shareType.equals("仿锤子便签"))
+        if (shareType.equals("纯文本")) {
+            ShareUtils.shareText(getActivity(), WeatherUtil.getInstance().getShareMessage(currentWeather), "分享到");
+        } else if (shareType.equals("仿锤子便签")) {
             ShareActivity.start(getActivity(), WeatherUtil.getInstance().getShareMessage(currentWeather));
+        }
     }
 
     @Override

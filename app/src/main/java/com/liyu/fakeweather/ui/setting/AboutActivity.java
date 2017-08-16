@@ -118,7 +118,7 @@ public class AboutActivity extends BaseActivity {
                 UpdateUtil.check(AboutActivity.this, false);
                 break;
             case R.id.btn_share_app:
-                ShareUtils.shareText(this, "来不及了，赶紧上车！https://github.com/li-yu/FakeWeather");
+                ShareUtils.shareText(this, "来不及了，赶紧上车！https://github.com/li-yu/FakeWeather", "分享到");
                 break;
         }
     }
