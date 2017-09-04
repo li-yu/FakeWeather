@@ -2,6 +2,7 @@ package com.liyu.fakeweather.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.liyu.fakeweather.AppGlobal;
 import com.liyu.fakeweather.R;
@@ -57,6 +60,16 @@ public class MainActivity extends BaseActivity {
     @Override
     protected int getMenuId() {
         return 0;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        //取消标题栏
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //取消状态栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        super.onCreate(savedInstanceState);
     }
 
     @Override

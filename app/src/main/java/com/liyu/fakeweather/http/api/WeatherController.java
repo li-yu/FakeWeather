@@ -17,4 +17,5 @@ public interface WeatherController {
 
     @GET("https://free-api.heweather.com/v5/weather")
     Observable<BaseWeatherResponse<HeWeather5>> getWeather(@Query("key") String key, @Query("city") String city);
+
 }

@@ -36,20 +36,18 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="E6rdq6U1vjjmTTglEtdX6fFbYTejWKEq"/>
 
-        <activity android:name="com.liyu.fakeweather.ui.MainActivity"
+        <activity
+            android:name="com.liyu.fakeweather.ui.MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
-        <activity android:name="com.liyu.fakeweather.ui.bus.LineDetailActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.liyu.fakeweather.ui.bus.LineDetailActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name="com.liyu.fakeweather.ui.bus.StationDetailActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.liyu.fakeweather.ui.bus.StationDetailActivity"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name="com.baidu.location.f"
@@ -58,15 +56,16 @@
         <activity
             android:name="com.liyu.fakeweather.ui.girl.PictureActivity"
             android:label=""
-            android:theme="@style/PictureTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/PictureTheme"/>
 
         <service
             android:name="com.liyu.fakeweather.service.GirlService"
             android:enabled="true"/>
 
-        <activity android:name="com.liyu.fakeweather.ui.weather.ShareActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.liyu.fakeweather.ui.weather.ShareActivity"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.liyu.fakeweather.ui.setting.SettingActivity"
@@ -92,6 +91,16 @@
             android:name="com.liyu.fakeweather.ui.bus.AllLineActivity"
             android:label="全部线路"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.liyu.fakeweather.ui.SplashActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            </activity>
 
     </application>
 

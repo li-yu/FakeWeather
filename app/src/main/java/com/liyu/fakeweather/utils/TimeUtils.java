@@ -186,6 +186,8 @@ public class TimeUtils {
 
     public static final SimpleDateFormat HOUR_SDF = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
+    public static final SimpleDateFormat HOURLY_FORECAST_SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+
     /**
      * 将时间戳转为时间字符串
      * <p>格式为yyyy-MM-dd HH:mm:ss</p>
@@ -645,6 +647,63 @@ public class TimeUtils {
 
     public static String getSystemTime() {
         return String.valueOf(System.currentTimeMillis());
+    }
+
+    /**
+     * 判断当前时间是否在两个时间段之内
+     *
+     * @param beginTime 开始时间
+     * @param endTime   结束时间
+     * @return
+     */
+    public static boolean isNowBetween(String beginTime, String endTime) {
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        Date now = null;
+        Date begin = null;
+        Date end = null;
+        try {
+            now = df.parse(df.format(new Date()));
+            begin = df.parse(beginTime);
+            end = df.parse(endTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Calendar nowCal = Calendar.getInstance();
+        nowCal.setTime(now);
+
+        Calendar beginCal = Calendar.getInstance();
+        beginCal.setTime(begin);
+
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(end);
+
+        if (nowCal.after(beginCal) && nowCal.before(endCal)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 获取当前时间在某段时间内的百分比位置
+     *
+     * @param beginTime 开始时间
+     * @param endTime   结束时间
+     * @return
+     */
+    public static float getTimeDiffPercent(String beginTime, String endTime) {
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        Date now = null;
+        Date begin = null;
+        Date end = null;
+        try {
+            now = df.parse(df.format(new Date()));
+            begin = df.parse(beginTime);
+            end = df.parse(endTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (float) (now.getTime() - begin.getTime()) / (float) (end.getTime() - begin.getTime());
     }
 
 }

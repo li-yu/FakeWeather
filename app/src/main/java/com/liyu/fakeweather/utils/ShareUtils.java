@@ -18,8 +18,7 @@ public class ShareUtils {
     }
 
     public static void shareImage(Context context, Uri uri, String title) {
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         shareIntent.setType("image/jpeg");
         context.startActivity(Intent.createChooser(shareIntent, title));

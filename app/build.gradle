@@ -47,4 +47,8 @@ dependencies {
     compile 'com.github.andremion:counterfab:1.0.1'
     compile 'com.android.support:support-vector-drawable:25.3.1'
     compile 'com.android.support:support-v13:25.3.1'
+    compile 'com.airbnb.android:lottie:2.2.0'
+}
+repositories {
+    mavenCentral()
 }

@@ -2,6 +2,7 @@ package com.liyu.fakeweather.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -53,5 +54,13 @@ public class ThemeUtil {
         Drawable drawable1 = DrawableCompat.wrap(context.getResources().getDrawable(drawable));
         DrawableCompat.setTintList(drawable1, context.getResources().getColorStateList(color));
         return drawable1;
+    }
+
+    public static int changeAlpha(int color, float fraction) {
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        int alpha = (int) (Color.alpha(color) * fraction);
+        return Color.argb(alpha, red, green, blue);
     }
 }

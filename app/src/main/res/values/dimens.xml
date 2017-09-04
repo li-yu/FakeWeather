@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="app_bar_height">230dp</dimen>
+    <dimen name="font_space_width">12dp</dimen>
+
 </resources>

@@ -1,36 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground">
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+    >
 
-    <android.support.v4.widget.Space
-        android:id="@+id/spacer"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_centerInParent="true"/>
-
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/spacer"
+    <com.liyu.fakeweather.widgets.CircleImageView
+        android:id="@+id/civ_suggesstion"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="4dp"
-        android:text="TextView"
-        android:textColor="@color/white"
-        android:textSize="12sp"/>
+        android:cropToPadding="true"
+        android:src="@drawable/ic_uv"
+        app:civ_fill_color="@color/greenery"
+        app:civ_padding="8dp"/>
 
     <TextView
         android:id="@+id/tvMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spacer"
+        android:layout_below="@+id/civ_suggesstion"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/colorTextDark"
+        android:textSize="12sp"
+        tools:text="TextView"/>
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvMsg"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="4dp"
-        android:text="TextView"
-        android:textColor="@color/white"
-        android:textSize="14sp"/>
+        android:textColor="@color/colorTextDark2nd"
+        android:textSize="10sp"
+        tools:text="TextView"/>
+
 
 </RelativeLayout>

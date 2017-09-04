@@ -1,38 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    
-    <TextView
-        android:id="@+id/tv_hourly_time"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="14sp"
-        android:layout_marginTop="8dp"
-        android:text="18:00"/>
-
-    <TextView
-        android:id="@+id/tv_hourly_weather"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="14sp"
-        android:layout_marginTop="16dp"
-        android:text="多云"/>
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_hourly_temp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:text="18°"
         android:textSize="14sp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="18℃"/>
+        android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/iv_hourly_weather"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/ic_launcher"
+        />
+
+    <TextView
+        android:id="@+id/tv_hourly_time"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="18:00"
+        android:textSize="12sp"/>
 
 </LinearLayout>

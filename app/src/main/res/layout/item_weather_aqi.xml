@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp">
+
+    <TextView
+        android:id="@+id/tv_aqi_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/colorTextDark2nd"
+        android:textSize="10sp"
+        tools:text="PM2.5"
+        />
+
+    <TextView
+        android:id="@+id/tv_aqi_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tv_aqi_name"
+        android:textColor="@color/colorTextDark2nd"
+        android:textSize="10sp"
+        tools:text="细颗粒物"
+        />
+
+    <TextView
+        android:id="@+id/tv_aqi_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_aqi_desc"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/colorTextDark2nd"
+        android:textSize="16sp"
+        tools:text="120"
+        />
+
+    <View
+        android:id="@+id/view_aqi_qlty"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/tv_aqi_value"
+        android:layout_marginTop="4dp"
+        android:background="@color/greenery"/>
+
+</RelativeLayout>

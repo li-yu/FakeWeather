@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PathMeasure;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
@@ -22,13 +21,6 @@ import java.util.List;
 public class ChartView extends View {
 
     private Paint paint;
-    private PathMeasure mPathMeasureMax;
-    private PathMeasure mPathMeasureMin;
-    private float mAnimatorValue;
-    private Path mDstMax;
-    private Path mDstMin;
-    private float mLengthMax;
-    private float mLengthMin;
 
     private List<Integer> minTemp;
     private List<Integer> maxTemp;
@@ -38,6 +30,12 @@ public class ChartView extends View {
 
     Path minPath;
     Path maxPath;
+
+    private int textMargin;
+
+    private float mAnimatorValue;
+
+    private static final int LINE_COLOR = 0xffE1E5E8;
 
     public ChartView(Context context) {
         this(context, null);
@@ -50,71 +48,40 @@ public class ChartView extends View {
     public ChartView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         paint = new Paint();
-        paint.setColor(context.getResources().getColor(R.color.white));
         paint.setAntiAlias(true);
-        paint.setStrokeWidth(3);
+        paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setTextSize(SizeUtils.sp2px(context, 10));
-        mPathMeasureMax = new PathMeasure();
-        mPathMeasureMin = new PathMeasure();
-        mDstMax = new Path();
-        mDstMin = new Path();
+        textMargin = SizeUtils.dp2px(context, 8);
         minPath = new Path();
         maxPath = new Path();
     }
 
     @Override
     protected void onDraw(final Canvas canvas) {
+        super.onDraw(canvas);
         float width = getWidth();
         float height = getHeight();
 
         final int heightScale = (int) (height / (maxValue - minValue));
         final int widthtScale = (int) (width / (2 * minTemp.size()));
 
+        paint.setStrokeWidth(widthtScale / 3);
+
         Rect rect = new Rect();
         for (int i = 0; i < minTemp.size(); i++) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(LINE_COLOR);
+            canvas.drawLine((2 * i + 1) * widthtScale, (maxValue - minTemp.get(i)) * heightScale * mAnimatorValue, (2 * i + 1) * widthtScale, (maxValue - maxTemp.get(i)) * heightScale * mAnimatorValue, paint);
             paint.setStyle(Paint.Style.FILL);
-            if (i == 0) {
-                minPath.moveTo((2 * i + 1) * widthtScale, (maxValue - minTemp.get(i)) * heightScale);
-            } else {
-                minPath.lineTo((2 * i + 1) * widthtScale, (maxValue - minTemp.get(i)) * heightScale);
-            }
-            final String valueStr = String.valueOf(minTemp.get(i)) + "℃";
-            paint.getTextBounds(valueStr, 0, valueStr.length(), rect);
-            final float textHeight = rect.height();
-            final float textWidth = rect.width();
-            canvas.drawCircle((2 * i + 1) * widthtScale, (maxValue - minTemp.get(i)) * heightScale, 5, paint);
-            canvas.drawText(valueStr, (2 * i + 1) * widthtScale - textWidth / 2, (maxValue - minTemp.get(i)) * heightScale + textHeight + 20, paint);
+            paint.setColor(getContext().getResources().getColor(R.color.colorTextDark2nd));
+            final String valueStrMin = String.valueOf(minTemp.get(i));
+            paint.getTextBounds(valueStrMin, 0, valueStrMin.length(), rect);
+            canvas.drawText(valueStrMin + "°", (2 * i + 1) * widthtScale - rect.width() / 2, (maxValue - minTemp.get(i)) * heightScale * mAnimatorValue + rect.height() + textMargin, paint);
+            final String valueStrMax = String.valueOf(maxTemp.get(i));
+            paint.getTextBounds(valueStrMax, 0, valueStrMax.length(), rect);
+            canvas.drawText(valueStrMax + "°", (2 * i + 1) * widthtScale - rect.width() / 2, (maxValue - maxTemp.get(i)) * heightScale * mAnimatorValue - textMargin, paint);
         }
 
-        for (int i = 0; i < maxTemp.size(); i++) {
-            if (i == 0) {
-                maxPath.moveTo((2 * i + 1) * widthtScale, (maxValue - maxTemp.get(i)) * heightScale);
-            } else {
-                maxPath.lineTo((2 * i + 1) * widthtScale, (maxValue - maxTemp.get(i)) * heightScale);
-            }
-            final String valueStr = String.valueOf(maxTemp.get(i)) + "℃";
-            paint.getTextBounds(valueStr, 0, valueStr.length(), rect);
-            final float textHeight = rect.height();
-            final float textWidth = rect.width();
-            canvas.drawCircle((2 * i + 1) * widthtScale, (maxValue - maxTemp.get(i)) * heightScale, 5, paint);
-            canvas.drawText(valueStr, (2 * i + 1) * widthtScale - textWidth / 2, (maxValue - maxTemp.get(i)) * heightScale - textHeight - 5, paint);
-        }
-        paint.setStyle(Paint.Style.STROKE);
-        mPathMeasureMax.setPath(maxPath, false);
-        mPathMeasureMin.setPath(minPath, false);
-        mLengthMax = mPathMeasureMax.getLength();
-        mLengthMin = mPathMeasureMin.getLength();
-        super.onDraw(canvas);
-        mDstMax.reset();
-        mDstMin.reset();
-        mDstMax.lineTo(0, 0);
-        mDstMin.lineTo(0, 0);
-        float stopMax = mLengthMax * mAnimatorValue;
-        mPathMeasureMax.getSegment(0, stopMax, mDstMax, true);
-        canvas.drawPath(mDstMax, paint);
-        float stopMin = mLengthMin * mAnimatorValue;
-        mPathMeasureMin.getSegment(0, stopMin, mDstMin, true);
-        canvas.drawPath(mDstMin, paint);
     }
 
     public void setData(List<Integer> minTemp, List<Integer> maxTemp) {
@@ -145,5 +112,33 @@ public class ChartView extends View {
         valueAnimator.setDuration((minTemp.size() + 1) * 200);
         valueAnimator.setRepeatCount(0);
         valueAnimator.start();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int desiredHeight = SizeUtils.dp2px(getContext(), 140);
+
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        int height;
+
+        //Measure Height
+        if (heightMode == MeasureSpec.EXACTLY) {
+            //Must be this size
+            height = heightSize;
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+            //Can't be bigger than...
+            height = Math.min(desiredHeight, heightSize);
+        } else {
+            //Be whatever you want
+            height = desiredHeight;
+        }
+
+        //MUST CALL THIS
+        setMeasuredDimension(widthSize, height);
     }
 }

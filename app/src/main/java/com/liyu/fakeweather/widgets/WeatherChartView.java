@@ -30,6 +30,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class WeatherChartView extends LinearLayout {
 
+    private boolean canRefresh = true;
+
     private List<HeWeather5.DailyForecastBean> dailyForecastList = new ArrayList<>();
 
     LinearLayout.LayoutParams cellParams;
@@ -53,7 +55,7 @@ public class WeatherChartView extends LinearLayout {
         this.setLayoutTransition(transition);
         rowParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         cellParams = new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1);
-        chartParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, SizeUtils.dp2px(getContext(), 200));
+        chartParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     }
 
     private void letItGo() {
@@ -86,20 +88,20 @@ public class WeatherChartView extends LinearLayout {
             final TextView tvDate = new TextView(getContext());
             tvDate.setGravity(Gravity.CENTER);
             tvDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-            tvDate.setTextColor(getResources().getColor(R.color.white));
+            tvDate.setTextColor(getResources().getColor(R.color.colorTextDark));
             tvDate.setVisibility(INVISIBLE);
             final TextView tvWeather = new TextView((getContext()));
             tvWeather.setGravity(Gravity.CENTER);
             tvWeather.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-            tvWeather.setTextColor(getResources().getColor(R.color.white));
+            tvWeather.setTextColor(getResources().getColor(R.color.colorTextDark));
             tvWeather.setVisibility(INVISIBLE);
             final ImageView ivIcon = new ImageView(getContext());
             ivIcon.setAdjustViewBounds(true);
             ivIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
             int padding = SizeUtils.dp2px(getContext(), 10);
             int width = SizeUtils.getScreenWidth(getContext()) / dailyForecastList.size();
-            LayoutParams ivParam = new LayoutParams(width,width);
-            ivParam.weight =1;
+            LayoutParams ivParam = new LayoutParams(width, width);
+            ivParam.weight = 1;
             ivIcon.setLayoutParams(ivParam);
             ivIcon.setPadding(padding, padding, padding, padding);
             ivIcon.setVisibility(INVISIBLE);
@@ -153,8 +155,18 @@ public class WeatherChartView extends LinearLayout {
     }
 
     public void setWeather5(HeWeather5 weather5) {
+        if (weather5 == null || !canRefresh) {
+            return;
+        }
         dailyForecastList.clear();
         dailyForecastList.addAll(weather5.getDaily_forecast());
         letItGo();
+        canRefresh = false;
+        this.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                canRefresh = true;
+            }
+        }, weather5.getDaily_forecast().size() * 200);
     }
 }
