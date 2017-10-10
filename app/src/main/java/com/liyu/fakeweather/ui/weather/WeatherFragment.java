@@ -8,9 +8,7 @@ import android.support.v7.widget.Toolbar;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.ui.MainActivity;
 import com.liyu.fakeweather.ui.base.BaseFragment;
-import com.liyu.fakeweather.ui.weather.dynamic.DynamicWeatherView;
 import com.liyu.fakeweather.ui.weather.dynamic.DynamicWeatherView2;
-import com.liyu.fakeweather.ui.weather.dynamic.SandstormType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,6 @@ public class WeatherFragment extends BaseFragment {
 
     private DynamicWeatherView2 dynamicWeatherView;
     private Toolbar mToolbar;
-
 
     @Override
     protected int getLayoutId() {
@@ -66,12 +63,7 @@ public class WeatherFragment extends BaseFragment {
 
     @Override
     protected void lazyFetchData() {
-        dynamicWeatherView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                dynamicWeatherView.setType(new SandstormType(getContext()));
-            }
-        }, 3000);
+
     }
 
     @Override

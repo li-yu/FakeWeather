@@ -8,13 +8,12 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.http.ApiFactory;
-import com.liyu.fakeweather.model.WeatherCityBean;
+import com.liyu.fakeweather.http.BaseCityResponse;
+import com.liyu.fakeweather.model.City;
 import com.liyu.fakeweather.ui.base.BaseActivity;
 import com.liyu.fakeweather.utils.ToastUtil;
 
 import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -48,20 +47,21 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
-        if (DataSupport.count(WeatherCityBean.class) <= 0) {
+        if (DataSupport.count(City.class) <= 0) {
             ApiFactory
                     .getAppController()
                     .getWeatherCityList()
                     .subscribeOn(Schedulers.io())
-                    .map(new Func1<List<WeatherCityBean>, List<WeatherCityBean>>() {
+                    .map(new Func1<BaseCityResponse, BaseCityResponse>() {
                         @Override
-                        public List<WeatherCityBean> call(List<WeatherCityBean> weatherCityBeen) {
-                            DataSupport.saveAll(weatherCityBeen);
-                            return weatherCityBeen;
+                        public BaseCityResponse call(BaseCityResponse cityResponse) {
+                            DataSupport.saveAll(cityResponse.citys);
+                            DataSupport.saveAll(cityResponse.provinces);
+                            return cityResponse;
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<WeatherCityBean>>() {
+                    .subscribe(new Observer<BaseCityResponse>() {
                         @Override
                         public void onCompleted() {
                             lottieAnimationView.cancelAnimation();
@@ -102,7 +102,7 @@ public class SplashActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void onNext(List<WeatherCityBean> weatherCityBeen) {
+                        public void onNext(BaseCityResponse cityResponse) {
 
                         }
                     });

@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.TextureView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,11 +16,9 @@ import com.baidu.location.BDLocation;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.http.ApiFactory;
-import com.liyu.fakeweather.http.BaseBusResponse;
 import com.liyu.fakeweather.http.BaseWeatherResponse;
 import com.liyu.fakeweather.location.RxLocation;
 import com.liyu.fakeweather.model.AqiDetailBean;
-import com.liyu.fakeweather.model.BusLineSearch;
 import com.liyu.fakeweather.model.HeWeather5;
 import com.liyu.fakeweather.ui.base.BaseContentFragment;
 import com.liyu.fakeweather.ui.weather.adapter.AqiAdapter;
@@ -31,7 +28,6 @@ import com.liyu.fakeweather.ui.weather.dynamic.DynamicWeatherView2;
 import com.liyu.fakeweather.ui.weather.dynamic.ShortWeatherInfo;
 import com.liyu.fakeweather.ui.weather.dynamic.SunnyType;
 import com.liyu.fakeweather.utils.ACache;
-import com.liyu.fakeweather.utils.SimpleSubscriber;
 import com.liyu.fakeweather.utils.ThemeUtil;
 import com.liyu.fakeweather.utils.WeatherUtil;
 import com.liyu.fakeweather.widgets.AqiView;
@@ -39,7 +35,6 @@ import com.liyu.fakeweather.widgets.WeatherChartView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Observer;
