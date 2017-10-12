@@ -20,6 +20,7 @@ import com.liyu.fakeweather.http.BaseWeatherResponse;
 import com.liyu.fakeweather.location.RxLocation;
 import com.liyu.fakeweather.model.AqiDetailBean;
 import com.liyu.fakeweather.model.HeWeather5;
+import com.liyu.fakeweather.model.IFakeWeather;
 import com.liyu.fakeweather.ui.base.BaseContentFragment;
 import com.liyu.fakeweather.ui.weather.adapter.AqiAdapter;
 import com.liyu.fakeweather.ui.weather.adapter.HourlyAdapter;
@@ -68,7 +69,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
     private ACache mCache;
 
-    private HeWeather5 currentWeather;
+    private IFakeWeather currentWeather;
 
     private Subscription subscription;
 
@@ -149,12 +150,12 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
     }
 
-    private Observable<HeWeather5> getLocalCache() {
-        return Observable.unsafeCreate(new Observable.OnSubscribe<HeWeather5>() {
+    private Observable<IFakeWeather> getLocalCache() {
+        return Observable.unsafeCreate(new Observable.OnSubscribe<IFakeWeather>() {
 
             @Override
-            public void call(Subscriber<? super HeWeather5> subscriber) {
-                HeWeather5 cacheWeather = (HeWeather5) mCache.getAsObject(CACHE_WEAHTHER_NAME);
+            public void call(Subscriber<? super IFakeWeather> subscriber) {
+                IFakeWeather cacheWeather = (IFakeWeather) mCache.getAsObject(CACHE_WEAHTHER_NAME);
                 if (cacheWeather == null) {
                     subscriber.onCompleted();
                 } else {
@@ -164,7 +165,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         });
     }
 
-    private Observable<HeWeather5> getFromNetwork() {
+    private Observable<IFakeWeather> getFromNetwork() {
         return RxLocation.get().locate(getActivity())
                 .flatMap(new Func1<BDLocation, Observable<BaseWeatherResponse<HeWeather5>>>() {
                     @Override
@@ -181,9 +182,9 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
                         });
                     }
                 })
-                .map(new Func1<BaseWeatherResponse<HeWeather5>, HeWeather5>() {
+                .map(new Func1<BaseWeatherResponse<HeWeather5>, IFakeWeather>() {
                     @Override
-                    public HeWeather5 call(BaseWeatherResponse<HeWeather5> response) {
+                    public IFakeWeather call(BaseWeatherResponse<HeWeather5> response) {
                         HeWeather5 heWeather5 = response.HeWeather5.get(0);
                         mCache.put(CACHE_WEAHTHER_NAME, heWeather5, 30 * 60);
                         WeatherUtil.getInstance().saveDailyHistory(heWeather5);
@@ -199,7 +200,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
                 .concat(getLocalCache(), getFromNetwork())
                 .first()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<HeWeather5>() {
+                .subscribe(new Observer<IFakeWeather>() {
                     @Override
                     public void onCompleted() {
                         showRefreshing(false);
@@ -217,68 +218,55 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
                     }
 
                     @Override
-                    public void onNext(HeWeather5 heWeather5) {
-                        showWeather(heWeather5);
+                    public void onNext(IFakeWeather weather) {
+                        showWeather(weather);
                     }
                 });
 
     }
 
-    private void showWeather(HeWeather5 weather) {
-        ShortWeatherInfo info = new ShortWeatherInfo();
-        info.setCode(weather.getNow().getCond().getCode());
-        info.setWindSpeed(weather.getNow().getWind().getSpd());
-        info.setSunrise(weather.getDaily_forecast().get(0).getAstro().getSr());
-        info.setSunset(weather.getDaily_forecast().get(0).getAstro().getSs());
-        info.setMoonrise(weather.getDaily_forecast().get(0).getAstro().getMr());
-        info.setMoonset(weather.getDaily_forecast().get(0).getAstro().getMs());
-        dynamicWeatherView.setType(new SunnyType(getActivity(), info));
-        parentToolbar.setTitle(weather.getBasic().getCity());
-        parentToolbar.setTitleTextColor(0x00FFFFFF);
-        tvCityName.setText(weather.getBasic().getCity());
+    private void showWeather(IFakeWeather weather) {
         currentWeather = weather;
-        hourlyAdapter.setNewData(weather.getHourly_forecast());
+        ShortWeatherInfo info = new ShortWeatherInfo();
+        info.setCode(weather.getFakeNow().getNowCode());
+        info.setWindSpeed(weather.getFakeNow().getNowWindSpeed());
+        info.setSunrise(weather.getFakeForecastDaily().get(0).getSunRise());
+        info.setSunset(weather.getFakeForecastDaily().get(0).getSunSet());
+        info.setMoonrise(weather.getFakeForecastDaily().get(0).getMoonRise());
+        info.setMoonset(weather.getFakeForecastDaily().get(0).getMoonSet());
+        dynamicWeatherView.setType(new SunnyType(getActivity(), info));
+        parentToolbar.setTitle(weather.getFakeBasic().getCityName());
+        parentToolbar.setTitleTextColor(0x00FFFFFF);
+        tvCityName.setText(weather.getFakeBasic().getCityName());
+        hourlyAdapter.setNewData(weather.getFakeForecastHourly());
         weatherChartView.setWeather5(weather);
-        tvNowWeatherString.setText(weather.getNow().getCond().getTxt());
-        tvNowTemp.setText(String.format("%s°", weather.getNow().getTmp()));
-        tvTodayTempMax.setText(weather.getDaily_forecast().get(0).getTmp().getMax() + "℃");
-        tvTodayTempMin.setText(weather.getDaily_forecast().get(0).getTmp().getMin() + "℃");
+        tvNowWeatherString.setText(weather.getFakeNow().getNowText());
+        tvNowTemp.setText(String.format("%s°", weather.getFakeNow().getNowTemp()));
+        tvTodayTempMax.setText(weather.getFakeForecastDaily().get(0).getMaxTemp() + "℃");
+        tvTodayTempMin.setText(weather.getFakeForecastDaily().get(0).getMinTemp() + "℃");
         aqiView.setApi(weather);
         setAqiDetail(weather);
         setSuggesstion(weather);
 
     }
 
-    private void setSuggesstion(HeWeather5 weather5) {
-        List suggestion = new ArrayList();
-        suggestion.add(weather5.getSuggestion().getAir());
-        suggestion.add(weather5.getSuggestion().getComf());
-        suggestion.add(weather5.getSuggestion().getCw());
-        suggestion.add(weather5.getSuggestion().getDrsg());
-        suggestion.add(weather5.getSuggestion().getFlu());
-        suggestion.add(weather5.getSuggestion().getSport());
-        suggestion.add(weather5.getSuggestion().getTrav());
-        suggestion.add(weather5.getSuggestion().getUv());
-        for (int i = 0; i < suggestion.size(); i++) {
-            if (suggestion.get(i) == null)
-                suggestion.remove(i);
-        }
-        suggestionAdapter.setNewData(suggestion);
+    private void setSuggesstion(IFakeWeather weather) {
+        suggestionAdapter.setNewData(weather.getFakeSuggestion());
     }
 
-    private void setAqiDetail(HeWeather5 weather5) {
+    private void setAqiDetail(IFakeWeather weather) {
         List<AqiDetailBean> list = new ArrayList<>();
-        AqiDetailBean pm25 = new AqiDetailBean("PM2.5", "细颗粒物", weather5.getAqi().getCity().getPm25());
+        AqiDetailBean pm25 = new AqiDetailBean("PM2.5", "细颗粒物", weather.getFakeAqi().getPm25());
         list.add(pm25);
-        AqiDetailBean pm10 = new AqiDetailBean("PM10", "可吸入颗粒物", weather5.getAqi().getCity().getPm10());
+        AqiDetailBean pm10 = new AqiDetailBean("PM10", "可吸入颗粒物", weather.getFakeAqi().getPm10());
         list.add(pm10);
-        AqiDetailBean so2 = new AqiDetailBean("SO2", "二氧化硫", weather5.getAqi().getCity().getSo2());
+        AqiDetailBean so2 = new AqiDetailBean("SO2", "二氧化硫", weather.getFakeAqi().getSo2());
         list.add(so2);
-        AqiDetailBean no2 = new AqiDetailBean("NO2", "二氧化氮", weather5.getAqi().getCity().getNo2());
+        AqiDetailBean no2 = new AqiDetailBean("NO2", "二氧化氮", weather.getFakeAqi().getNo2());
         list.add(no2);
-        AqiDetailBean co = new AqiDetailBean("CO", "一氧化碳", weather5.getAqi().getCity().getCo());
+        AqiDetailBean co = new AqiDetailBean("CO", "一氧化碳", weather.getFakeAqi().getCo());
         list.add(co);
-        AqiDetailBean o3 = new AqiDetailBean("O3", "臭氧", weather5.getAqi().getCity().getO3());
+        AqiDetailBean o3 = new AqiDetailBean("O3", "臭氧", weather.getFakeAqi().getO3());
         list.add(o3);
         aqiAdapter.setNewData(list);
     }

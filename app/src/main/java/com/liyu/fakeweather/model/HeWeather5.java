@@ -1,21 +1,17 @@
 package com.liyu.fakeweather.model;
 
-import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.liyu.fakeweather.utils.SettingsUtil;
+import com.liyu.fakeweather.utils.TimeUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by liyu on 2016/11/10.
  */
 
-public class HeWeather5 implements Serializable, Cloneable, MultiItemEntity {
-
-    public static final int TYPE_NOW = 1;
-    public static final int TYPE_DAILYFORECAST = 2;
-    public static final int TYPE_SUGGESTION = 3;
-
-    private int itemType = 0;
+public class HeWeather5 implements Serializable, Cloneable, IFakeWeather {
 
     /**
      * city : {"aqi":"48","co":"1","no2":"51","o3":"26","pm10":"47","pm25":"25","qlty":"优","so2":"24"}
@@ -151,12 +147,119 @@ public class HeWeather5 implements Serializable, Cloneable, MultiItemEntity {
     }
 
     @Override
-    public int getItemType() {
-        return itemType;
+    public FakeWeather.FakeBasic getFakeBasic() {
+        FakeWeather.FakeBasic fakeBasic = new FakeWeather.FakeBasic();
+        fakeBasic.setCityName(basic.getCity());
+        fakeBasic.setCityId(basic.getId());
+        return fakeBasic;
     }
 
-    public void setItemType(int type) {
-        this.itemType = type;
+    @Override
+    public FakeWeather.FakeNow getFakeNow() {
+        FakeWeather.FakeNow fakeNow = new FakeWeather.FakeNow();
+        fakeNow.setNowTemp(now.getTmp());
+        fakeNow.setNowCode(now.getCond().getCode());
+        fakeNow.setNowText(now.getCond().getTxt());
+        fakeNow.setNowWindDir(now.getWind().getDir());
+        fakeNow.setNowWindSpeed(now.getWind().getSc());
+        fakeNow.setUpdateTime(basic.getUpdate().getLoc());
+        return fakeNow;
+    }
+
+    @Override
+    public FakeWeather.FakeAqi getFakeAqi() {
+        FakeWeather.FakeAqi fakeAqi = new FakeWeather.FakeAqi();
+        fakeAqi.setApi(aqi.getCity().getAqi());
+        fakeAqi.setQlty(aqi.getCity().getQlty());
+        fakeAqi.setCo(aqi.getCity().getCo());
+        fakeAqi.setNo2(aqi.getCity().getNo2());
+        fakeAqi.setO3(aqi.getCity().getO3());
+        fakeAqi.setPm10(aqi.getCity().getPm10());
+        fakeAqi.setPm25(aqi.getCity().getPm25());
+        fakeAqi.setSo2(aqi.getCity().getSo2());
+        return fakeAqi;
+    }
+
+    @Override
+    public List<FakeWeather.FakeForecastDaily> getFakeForecastDaily() {
+        List<FakeWeather.FakeForecastDaily> dailyList = new ArrayList<>();
+        for (DailyForecastBean item : daily_forecast) {
+            FakeWeather.FakeForecastDaily daily = new FakeWeather.FakeForecastDaily();
+            daily.setCode(item.getCond().getCode_d());
+            daily.setMaxTemp(item.getTmp().getMax());
+            daily.setMinTemp(item.getTmp().getMin());
+            daily.setTxt(item.getCond().getTxt_d());
+            daily.setSunRise(item.getAstro().getSr());
+            daily.setSunSet(item.getAstro().getSs());
+            daily.setMoonRise(item.getAstro().getMr());
+            daily.setMoonSet(item.getAstro().getMs());
+            if (SettingsUtil.getWeatherDateType() == SettingsUtil.WEATHER_DATE_TYPE_WEEK) {
+                daily.setDate(TimeUtils.getWeek(item.getDate(), TimeUtils.DATE_SDF));
+            } else {
+                daily.setDate(TimeUtils.string2String(item.getDate(), TimeUtils.DATE_SDF, TimeUtils.DATE_NO_YEAR_SDF));
+            }
+            dailyList.add(daily);
+        }
+        return dailyList;
+    }
+
+    @Override
+    public List<FakeWeather.FakeForecastHourly> getFakeForecastHourly() {
+        List<FakeWeather.FakeForecastHourly> hourlyList = new ArrayList<>();
+        for (HourlyForecastBean item : hourly_forecast) {
+            FakeWeather.FakeForecastHourly hourly = new FakeWeather.FakeForecastHourly();
+            hourly.setCode(item.getCond().getCode());
+            hourly.setTemp(item.getTmp());
+            hourly.setTime(TimeUtils.string2String(item.getDate(), TimeUtils.HOURLY_FORECAST_SDF, TimeUtils.HOUR_SDF));
+            hourlyList.add(hourly);
+        }
+        return hourlyList;
+    }
+
+    @Override
+    public List<FakeWeather.FakeSuggestion> getFakeSuggestion() {
+        List<FakeWeather.FakeSuggestion> suggestionList = new ArrayList<>();
+        FakeWeather.FakeSuggestion air = new FakeWeather.FakeSuggestion();
+        air.setTitle(FakeWeather.空气);
+        air.setMsg(suggestion.getAir().getBrf());
+        suggestionList.add(air);
+
+        FakeWeather.FakeSuggestion comf = new FakeWeather.FakeSuggestion();
+        comf.setTitle(FakeWeather.舒适度);
+        comf.setMsg(suggestion.getComf().getBrf());
+        suggestionList.add(comf);
+
+        FakeWeather.FakeSuggestion carWash = new FakeWeather.FakeSuggestion();
+        carWash.setTitle(FakeWeather.洗车);
+        carWash.setMsg(suggestion.getCw().getBrf());
+        suggestionList.add(carWash);
+
+        FakeWeather.FakeSuggestion drsg = new FakeWeather.FakeSuggestion();
+        drsg.setTitle(FakeWeather.穿衣);
+        drsg.setMsg(suggestion.getDrsg().getBrf());
+        suggestionList.add(drsg);
+
+        FakeWeather.FakeSuggestion flu = new FakeWeather.FakeSuggestion();
+        flu.setTitle(FakeWeather.感冒);
+        flu.setMsg(suggestion.getFlu().getBrf());
+        suggestionList.add(flu);
+
+        FakeWeather.FakeSuggestion sport = new FakeWeather.FakeSuggestion();
+        sport.setTitle(FakeWeather.运动);
+        sport.setMsg(suggestion.getSport().getBrf());
+        suggestionList.add(sport);
+
+        FakeWeather.FakeSuggestion trav = new FakeWeather.FakeSuggestion();
+        trav.setTitle(FakeWeather.旅游);
+        trav.setMsg(suggestion.getTrav().getBrf());
+        suggestionList.add(trav);
+
+        FakeWeather.FakeSuggestion uv = new FakeWeather.FakeSuggestion();
+        uv.setTitle(FakeWeather.紫外线);
+        uv.setMsg(suggestion.getUv().getBrf());
+        suggestionList.add(uv);
+
+        return suggestionList;
     }
 
     public static class AqiBean implements Serializable {
@@ -340,7 +443,7 @@ public class HeWeather5 implements Serializable, Cloneable, MultiItemEntity {
         }
     }
 
-    public static class NowBean implements Serializable, MultiItemEntity {
+    public static class NowBean implements Serializable {
         /**
          * code : 101
          * txt : 多云
@@ -426,11 +529,6 @@ public class HeWeather5 implements Serializable, Cloneable, MultiItemEntity {
             this.wind = wind;
         }
 
-        @Override
-        public int getItemType() {
-            return TYPE_NOW;
-        }
-
         public static class CondBean implements Serializable {
             private String code;
             private String txt;
@@ -492,7 +590,7 @@ public class HeWeather5 implements Serializable, Cloneable, MultiItemEntity {
         }
     }
 
-    public static class SuggestionBean implements Serializable, MultiItemEntity {
+    public static class SuggestionBean implements Serializable {
         /**
          * brf : 良
          * txt : 气象条件有利于空气污染物稀释、扩散和清除，可在室外正常活动。
@@ -604,11 +702,6 @@ public class HeWeather5 implements Serializable, Cloneable, MultiItemEntity {
 
         public void setUv(UvBean uv) {
             this.uv = uv;
-        }
-
-        @Override
-        public int getItemType() {
-            return TYPE_SUGGESTION;
         }
 
         public static class AirBean implements Serializable {
@@ -780,7 +873,7 @@ public class HeWeather5 implements Serializable, Cloneable, MultiItemEntity {
         }
     }
 
-    public static class DailyForecastBean implements Serializable, MultiItemEntity {
+    public static class DailyForecastBean implements Serializable {
         /**
          * mr : 14:10
          * ms : 01:11
@@ -905,11 +998,6 @@ public class HeWeather5 implements Serializable, Cloneable, MultiItemEntity {
 
         public void setWind(WindBean wind) {
             this.wind = wind;
-        }
-
-        @Override
-        public int getItemType() {
-            return TYPE_DAILYFORECAST;
         }
 
         public static class AstroBean implements Serializable {

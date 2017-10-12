@@ -184,6 +184,8 @@ public class TimeUtils {
 
     public static final SimpleDateFormat DATE_SDF = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
+    public static final SimpleDateFormat DATE_NO_YEAR_SDF = new SimpleDateFormat("MM-dd", Locale.getDefault());
+
     public static final SimpleDateFormat HOUR_SDF = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
     public static final SimpleDateFormat HOURLY_FORECAST_SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());

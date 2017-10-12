@@ -10,11 +10,16 @@ import com.liyu.fakeweather.R;
 public class SettingsUtil {
 
     public static final String WEATHER_SHARE_TYPE = "weather_share_type";//天气分享形式
-    public static final String WEATHER_KEY = "weather_key";//天气key
+    public static final String WEATHER_KEY = "weather_key";//天气 key
+    public static final String WEATHER_DATE_TYPE = "weather_date_type";//天气日期显示样式，日期 or 星期
     public static final String THEME = "theme_color";//主题
     public static final String CLEAR_CACHE = "clean_cache";//清空缓存
     public static final String BUS_REFRESH_FREQ = "bus_refresh_freq";//公交自动刷新频率
     public static final String TTS_VOICE_TYPE = "tts_voice_type";//讯飞语音人声
+
+    public static final int WEATHER_DATE_TYPE_WEEK = 0;
+
+    public static final int WEATHER_DATE_TYPE_DATE = 1;
 
     public static void setTtsVoiceType(String type) {
         SPUtil.put(App.getContext(), TTS_VOICE_TYPE, type);
@@ -30,6 +35,14 @@ public class SettingsUtil {
 
     public static String getWeatherShareType() {
         return (String) SPUtil.get(App.getContext(), WEATHER_SHARE_TYPE, App.getContext().getResources().getStringArray(R.array.share_type)[0]);
+    }
+
+    public static void setWeatherDateType(int type) {
+        SPUtil.put(App.getContext(), WEATHER_DATE_TYPE, type);
+    }
+
+    public static int getWeatherDateType() {
+        return (int) SPUtil.get(App.getContext(), WEATHER_DATE_TYPE, 0);
     }
 
     public static void setWeatherKey(String key) {

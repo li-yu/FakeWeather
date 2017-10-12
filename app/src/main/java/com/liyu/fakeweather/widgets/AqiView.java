@@ -13,9 +13,9 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
 
-import com.liyu.fakeweather.model.HeWeather5;
+import com.liyu.fakeweather.model.FakeWeather;
+import com.liyu.fakeweather.model.IFakeWeather;
 import com.liyu.fakeweather.utils.SizeUtils;
 
 /**
@@ -40,7 +40,7 @@ public class AqiView extends View {
 
     private float roundWidth = 28; //圆环宽度
 
-    private HeWeather5.AqiBean aqi;
+    private FakeWeather.FakeAqi aqi;
 
     private Shader shader;
 
@@ -120,7 +120,7 @@ public class AqiView extends View {
 
         paint.setShader(shader);
 
-        int aqiValue = Integer.parseInt(aqi.getCity().getAqi());
+        int aqiValue = Integer.parseInt(aqi.getApi());
 
         canvas.drawArc(rectF, 135, (aqiValue * speed / 500f) * 270.0f, false, paint);
 
@@ -140,7 +140,7 @@ public class AqiView extends View {
 
         int baseLineY2 = (int) (textRectf.centerY() - top / 2 - bottom / 2);//基线中间点的y轴计算公式
         textPaint.setColor(Color.WHITE);
-        canvas.drawText(aqi.getCity().getQlty(), textRectf.centerX(), baseLineY2, textPaint);
+        canvas.drawText(aqi.getQlty(), textRectf.centerX(), baseLineY2, textPaint);
 
     }
 
@@ -187,11 +187,11 @@ public class AqiView extends View {
         setMeasuredDimension(width, height);
     }
 
-    public void setApi(HeWeather5 weather5) {
-        if (weather5 == null || !canRefresh) {
+    public void setApi(IFakeWeather weather) {
+        if (weather == null || !canRefresh) {
             return;
         }
-        this.aqi = weather5.getAqi();
+        this.aqi = weather.getFakeAqi();
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
         animator.setDuration(2000);
         animator.setRepeatCount(0);

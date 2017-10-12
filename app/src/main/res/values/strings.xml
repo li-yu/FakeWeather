@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">假装看天气</string>
+    <string name="app_name">法克天气</string>
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="theme">主题</string>
@@ -12,6 +12,11 @@
     <string-array name="share_type">
         <item>纯文本</item>
         <item>仿锤子便签</item>
+    </string-array>
+
+    <string-array name="date_type">
+        <item>星期</item>
+        <item>日期</item>
     </string-array>
 
     <string-array name="bus_refresh_item">

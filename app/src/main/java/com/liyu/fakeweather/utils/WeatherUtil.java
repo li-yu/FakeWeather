@@ -8,7 +8,8 @@ import com.liyu.fakeweather.App;
 import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseAppResponse;
 import com.liyu.fakeweather.http.RetrofitManager;
-import com.liyu.fakeweather.model.HeWeather5;
+import com.liyu.fakeweather.model.FakeWeather;
+import com.liyu.fakeweather.model.IFakeWeather;
 import com.liyu.fakeweather.model.WeatherBean;
 
 import java.io.InputStream;
@@ -103,17 +104,17 @@ public class WeatherUtil {
         }
     }
 
-    public void saveDailyHistory(HeWeather5 weather) {
-        Observable.just(weather).filter(new Func1<HeWeather5, Boolean>() {
+    public void saveDailyHistory(IFakeWeather weather) {
+        Observable.just(weather).filter(new Func1<IFakeWeather, Boolean>() {
             @Override
-            public Boolean call(HeWeather5 weather5) {
+            public Boolean call(IFakeWeather weather5) {
                 return weather5 != null;
             }
-        }).map(new Func1<HeWeather5, Boolean>() {
+        }).map(new Func1<IFakeWeather, Boolean>() {
             @Override
-            public Boolean call(HeWeather5 weather5) {
+            public Boolean call(IFakeWeather weather) {
                 ACache mCache = ACache.get(App.getContext());
-                for (HeWeather5.DailyForecastBean bean : weather5.getDaily_forecast()) {
+                for (FakeWeather.FakeForecastDaily bean : weather.getFakeForecastDaily()) {
                     mCache.put(bean.getDate(), bean, 7 * 24 * 60 * 60);//每天的情况缓存7天，供后面查询
                 }
                 return true;
@@ -121,48 +122,40 @@ public class WeatherUtil {
         }).subscribeOn(Schedulers.io()).subscribe();
     }
 
-    public HeWeather5.DailyForecastBean getYesterday() {
-        return (HeWeather5.DailyForecastBean) ACache.get(App.getContext())
+    public FakeWeather.FakeForecastDaily getYesterday() {
+        return (FakeWeather.FakeForecastDaily) ACache.get(App.getContext())
                 .getAsObject(TimeUtils.getPreviousDay(TimeUtils.getCurTimeString(TimeUtils.DATE_SDF), 1));
     }
 
-    public String getShareMessage(HeWeather5 weather) {
+    public String getShareMessage(IFakeWeather weather) {
         StringBuffer message = new StringBuffer();
-        message.append(weather.getBasic().getCity());
+        message.append(weather.getFakeBasic().getCityName());
         message.append("天气：");
         message.append("\r\n");
-        message.append(weather.getBasic().getUpdate().getLoc());
+        message.append(weather.getFakeNow().getUpdateTime());
         message.append(" 发布：");
         message.append("\r\n");
-        message.append(weather.getNow().getCond().getTxt());
+        message.append(weather.getFakeNow().getNowText());
         message.append("，");
-        message.append(weather.getNow().getTmp()).append("℃");
+        message.append(weather.getFakeNow().getNowTemp()).append("℃");
         message.append("。");
         message.append("\r\n");
-        message.append("PM2.5：").append(weather.getAqi().getCity().getPm25());
+        message.append("PM2.5：").append(weather.getFakeAqi().getPm25());
         message.append("，");
-        message.append(weather.getAqi().getCity().getQlty());
+        message.append(weather.getFakeAqi().getQlty());
         message.append("。");
         message.append("\r\n");
         message.append("今天：");
-        message.append(weather.getDaily_forecast().get(0).getTmp().getMin()).append("℃-");
-        message.append(weather.getDaily_forecast().get(0).getTmp().getMax()).append("℃");
+        message.append(weather.getFakeForecastDaily().get(0).getMinTemp()).append("℃-");
+        message.append(weather.getFakeForecastDaily().get(0).getMaxTemp()).append("℃");
         message.append("，");
-        message.append(weather.getDaily_forecast().get(0).getCond().getTxt_d());
-        message.append("，");
-        message.append(weather.getDaily_forecast().get(0).getWind().getDir());
-        message.append(weather.getDaily_forecast().get(0).getWind().getSc());
-        message.append("级。");
+        message.append(weather.getFakeForecastDaily().get(0).getTxt());
         message.append("\r\n");
         message.append("明天：");
-        message.append(weather.getDaily_forecast().get(1).getTmp().getMin()).append("℃-");
-        message.append(weather.getDaily_forecast().get(1).getTmp().getMax()).append("℃");
+        message.append(weather.getFakeForecastDaily().get(1).getMinTemp()).append("℃-");
+        message.append(weather.getFakeForecastDaily().get(1).getMaxTemp()).append("℃");
         message.append("，");
-        message.append(weather.getDaily_forecast().get(1).getCond().getTxt_d());
-        message.append("，");
-        message.append(weather.getDaily_forecast().get(1).getWind().getDir());
-        message.append(weather.getDaily_forecast().get(1).getWind().getSc());
-        message.append("级。");
+        message.append(weather.getFakeForecastDaily().get(1).getTxt());
 
         return message.toString();
     }

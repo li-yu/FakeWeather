@@ -114,7 +114,32 @@ public class XiaomiWeather implements IFakeWeather{
     }
 
     @Override
-    public FakeWeather creatWeather() {
+    public FakeWeather.FakeBasic getFakeBasic() {
+        return null;
+    }
+
+    @Override
+    public FakeWeather.FakeNow getFakeNow() {
+        return null;
+    }
+
+    @Override
+    public FakeWeather.FakeAqi getFakeAqi() {
+        return null;
+    }
+
+    @Override
+    public List<FakeWeather.FakeForecastDaily> getFakeForecastDaily() {
+        return null;
+    }
+
+    @Override
+    public List<FakeWeather.FakeForecastHourly> getFakeForecastHourly() {
+        return null;
+    }
+
+    @Override
+    public List<FakeWeather.FakeSuggestion> getFakeSuggestion() {
         return null;
     }
 

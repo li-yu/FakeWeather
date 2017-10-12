@@ -12,11 +12,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.liyu.fakeweather.R;
-import com.liyu.fakeweather.model.HeWeather5;
+import com.liyu.fakeweather.model.FakeWeather;
+import com.liyu.fakeweather.model.IFakeWeather;
 import com.liyu.fakeweather.model.WeatherBean;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
 import com.liyu.fakeweather.utils.SizeUtils;
-import com.liyu.fakeweather.utils.TimeUtils;
 import com.liyu.fakeweather.utils.WeatherUtil;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class WeatherChartView extends LinearLayout {
 
     private boolean canRefresh = true;
 
-    private List<HeWeather5.DailyForecastBean> dailyForecastList = new ArrayList<>();
+    private List<FakeWeather.FakeForecastDaily> dailyForecastList = new ArrayList<>();
 
     LinearLayout.LayoutParams cellParams;
     LinearLayout.LayoutParams rowParams;
@@ -80,10 +80,6 @@ public class WeatherChartView extends LinearLayout {
 
         List<Integer> minTemp = new ArrayList<>();
         List<Integer> maxTemp = new ArrayList<>();
-        HeWeather5.DailyForecastBean yesterday = WeatherUtil.getInstance().getYesterday();
-        if (yesterday != null) {
-            dailyForecastList.add(0, yesterday);
-        }
         for (int i = 0; i < dailyForecastList.size(); i++) {
             final TextView tvDate = new TextView(getContext());
             tvDate.setGravity(Gravity.CENTER);
@@ -105,34 +101,16 @@ public class WeatherChartView extends LinearLayout {
             ivIcon.setLayoutParams(ivParam);
             ivIcon.setPadding(padding, padding, padding, padding);
             ivIcon.setVisibility(INVISIBLE);
-            if (yesterday != null) {
-                if (i == 0) {
-                    tvDate.setText("昨天");
-                } else if (i == 1) {
-                    tvDate.setText("今天");
-                } else if (i == 2) {
-                    tvDate.setText("明天");
-                } else {
-                    tvDate.setText(TimeUtils.getWeek(dailyForecastList.get(i).getDate(), TimeUtils.DATE_SDF));
-                }
-            } else {
-                if (i == 0) {
-                    tvDate.setText("今天");
-                } else if (i == 1) {
-                    tvDate.setText("明天");
-                } else {
-                    tvDate.setText(TimeUtils.getWeek(dailyForecastList.get(i).getDate(), TimeUtils.DATE_SDF));
-                }
-            }
-            tvWeather.setText(dailyForecastList.get(i).getCond().getTxt_d());
-            WeatherUtil.getInstance().getWeatherDict(dailyForecastList.get(i).getCond().getCode_d()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
+            tvDate.setText(dailyForecastList.get(i).getDate());
+            tvWeather.setText(dailyForecastList.get(i).getTxt());
+            WeatherUtil.getInstance().getWeatherDict(dailyForecastList.get(i).getCode()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
                 @Override
                 public void onNext(WeatherBean weatherBean) {
                     Glide.with(getContext()).load(weatherBean.getIcon()).diskCacheStrategy(DiskCacheStrategy.ALL).into(ivIcon);
                 }
             });
-            minTemp.add(Integer.valueOf(dailyForecastList.get(i).getTmp().getMin()));
-            maxTemp.add(Integer.valueOf(dailyForecastList.get(i).getTmp().getMax()));
+            minTemp.add(Integer.valueOf(dailyForecastList.get(i).getMinTemp()));
+            maxTemp.add(Integer.valueOf(dailyForecastList.get(i).getMaxTemp()));
             weatherStrView.addView(tvWeather, cellParams);
             dateTitleView.addView(tvDate, cellParams);
             iconView.addView(ivIcon);
@@ -154,12 +132,12 @@ public class WeatherChartView extends LinearLayout {
         addView(chartView, chartParams);
     }
 
-    public void setWeather5(HeWeather5 weather5) {
-        if (weather5 == null || !canRefresh) {
+    public void setWeather5(IFakeWeather weather) {
+        if (weather == null || !canRefresh) {
             return;
         }
         dailyForecastList.clear();
-        dailyForecastList.addAll(weather5.getDaily_forecast());
+        dailyForecastList.addAll(weather.getFakeForecastDaily());
         letItGo();
         canRefresh = false;
         this.postDelayed(new Runnable() {
@@ -167,6 +145,6 @@ public class WeatherChartView extends LinearLayout {
             public void run() {
                 canRefresh = true;
             }
-        }, weather5.getDaily_forecast().size() * 200);
+        }, weather.getFakeForecastDaily().size() * 200);
     }
 }
