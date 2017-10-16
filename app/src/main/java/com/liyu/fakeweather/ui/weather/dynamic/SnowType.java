@@ -9,10 +9,13 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
 import android.graphics.Shader;
+import android.support.annotation.IntDef;
 
 
 import com.liyu.fakeweather.R;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 /**
@@ -20,6 +23,10 @@ import java.util.ArrayList;
  */
 
 public class SnowType extends BaseWeatherType {
+
+    public static final int SNOW_LEVEL_1 = 20;//小雪级别
+    public static final int SNOW_LEVEL_2 = 40;//中雪级别
+    public static final int SNOW_LEVEL_3 = 60;//大到暴雪级别
 
     private ArrayList<Snow> mSnows;
 
@@ -29,16 +36,15 @@ public class SnowType extends BaseWeatherType {
 
     private Shader shader;
 
-    private int snowLevel = 40;
-
-    private int windLevel = 40;
+    private int snowLevel = SNOW_LEVEL_1;
 
     Bitmap bitmap;
 
     Matrix matrix;
 
-    public SnowType(Context context) {
+    public SnowType(Context context, @SnowLevel int snowLevel) {
         super(context);
+        this.snowLevel = snowLevel;
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.WHITE);
@@ -118,5 +124,10 @@ public class SnowType extends BaseWeatherType {
             this.speed = speed;
         }
 
+    }
+
+    @IntDef({SNOW_LEVEL_1, SNOW_LEVEL_2, SNOW_LEVEL_3})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SnowLevel {
     }
 }

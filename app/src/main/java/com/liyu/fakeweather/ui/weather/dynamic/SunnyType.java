@@ -66,9 +66,13 @@ public class SunnyType extends BaseWeatherType {
     private static final int colorWaveEndDay = 0xFFFFFFFF;
 
     private float currentSunPosition;
+    private float currentMoonPosition;
 
     private float[] sunPos;
     private float[] sunTan;
+
+    private float[] moonPos;
+    private float[] moonTan;
 
     public SunnyType(Context context, ShortWeatherInfo info) {
         super(context);
@@ -82,6 +86,7 @@ public class SunnyType extends BaseWeatherType {
         measure = new PathMeasure();
         sunMeasure = new PathMeasure();
         currentSunPosition = TimeUtils.getTimeDiffPercent(info.getSunrise(), info.getSunset());
+        currentMoonPosition = TimeUtils.getTimeDiffPercent(info.getMoonrise(), info.getMoonset());
         if (currentSunPosition >= 0 && currentSunPosition <= 1) {
             color = colorDay;
             mBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_boat_day);
@@ -111,9 +116,9 @@ public class SunnyType extends BaseWeatherType {
             }
         } else {
             mPaint.setMaskFilter(new BlurMaskFilter(10, BlurMaskFilter.Blur.SOLID));
-            canvas.drawCircle(sunPos[0], sunPos[1], 40, mPaint);
+            canvas.drawCircle(moonPos[0], moonPos[1], 40, mPaint);
             mPaint.setColor(color);
-            canvas.drawCircle(sunPos[0] + 20, sunPos[1] - 20, 40, mPaint);
+            canvas.drawCircle(moonPos[0] + 20, moonPos[1] - 20, 40, mPaint);
             mPaint.setColor(Color.WHITE);
             mPaint.setMaskFilter(null);
             if (shader == null) {
@@ -175,7 +180,7 @@ public class SunnyType extends BaseWeatherType {
     @Override
     public void generateElements() {
         sunPath.reset();
-        RectF rectF = new RectF(0 + 100, getHeight() * 9 / 10 - getWidth() / 2, getWidth() - 100, getHeight() * 9 / 10 + getWidth() / 2);
+        RectF rectF = new RectF(0 + 100, getHeight() * (8.5f / 10f) - getWidth() / 2, getWidth() - 100, getHeight() * (8.5f / 10f) + getWidth() / 2);
         sunPath.arcTo(rectF, 180, 180);
         sunMeasure.setPath(sunPath, false);
     }
@@ -184,6 +189,8 @@ public class SunnyType extends BaseWeatherType {
     public void startAnimation(final DynamicWeatherView dynamicWeatherView) {
         sunPos = new float[2];
         sunTan = new float[2];
+        moonPos = new float[2];
+        moonTan = new float[2];
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
         animator.setDuration(2000);
         animator.setRepeatCount(0);
@@ -204,6 +211,7 @@ public class SunnyType extends BaseWeatherType {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 sunMeasure.getPosTan(sunMeasure.getLength() * (float) animation.getAnimatedValue() * currentSunPosition, sunPos, sunTan);
+                sunMeasure.getPosTan(sunMeasure.getLength() * (float) animation.getAnimatedValue() * currentMoonPosition, moonPos, moonTan);
             }
         });
         sunAnimator.start();

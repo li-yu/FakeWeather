@@ -8,11 +8,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.view.animation.LinearInterpolator;
+import android.support.annotation.IntDef;
 import android.view.animation.OvershootInterpolator;
 
 import com.liyu.fakeweather.R;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 /**
@@ -21,15 +23,23 @@ import java.util.ArrayList;
 
 public class RainType extends BaseWeatherType {
 
+    public static final int RAIN_LEVEL_1 = 10;//小雨级别
+    public static final int RAIN_LEVEL_2 = 20;//中雨级别
+    public static final int RAIN_LEVEL_3 = 30;//大到暴雨级别
+
+    public static final int WIND_LEVEL_1 = 20;//小风
+    public static final int WIND_LEVEL_2 = 30;//中风
+    public static final int WIND_LEVEL_3 = 45;//大风
+
     private ArrayList<Rain> mRains;
 
     private Paint mPaint;
 
     private Rain rain;
 
-    private int rainLevel = 10;
+    private int rainLevel = RAIN_LEVEL_1;
 
-    private int windLevel = 30;
+    private int windLevel = WIND_LEVEL_1;
 
     float speed;
 
@@ -37,8 +47,10 @@ public class RainType extends BaseWeatherType {
 
     Matrix matrix;
 
-    public RainType(Context context) {
+    public RainType(Context context, @RainLevel int rainLevel, @WindLevel int windLevel) {
         super(context);
+        this.rainLevel = rainLevel;
+        this.windLevel = windLevel;
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.WHITE);
@@ -133,5 +145,15 @@ public class RainType extends BaseWeatherType {
             this.speed = speed;
             this.alpha = alpha;
         }
+    }
+
+    @IntDef({RAIN_LEVEL_1, RAIN_LEVEL_2, RAIN_LEVEL_3})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface RainLevel {
+    }
+
+    @IntDef({WIND_LEVEL_1, WIND_LEVEL_2, WIND_LEVEL_3})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface WindLevel {
     }
 }

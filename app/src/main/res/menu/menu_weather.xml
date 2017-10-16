@@ -4,10 +4,15 @@
         android:id="@+id/menu_tts"
         android:icon="@drawable/ic_speaker_1"
         android:title="播报"
-        app:showAsAction="always"/>
+        app:showAsAction="never"/>
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_share_white"
         android:title="分享"
-        app:showAsAction="always"/>
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_preview"
+        android:title="动态天气预览"
+        app:showAsAction="never"/>
 </menu>

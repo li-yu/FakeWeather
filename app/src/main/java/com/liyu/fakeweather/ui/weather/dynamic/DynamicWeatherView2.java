@@ -5,10 +5,11 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.animation.AnimationUtils;
+
+import com.liyu.fakeweather.model.IFakeWeather;
 
 /**
  * Created by liyu on 2017/8/16.
@@ -18,9 +19,10 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
 
     private Context mContext;
     private DrawThread mDrawThread;
-    private BaseWeatherType mWeather;
+    private BaseWeatherType weatherType;
     private int mViewWidth;
     private int mViewHeight;
+    private IFakeWeather originWeather;
 
     public DynamicWeatherView2(Context context) {
         this(context, null);
@@ -40,22 +42,34 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
         info.setSunset("19:00");
         info.setMoonrise("06:42");
         info.setMoonset("19:39");
-        mWeather = new SunnyType(context, info);
+        weatherType = new SunnyType(context, info);
         getHolder().setFormat(PixelFormat.RGBA_8888);
         getHolder().addCallback(this);
 
     }
 
     public int getColor() {
-        return mWeather.getColor();
+        return weatherType.getColor();
     }
 
     public void setType(BaseWeatherType weatherType) {
-        this.mWeather = weatherType;
-        if (mWeather != null) {
-            mWeather.onSizeChanged(mContext, mViewWidth, mViewHeight);
+        this.weatherType = weatherType;
+        if (this.weatherType != null) {
+            this.weatherType.onSizeChanged(mContext, mViewWidth, mViewHeight);
         }
-        mWeather.startAnimation(null);
+        this.weatherType.startAnimation(null);
+    }
+
+    public IFakeWeather getOriginWeather() {
+        return originWeather;
+    }
+
+    public void setOriginWeather(IFakeWeather originWeather) {
+        this.originWeather = originWeather;
+    }
+
+    public BaseWeatherType getWeather() {
+        return weatherType;
     }
 
     @Override
@@ -63,8 +77,8 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
         super.onSizeChanged(w, h, oldw, oldh);
         mViewWidth = w;
         mViewHeight = h;
-        if (mWeather != null) {
-            mWeather.onSizeChanged(mContext, w, h);
+        if (weatherType != null) {
+            weatherType.onSizeChanged(mContext, w, h);
         }
     }
 
@@ -89,7 +103,7 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
         mDrawThread.mSurface = holder;
         mDrawThread.setRunning(true);
         mDrawThread.start();
-        mWeather.startAnimation(null);
+        weatherType.startAnimation(null);
     }
 
     @Override
@@ -140,7 +154,7 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
                 final long startTime = AnimationUtils.currentAnimationTimeMillis();
                 Canvas canvas = mSurface.lockCanvas();
                 if (canvas != null) {
-                    mWeather.onDrawElements(canvas);
+                    weatherType.onDrawElements(canvas);
                     mSurface.unlockCanvasAndPost(canvas);
                     System.out.print("fuck");//如果不加这一行，在某些手机上竟然会 ANR
                 }

@@ -1,6 +1,5 @@
 package com.liyu.fakeweather.ui.weather.dynamic;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,9 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.RectF;
-import android.view.animation.LinearInterpolator;
-
-import java.util.Map;
 
 /**
  * Created by liyu on 2017/8/19.

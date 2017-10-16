@@ -32,7 +32,7 @@ public class DynamicWeatherView extends TextureView implements TextureView.Surfa
     public DynamicWeatherView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        mWeather = new RainType(context);
+        mWeather = new RainType(context, RainType.RAIN_LEVEL_1, RainType.WIND_LEVEL_1);
         setSurfaceTextureListener(this);
     }
 

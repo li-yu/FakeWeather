@@ -132,7 +132,7 @@ public class WeatherChartView extends LinearLayout {
         addView(chartView, chartParams);
     }
 
-    public void setWeather5(IFakeWeather weather) {
+    public void setWeather(IFakeWeather weather) {
         if (weather == null || !canRefresh) {
             return;
         }
