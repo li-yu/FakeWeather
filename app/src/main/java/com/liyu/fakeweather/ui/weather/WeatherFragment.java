@@ -157,7 +157,7 @@ public class WeatherFragment extends BaseFragment {
     private void switchDynamicWeather(String which) {
         ShortWeatherInfo info = new ShortWeatherInfo();
         info.setCode("100");
-        info.setWindSpeed("18");
+        info.setWindSpeed("11");
         BaseWeatherType type;
         switch (which) {
             case "晴（白天）":
@@ -175,10 +175,10 @@ public class WeatherFragment extends BaseFragment {
                 type = new SunnyType(getActivity(), info);
                 break;
             case "多云":
-                type = new OvercastType(getActivity());
+                type = new OvercastType(getActivity(), info);
                 break;
             case "阴":
-                type = new OvercastType(getActivity());
+                type = new OvercastType(getActivity(), info);
                 break;
             case "雨":
                 type = new RainType(getActivity(), RainType.RAIN_LEVEL_2, RainType.WIND_LEVEL_2);

@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.support.annotation.IntDef;
 import android.view.animation.OvershootInterpolator;
 
@@ -16,6 +17,9 @@ import com.liyu.fakeweather.R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Random;
 
 /**
  * Created by liyu on 2017/8/17.
@@ -30,6 +34,8 @@ public class RainType extends BaseWeatherType {
     public static final int WIND_LEVEL_1 = 20;//小风
     public static final int WIND_LEVEL_2 = 30;//中风
     public static final int WIND_LEVEL_3 = 45;//大风
+
+    private int color = 0xFF6188DA;
 
     private ArrayList<Rain> mRains;
 
@@ -47,6 +53,10 @@ public class RainType extends BaseWeatherType {
 
     Matrix matrix;
 
+    int[] yArray;
+    int[] xArray;
+    Path flash1;
+
     public RainType(Context context, @RainLevel int rainLevel, @WindLevel int windLevel) {
         super(context);
         this.rainLevel = rainLevel;
@@ -55,6 +65,7 @@ public class RainType extends BaseWeatherType {
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.WHITE);
         mPaint.setStrokeWidth(5);
+        mPaint.setStyle(Paint.Style.STROKE);
         mRains = new ArrayList<>();
         matrix = new Matrix();
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_rain_ground);
@@ -63,8 +74,9 @@ public class RainType extends BaseWeatherType {
     @Override
     public void onDrawElements(Canvas canvas) {
         clearCanvas(canvas);
-        canvas.drawColor(Color.parseColor("#6188DA"));
+        canvas.drawColor(color);
         mPaint.setAlpha(255);
+        canvas.drawPath(flash1, mPaint);
         matrix.reset();
         matrix.postScale(0.2f, 0.2f);
         matrix.postTranslate(speed, getHeight() - bitmap.getHeight() * 0.2f + 2f);
@@ -85,9 +97,50 @@ public class RainType extends BaseWeatherType {
         }
     }
 
+    private void drawFlash(int x1, int y1, int x2, int y2) {
+        flash1 = new Path();
+
+        flash1.moveTo(x1, y1);
+
+        int[] yArray = randomArray(y1, y2, 30);
+        Arrays.sort(yArray);
+        int[] xArray = new int[yArray.length];
+        for (int i = 0; i < yArray.length; i++) {
+            xArray[i] = (int) (yArray[i] * (x2 - x1) / (y2 - y1) + (16 - (Math.random() * 32)));
+            flash1.lineTo(xArray[i], yArray[i]);
+        }
+    }
+
+    private int[] randomArray(int min, int max, int n) {
+        int len = max - min + 1;
+
+        if (max < min || n > len) {
+            return null;
+        }
+
+        //初始化给定范围的待选数组
+        int[] source = new int[len];
+        for (int i = min; i < min + len; i++) {
+            source[i - min] = i;
+        }
+
+        int[] result = new int[n];
+        Random rd = new Random();
+        int index = 0;
+        for (int i = 0; i < result.length; i++) {
+            //待选数组0到(len-2)随机一个下标
+            index = Math.abs(rd.nextInt() % len--);
+            //将随机到的数放入结果集
+            result[i] = source[index];
+            //将待选数组中被随机到的数，用待选数组(len-1)下标对应的数替换
+            source[index] = source[len];
+        }
+        return result;
+    }
+
     @Override
     public int getColor() {
-        return 0;
+        return color;
     }
 
     @Override
@@ -103,6 +156,7 @@ public class RainType extends BaseWeatherType {
             );
             mRains.add(rain);
         }
+        drawFlash(0, 0, 500, 500);
         ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.2f);
         animator.setDuration(1000);
         animator.setRepeatCount(0);

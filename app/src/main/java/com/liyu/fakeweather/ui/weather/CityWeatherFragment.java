@@ -224,7 +224,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
                     @Override
                     public void onError(Throwable e) {
                         showRefreshing(false);
-                        Snackbar.make(getView(), "获取天气失败!", Snackbar.LENGTH_INDEFINITE).setAction("重试", new View.OnClickListener() {
+                        Snackbar.make(getView(), "获取天气失败!", Snackbar.LENGTH_LONG).setAction("重试", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 lazyFetchData();

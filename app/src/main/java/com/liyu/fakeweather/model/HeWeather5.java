@@ -221,42 +221,42 @@ public class HeWeather5 implements Serializable, Cloneable, IFakeWeather {
         List<FakeWeather.FakeSuggestion> suggestionList = new ArrayList<>();
         FakeWeather.FakeSuggestion air = new FakeWeather.FakeSuggestion();
         air.setTitle(FakeWeather.空气);
-        air.setMsg(suggestion.getAir().getBrf());
+        air.setMsg(suggestion == null || suggestion.getAir() == null ? "未知" : suggestion.getAir().getBrf());
         suggestionList.add(air);
 
         FakeWeather.FakeSuggestion comf = new FakeWeather.FakeSuggestion();
         comf.setTitle(FakeWeather.舒适度);
-        comf.setMsg(suggestion.getComf().getBrf());
+        comf.setMsg(suggestion == null || suggestion.getComf() == null ? "未知" : suggestion.getComf().getBrf());
         suggestionList.add(comf);
 
         FakeWeather.FakeSuggestion carWash = new FakeWeather.FakeSuggestion();
         carWash.setTitle(FakeWeather.洗车);
-        carWash.setMsg(suggestion.getCw().getBrf());
+        carWash.setMsg(suggestion == null || suggestion.getCw() == null ? "未知" : suggestion.getCw().getBrf());
         suggestionList.add(carWash);
 
         FakeWeather.FakeSuggestion drsg = new FakeWeather.FakeSuggestion();
         drsg.setTitle(FakeWeather.穿衣);
-        drsg.setMsg(suggestion.getDrsg().getBrf());
+        drsg.setMsg(suggestion == null || suggestion.getDrsg() == null ? "未知" : suggestion.getDrsg().getBrf());
         suggestionList.add(drsg);
 
         FakeWeather.FakeSuggestion flu = new FakeWeather.FakeSuggestion();
         flu.setTitle(FakeWeather.感冒);
-        flu.setMsg(suggestion.getFlu().getBrf());
+        flu.setMsg(suggestion == null || suggestion.getFlu() == null ? "未知" : suggestion.getFlu().getBrf());
         suggestionList.add(flu);
 
         FakeWeather.FakeSuggestion sport = new FakeWeather.FakeSuggestion();
         sport.setTitle(FakeWeather.运动);
-        sport.setMsg(suggestion.getSport().getBrf());
+        sport.setMsg(suggestion == null || suggestion.getSport() == null ? "未知" : suggestion.getSport().getBrf());
         suggestionList.add(sport);
 
         FakeWeather.FakeSuggestion trav = new FakeWeather.FakeSuggestion();
         trav.setTitle(FakeWeather.旅游);
-        trav.setMsg(suggestion.getTrav().getBrf());
+        trav.setMsg(suggestion == null || suggestion.getTrav() == null ? "未知" : suggestion.getTrav().getBrf());
         suggestionList.add(trav);
 
         FakeWeather.FakeSuggestion uv = new FakeWeather.FakeSuggestion();
         uv.setTitle(FakeWeather.紫外线);
-        uv.setMsg(suggestion.getUv().getBrf());
+        uv.setMsg(suggestion == null || suggestion.getUv() == null ? "未知" : suggestion.getUv().getBrf());
         suggestionList.add(uv);
 
         return suggestionList;

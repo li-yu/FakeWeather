@@ -27,7 +27,7 @@ public class TypeUtil {
             } else if (code >= 101 && code <= 103) {//多云
                 return new SunnyType(context, info);
             } else if (code == 104) {//阴
-                return new OvercastType(context);
+                return new OvercastType(context, info);
             } else if (code >= 200 && code <= 213) {//各种风
                 return new SunnyType(context, info);
             } else if (code >= 300 && code <= 303) {//各种阵雨

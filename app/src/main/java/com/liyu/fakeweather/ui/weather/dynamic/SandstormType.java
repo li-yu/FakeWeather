@@ -133,7 +133,7 @@ public class SandstormType extends BaseWeatherType {
     @Override
     public void startAnimation(final DynamicWeatherView dynamicWeatherView) {
         ValueAnimator animator1 = ValueAnimator.ofFloat(0, 1);
-        animator1.setInterpolator(new LinearInterpolator());
+        animator1.setInterpolator(new OvershootInterpolator());
         animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
