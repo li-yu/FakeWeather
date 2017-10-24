@@ -30,7 +30,6 @@ import com.liyu.fakeweather.ui.weather.WeatherFragment;
 import com.liyu.fakeweather.utils.DoubleClickExit;
 import com.liyu.fakeweather.utils.RxDrawer;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
-import com.liyu.fakeweather.utils.TTSManager;
 import com.liyu.fakeweather.utils.UpdateUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -220,7 +219,6 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
-        TTSManager.destroy();
         super.onDestroy();
     }
 
@@ -233,6 +231,7 @@ public class MainActivity extends BaseActivity {
                 Snackbar.make(MainActivity.this.getWindow().getDecorView().findViewById(android.R.id.content), "再按一次退出 App!", Snackbar.LENGTH_SHORT).show();
             } else {
                 super.onBackPressed();
+                System.exit(0);
             }
         }
     }

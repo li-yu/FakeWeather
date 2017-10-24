@@ -9,13 +9,6 @@
             android:key="weather_share_type"
             android:title="分享形式"/>
 
-        <ListPreference
-            android:defaultValue="xiaoyan"
-            android:dialogTitle="语音播报人声"
-            android:entries="@array/tts_voice_item"
-            android:entryValues="@array/tts_voice_value"
-            android:key="tts_voice_type"
-            android:title="播报人声"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="公交">

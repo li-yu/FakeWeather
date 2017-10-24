@@ -82,7 +82,7 @@ public class FogType extends BaseWeatherType {
     }
 
     @Override
-    public void startAnimation(DynamicWeatherView dynamicWeatherView) {
+    public void startAnimation(DynamicWeatherView2 dynamicWeatherView) {
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
         animator.setDuration(6000);
         animator.setRepeatCount(-1);

@@ -2,6 +2,7 @@ package com.liyu.fakeweather.ui.weather;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,6 +26,7 @@ import com.liyu.fakeweather.ui.weather.dynamic.SunnyType;
 import com.liyu.fakeweather.utils.SettingsUtil;
 import com.liyu.fakeweather.utils.ShareUtils;
 import com.liyu.fakeweather.utils.WeatherUtil;
+import com.liyu.fakeweather.widgets.PagerTitleView;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
@@ -40,6 +42,8 @@ public class WeatherFragment extends BaseFragment {
 
     private DynamicWeatherView2 dynamicWeatherView;
     private Toolbar mToolbar;
+
+    private PagerTitleView pagerTitleView;
 
     @Override
     protected int getLayoutId() {
@@ -60,6 +64,7 @@ public class WeatherFragment extends BaseFragment {
         ((MainActivity) getActivity()).initDrawer(mToolbar);
         mToolbar.inflateMenu(R.menu.menu_weather);
         dynamicWeatherView = findView(R.id.dynamicWeather);
+        pagerTitleView = findView(R.id.pager_title);
         ViewPager viewPager = findView(R.id.weatherViewPager);
         final List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(new CityWeatherFragment());
@@ -75,9 +80,15 @@ public class WeatherFragment extends BaseFragment {
             public int getCount() {
                 return fragmentList.size();
             }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return super.getPageTitle(position);
+            }
         };
         viewPager.setPageTransformer(true, new WeatherPageTransformer());
         viewPager.setAdapter(adapter);
+        pagerTitleView.setViewPager(viewPager);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -92,8 +103,8 @@ public class WeatherFragment extends BaseFragment {
                         }
                     });
                     return true;
-                } else if (id == R.id.menu_tts) {
-
+                } else if (id == R.id.menu_city_manage) {
+                    startActivity(new Intent(getActivity(), CityManageActivity.class));
                     return true;
                 } else if (id == R.id.menu_preview) {
                     previewDynamicWeather();

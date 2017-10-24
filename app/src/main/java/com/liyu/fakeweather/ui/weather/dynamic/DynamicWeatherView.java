@@ -77,7 +77,7 @@ public class DynamicWeatherView extends TextureView implements TextureView.Surfa
         mDrawThread = new DrawThread();
         mDrawThread.setRunning(true);
         mDrawThread.start();
-        mWeather.startAnimation(this);
+        mWeather.startAnimation(null);
 
     }
 

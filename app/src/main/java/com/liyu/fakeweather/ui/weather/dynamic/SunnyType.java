@@ -186,7 +186,7 @@ public class SunnyType extends BaseWeatherType {
     }
 
     @Override
-    public void startAnimation(final DynamicWeatherView dynamicWeatherView) {
+    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView) {
         sunPos = new float[2];
         sunTan = new float[2];
         moonPos = new float[2];

@@ -1,14 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/menu_tts"
-        android:icon="@drawable/ic_speaker_1"
-        android:title="播报"
-        app:showAsAction="never"/>
+
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_share_white"
         android:title="分享"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_city_manage"
+        android:icon="@drawable/ic_speaker_1"
+        android:title="城市管理"
         app:showAsAction="never"/>
 
     <item

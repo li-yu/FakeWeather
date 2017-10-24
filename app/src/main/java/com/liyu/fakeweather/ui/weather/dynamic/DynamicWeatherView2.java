@@ -53,11 +53,14 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
     }
 
     public void setType(BaseWeatherType weatherType) {
+        if (this.weatherType != null) {
+            this.weatherType.endAnimation(this);
+        }
         this.weatherType = weatherType;
         if (this.weatherType != null) {
             this.weatherType.onSizeChanged(mContext, mViewWidth, mViewHeight);
         }
-        this.weatherType.startAnimation(null);
+        this.weatherType.startAnimation(this);
     }
 
     public IFakeWeather getOriginWeather() {
@@ -95,6 +98,9 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
     public void onDestroy() {
         mDrawThread.setRunning(false);
         getHolder().removeCallback(this);
+        if (this.weatherType != null) {
+            this.weatherType.endAnimation(this);
+        }
     }
 
     @Override
@@ -103,7 +109,7 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
         mDrawThread.mSurface = holder;
         mDrawThread.setRunning(true);
         mDrawThread.start();
-        weatherType.startAnimation(null);
+        weatherType.startAnimation(this);
     }
 
     @Override

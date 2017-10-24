@@ -93,6 +93,11 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name="com.liyu.fakeweather.ui.weather.CityManageActivity"
+            android:label="城市管理"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name="com.liyu.fakeweather.ui.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -100,7 +105,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            </activity>
+        </activity>
 
     </application>
 

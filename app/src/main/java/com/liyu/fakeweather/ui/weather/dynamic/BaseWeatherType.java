@@ -37,7 +37,11 @@ public abstract class BaseWeatherType implements WeatherHandler {
 
     public abstract void generateElements();
 
-    public void startAnimation(DynamicWeatherView dynamicWeatherView) {
+    public void startAnimation(DynamicWeatherView2 dynamicWeatherView) {
+
+    }
+
+    public void endAnimation(DynamicWeatherView2 dynamicWeatherView) {
 
     }
 

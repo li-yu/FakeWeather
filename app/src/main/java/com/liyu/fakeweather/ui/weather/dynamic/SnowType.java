@@ -24,6 +24,8 @@ import java.util.ArrayList;
 
 public class SnowType extends BaseWeatherType {
 
+    private int color = 0xFF62B1FF;
+
     public static final int SNOW_LEVEL_1 = 20;//小雪级别
     public static final int SNOW_LEVEL_2 = 40;//中雪级别
     public static final int SNOW_LEVEL_3 = 60;//大到暴雪级别
@@ -57,7 +59,7 @@ public class SnowType extends BaseWeatherType {
     @Override
     public void onDrawElements(Canvas canvas) {
         clearCanvas(canvas);
-        canvas.drawColor(Color.parseColor("#62B1FF"));
+        canvas.drawColor(color);
         mPaint.setAlpha(255);
         matrix.reset();
         matrix.postScale(0.25f, 0.25f);
@@ -65,8 +67,8 @@ public class SnowType extends BaseWeatherType {
         canvas.drawBitmap(bitmap, matrix, mPaint);
         for (int i = 0; i < mSnows.size(); i++) {
             snow = mSnows.get(i);
-            shader = new RadialGradient(snow.x, snow.y, snow.size, Color.parseColor("#99ffffff"),
-                    Color.parseColor("#00ffffff"), Shader.TileMode.CLAMP);
+            shader = new RadialGradient(snow.x, snow.y, snow.size, 0x99FFFFFF,
+                    0x00FFFFFF, Shader.TileMode.CLAMP);
             mPaint.setShader(shader);
             canvas.drawCircle(snow.x, snow.y, snow.size, mPaint);
         }
@@ -82,7 +84,7 @@ public class SnowType extends BaseWeatherType {
 
     @Override
     public int getColor() {
-        return 0;
+        return color;
     }
 
     @Override

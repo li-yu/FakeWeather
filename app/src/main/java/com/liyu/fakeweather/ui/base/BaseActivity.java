@@ -1,6 +1,7 @@
 package com.liyu.fakeweather.ui.base;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
 import android.support.v7.app.AppCompatActivity;
@@ -72,9 +73,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initTheme(){
+    private void initTheme() {
         int themeIndex = SettingsUtil.getTheme();
-        switch (themeIndex){
+        switch (themeIndex) {
             case 0:
                 setTheme(R.style.LapisBlueTheme);
                 break;
@@ -120,6 +121,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
+
+    protected <T extends View> T findView(@IdRes int id) {
+        return (T) findViewById(id);
     }
 
 }
