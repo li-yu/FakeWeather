@@ -26,7 +26,7 @@ import com.liyu.fakeweather.ui.weather.dynamic.SunnyType;
 import com.liyu.fakeweather.utils.SettingsUtil;
 import com.liyu.fakeweather.utils.ShareUtils;
 import com.liyu.fakeweather.utils.WeatherUtil;
-import com.liyu.fakeweather.widgets.PagerTitleView;
+import com.liyu.fakeweather.widgets.SimplePagerIndicator;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class WeatherFragment extends BaseFragment {
     private DynamicWeatherView2 dynamicWeatherView;
     private Toolbar mToolbar;
 
-    private PagerTitleView pagerTitleView;
+    private SimplePagerIndicator pagerTitleView;
 
     @Override
     protected int getLayoutId() {

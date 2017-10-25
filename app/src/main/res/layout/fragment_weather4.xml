@@ -30,7 +30,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <com.liyu.fakeweather.widgets.PagerTitleView
+    <com.liyu.fakeweather.widgets.SimplePagerIndicator
         android:id="@+id/pager_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
