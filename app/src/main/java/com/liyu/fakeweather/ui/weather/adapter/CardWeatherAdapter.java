@@ -7,8 +7,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.liyu.fakeweather.R;
-import com.liyu.fakeweather.model.CardWeather;
 import com.liyu.fakeweather.model.WeatherBean;
+import com.liyu.fakeweather.model.WeatherCity;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
 import com.liyu.fakeweather.utils.WeatherUtil;
 
@@ -20,7 +20,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by liyu on 2017/10/18.
  */
 
-public class CardWeatherAdapter extends BaseQuickAdapter<CardWeather, BaseViewHolder> {
+public class CardWeatherAdapter extends BaseQuickAdapter<WeatherCity, BaseViewHolder> {
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
      * some initialization data.
@@ -28,7 +28,7 @@ public class CardWeatherAdapter extends BaseQuickAdapter<CardWeather, BaseViewHo
      * @param layoutResId The layout resource id of each item.
      * @param data        A new list is created out of this one to avoid mutable list
      */
-    public CardWeatherAdapter(int layoutResId, List<CardWeather> data) {
+    public CardWeatherAdapter(int layoutResId, List<WeatherCity> data) {
         super(layoutResId, data);
     }
 
@@ -39,12 +39,12 @@ public class CardWeatherAdapter extends BaseQuickAdapter<CardWeather, BaseViewHo
      * @param item   The item that needs to be displayed.
      */
     @Override
-    protected void convert(BaseViewHolder helper, CardWeather item) {
-        helper.setText(R.id.tv_card_city_name, item.getCity());
-        helper.setText(R.id.tv_card_weather, item.getText());
-        helper.setText(R.id.tv_card_temp, item.getTemp());
+    protected void convert(BaseViewHolder helper, WeatherCity item) {
+        helper.setText(R.id.tv_card_city_name, item.getCityName());
+        helper.setText(R.id.tv_card_weather, item.getWeatherText());
+        helper.setText(R.id.tv_card_temp, item.getWeatherTemp());
         final ImageView imageView = helper.getView(R.id.iv_card_weather);
-        WeatherUtil.getInstance().getWeatherDict(item.getCode()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
+        WeatherUtil.getInstance().getWeatherDict(item.getWeatherCode()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
             @Override
             public void onNext(WeatherBean weatherBean) {
                 Glide.with(mContext).load(weatherBean.getIcon()).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);

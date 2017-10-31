@@ -7,10 +7,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.liyu.fakeweather.R;
-import com.liyu.fakeweather.model.CardWeather;
+import com.liyu.fakeweather.model.WeatherCity;
 import com.liyu.fakeweather.ui.base.BaseActivity;
 import com.liyu.fakeweather.ui.weather.adapter.CardWeatherAdapter;
 import com.liyu.fakeweather.utils.ThemeUtil;
+
+import org.litepal.crud.DataSupport;
+import org.litepal.crud.callback.FindMultiCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,15 +61,12 @@ public class CityManageActivity extends BaseActivity {
     @Override
     protected void loadData() {
 
-        List<CardWeather> cardWeathers = new ArrayList<>();
-
-        cardWeathers.add(new CardWeather("苏州", "100", "晴", "9/18℃"));
-
-        cardWeathers.add(new CardWeather("北京", "104", "阴", "3/14℃"));
-
-        cardWeathers.add(new CardWeather("上海", "307", "大雨", "4/15℃"));
-
-        adapter.setNewData(cardWeathers);
+        DataSupport.order("cityIndex").findAsync(WeatherCity.class).listen(new FindMultiCallback() {
+            @Override
+            public <T> void onFinish(List<T> t) {
+                adapter.setNewData((List<WeatherCity>) t);
+            }
+        });
 
     }
 }
