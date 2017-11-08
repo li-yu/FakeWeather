@@ -1,6 +1,5 @@
 package com.liyu.fakeweather.ui.weather;
 
-import android.Manifest;
 import android.graphics.Rect;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
@@ -9,17 +8,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.baidu.location.BDLocation;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseWeatherResponse;
-import com.liyu.fakeweather.location.RxLocation;
 import com.liyu.fakeweather.model.AqiDetailBean;
 import com.liyu.fakeweather.model.HeWeather5;
 import com.liyu.fakeweather.model.IFakeWeather;
@@ -32,12 +27,10 @@ import com.liyu.fakeweather.ui.weather.dynamic.ShortWeatherInfo;
 import com.liyu.fakeweather.ui.weather.dynamic.TypeUtil;
 import com.liyu.fakeweather.utils.ACache;
 import com.liyu.fakeweather.utils.SettingsUtil;
-import com.liyu.fakeweather.utils.ShareUtils;
 import com.liyu.fakeweather.utils.ThemeUtil;
 import com.liyu.fakeweather.utils.WeatherUtil;
 import com.liyu.fakeweather.widgets.AqiView;
 import com.liyu.fakeweather.widgets.WeatherChartView;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +40,6 @@ import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -56,8 +48,6 @@ import rx.schedulers.Schedulers;
  */
 
 public class CityWeatherFragment extends BaseContentFragment implements NestedScrollView.OnScrollChangeListener {
-
-    private static final String CACHE_WEAHTHER_NAME = "weather_cache";
 
     private NestedScrollView weatherNestedScrollView;
 
@@ -89,8 +79,6 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
     private TextView tvTodayTempMax;
     private TextView tvTodayTempMin;
 
-    private TextView tvCityName;
-
     private AqiView aqiView;
 
     Rect localRect = new Rect();
@@ -100,6 +88,8 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
     private boolean weatherChartViewLastVisible = false;
 
     private boolean aqiViewLastVisible = false;
+
+    private String city = "苏州";
 
     @Override
     protected int getLayoutId() {
@@ -118,7 +108,6 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         aqiView = findView(R.id.aqiview);
         tvTodayTempMax = findView(R.id.tv_temp_max);
         tvTodayTempMin = findView(R.id.tv_temp_min);
-        tvCityName = findView(R.id.tv_city_name);
 
         weatherNestedScrollView = findView(R.id.weatherNestedScrollView);
         weatherNestedScrollView.setOnScrollChangeListener(this);
@@ -161,7 +150,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
             @Override
             public void call(Subscriber<? super IFakeWeather> subscriber) {
-                IFakeWeather cacheWeather = (IFakeWeather) mCache.getAsObject(CACHE_WEAHTHER_NAME);
+                IFakeWeather cacheWeather = (IFakeWeather) mCache.getAsObject(city);
                 if (cacheWeather == null) {
                     subscriber.onCompleted();
                 } else {
@@ -174,31 +163,23 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
     private Observable<IFakeWeather> getFromNetwork() {
         int weatherSrc = SettingsUtil.getWeatherSrc();
         if (weatherSrc == SettingsUtil.WEATHER_SRC_HEFENG) {
-            return RxLocation.get().locate(getActivity())
-                    .flatMap(new Func1<BDLocation, Observable<BaseWeatherResponse<HeWeather5>>>() {
-                        @Override
-                        public Observable<BaseWeatherResponse<HeWeather5>> call(BDLocation bdLocation) {
-                            final String city = TextUtils.isEmpty(bdLocation.getCity()) ? "苏州" : bdLocation.getCity().replace("市", "");
-                            return WeatherUtil.getInstance().getWeatherKey().flatMap(new Func1<String, Observable<BaseWeatherResponse<HeWeather5>>>() {
-                                @Override
-                                public Observable<BaseWeatherResponse<HeWeather5>> call(String key) {
-                                    return ApiFactory
-                                            .getWeatherController()
-                                            .getWeather(key, city)
-                                            .subscribeOn(Schedulers.io());
-                                }
-                            });
-                        }
-                    })
-                    .map(new Func1<BaseWeatherResponse<HeWeather5>, IFakeWeather>() {
-                        @Override
-                        public IFakeWeather call(BaseWeatherResponse<HeWeather5> response) {
-                            HeWeather5 heWeather5 = response.HeWeather5.get(0);
-                            mCache.put(CACHE_WEAHTHER_NAME, heWeather5, 30 * 60);
-                            WeatherUtil.getInstance().saveDailyHistory(heWeather5);
-                            return heWeather5;
-                        }
-                    });
+            return WeatherUtil.getInstance().getWeatherKey().flatMap(new Func1<String, Observable<BaseWeatherResponse<HeWeather5>>>() {
+                @Override
+                public Observable<BaseWeatherResponse<HeWeather5>> call(String key) {
+                    return ApiFactory
+                            .getWeatherController()
+                            .getWeather(key, city)
+                            .subscribeOn(Schedulers.io());
+                }
+            }).map(new Func1<BaseWeatherResponse<HeWeather5>, IFakeWeather>() {
+                @Override
+                public IFakeWeather call(BaseWeatherResponse<HeWeather5> response) {
+                    HeWeather5 heWeather5 = response.HeWeather5.get(0);
+                    mCache.put(city, heWeather5, 30 * 60);
+                    WeatherUtil.getInstance().saveDailyHistory(heWeather5);
+                    return heWeather5;
+                }
+            });
         } else if (weatherSrc == SettingsUtil.WEATHER_SRC_XIAOMI) {
 
             // TODO: 2017/10/12 完成小米天气源的适配
@@ -210,6 +191,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
     @Override
     protected void lazyFetchData() {
+        city = getArguments().getString("city");
         showRefreshing(true);
         subscription = Observable
                 .concat(getLocalCache(), getFromNetwork())
@@ -253,7 +235,6 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         dynamicWeatherView.setType(TypeUtil.getType(getActivity(), info));
         parentToolbar.setTitle(currentWeather.getFakeBasic().getCityName());
         parentToolbar.setTitleTextColor(0x00FFFFFF);
-        tvCityName.setText(currentWeather.getFakeBasic().getCityName());
         hourlyAdapter.setNewData(currentWeather.getFakeForecastHourly());
         weatherChartView.setWeather(currentWeather);
         tvNowWeatherString.setText(currentWeather.getFakeNow().getNowText());

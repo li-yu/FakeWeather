@@ -87,10 +87,12 @@ public class SimplePagerIndicator extends View implements ViewPager.OnPageChange
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        int count = titles.size();
+        if (count == 0)
+            return;
         textBaseline = getHeight() / 2 - textPaint.getFontMetrics().top / 2 - textPaint.getFontMetrics().bottom / 2;
         roundBaseline = textBaseline + roundRadius + 20;
 
-        int count = titles.size();
         float roundTotalWidth = 2 * roundRadius * count + (count - 1) * roundPadding;
         float startX = getWidth() / 2 - roundTotalWidth / 2 + roundRadius;
 
@@ -146,7 +148,7 @@ public class SimplePagerIndicator extends View implements ViewPager.OnPageChange
         PagerAdapter adapter = mViewPager.getAdapter();
         final int count = adapter.getCount();
         for (int i = 0; i < count; i++) {
-            titles.add("test" + i);
+            titles.add(adapter.getPageTitle(i).toString());
         }
         invalidate();
     }

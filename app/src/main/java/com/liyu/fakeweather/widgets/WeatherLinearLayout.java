@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -29,7 +30,7 @@ public class WeatherLinearLayout extends LinearLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (getChildCount() >= 2) {
-            final ViewParent parent = getParent();
+            ViewParent parent = getParent();
             if (parent != null) {
                 final int height = ((ViewGroup) parent).getMeasuredHeight();
                 if (height > 0) {

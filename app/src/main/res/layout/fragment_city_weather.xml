@@ -11,22 +11,13 @@
 
         <com.liyu.fakeweather.widgets.WeatherLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/transparent">
-
-                <TextView
-                    android:id="@+id/tv_city_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:gravity="center"
-                    android:text="苏州"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"/>
 
                 <android.support.v4.widget.Space
                     android:id="@+id/spacer"
@@ -75,7 +66,6 @@
                             android:layout_marginTop="4dp"
                             android:drawablePadding="2dp"
                             android:drawableStart="@drawable/ic_temp_max"
-                            android:text="27℃"
                             android:textColor="@color/white"
                             android:textSize="12sp"
                             />
@@ -88,7 +78,6 @@
                             android:layout_marginTop="2dp"
                             android:drawablePadding="2dp"
                             android:drawableStart="@drawable/ic_temp_min"
-                            android:text="20℃"
                             android:textColor="@color/white"
                             android:textSize="12sp"
                             />
@@ -100,7 +89,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView_hourly"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/white"/>
 
             <LinearLayout
