@@ -1,6 +1,5 @@
 package com.liyu.fakeweather.http;
 
-import com.airbnb.lottie.L;
 import com.liyu.fakeweather.model.City;
 import com.liyu.fakeweather.model.Province;
 

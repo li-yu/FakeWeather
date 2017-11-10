@@ -19,6 +19,8 @@
 
         <mapping class="com.liyu.fakeweather.model.WeatherCity"></mapping>
 
+        <mapping class="com.liyu.fakeweather.model.HeWeatherCity"></mapping>
+
     </list>
 
 </litepal>

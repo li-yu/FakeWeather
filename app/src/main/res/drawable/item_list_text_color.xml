@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 没有焦点时的背景图片 -->
+    <item android:color="@color/colorTextDark" android:state_window_focused="false"/>
+
+    <item android:color="@color/white" android:state_focused="false" android:state_selected="true"/>
+
+    <item android:color="@color/white" android:state_focused="false" android:state_pressed="true"/>
+    <!-- 默认时的背景图片-->
+    <item android:color="@color/colorTextDark"/>
+</selector>
+

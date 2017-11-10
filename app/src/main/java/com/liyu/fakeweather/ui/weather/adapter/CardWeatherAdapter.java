@@ -4,6 +4,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.liyu.fakeweather.R;
@@ -20,7 +21,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by liyu on 2017/10/18.
  */
 
-public class CardWeatherAdapter extends BaseQuickAdapter<WeatherCity, BaseViewHolder> {
+public class CardWeatherAdapter extends BaseItemDraggableAdapter<WeatherCity, BaseViewHolder> {
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
      * some initialization data.

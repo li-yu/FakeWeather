@@ -35,6 +35,9 @@ public class AqiAdapter extends BaseQuickAdapter<AqiDetailBean, BaseViewHolder> 
     protected void convert(BaseViewHolder helper, AqiDetailBean item) {
         helper.setText(R.id.tv_aqi_name, item.getName());
         helper.setText(R.id.tv_aqi_desc, item.getDesc());
+        if (TextUtils.isEmpty(item.getValue())) {
+            item.setValue("-1");
+        }
         helper.setText(R.id.tv_aqi_value, item.getValue() + "");
         int value = TextUtils.isDigitsOnly(item.getValue()) ? Integer.parseInt(item.getValue()) : 0;
         if (value <= 50) {

@@ -8,8 +8,9 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.http.ApiFactory;
-import com.liyu.fakeweather.http.BaseCityResponse;
+import com.liyu.fakeweather.http.BaseHeWeatherCityResponse;
 import com.liyu.fakeweather.model.City;
+import com.liyu.fakeweather.model.HeWeatherCity;
 import com.liyu.fakeweather.ui.base.BaseActivity;
 import com.liyu.fakeweather.utils.ToastUtil;
 
@@ -47,21 +48,21 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
-        if (DataSupport.count(City.class) <= 0) {
+        if (DataSupport.count(HeWeatherCity.class) <= 0) {
             ApiFactory
                     .getAppController()
-                    .getWeatherCityList()
+                    .getHeWeatherCityList()
                     .subscribeOn(Schedulers.io())
-                    .map(new Func1<BaseCityResponse, BaseCityResponse>() {
+                    .map(new Func1<BaseHeWeatherCityResponse, BaseHeWeatherCityResponse>() {
                         @Override
-                        public BaseCityResponse call(BaseCityResponse cityResponse) {
+                        public BaseHeWeatherCityResponse call(BaseHeWeatherCityResponse cityResponse) {
+                            DataSupport.deleteAll(HeWeatherCity.class);
                             DataSupport.saveAll(cityResponse.citys);
-                            DataSupport.saveAll(cityResponse.provinces);
                             return cityResponse;
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<BaseCityResponse>() {
+                    .subscribe(new Observer<BaseHeWeatherCityResponse>() {
                         @Override
                         public void onCompleted() {
                             lottieAnimationView.cancelAnimation();
@@ -102,7 +103,7 @@ public class SplashActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void onNext(BaseCityResponse cityResponse) {
+                        public void onNext(BaseHeWeatherCityResponse cityResponse) {
 
                         }
                     });

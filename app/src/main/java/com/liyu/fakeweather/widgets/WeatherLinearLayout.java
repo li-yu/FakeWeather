@@ -28,7 +28,8 @@ public class WeatherLinearLayout extends LinearLayout {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
         if (getChildCount() >= 2) {
             ViewParent parent = getParent();
             if (parent != null) {
@@ -45,6 +46,5 @@ public class WeatherLinearLayout extends LinearLayout {
                 }
             }
         }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 }

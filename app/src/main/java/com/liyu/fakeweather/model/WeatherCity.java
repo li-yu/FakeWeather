@@ -54,4 +54,20 @@ public class WeatherCity extends DataSupport {
     public void setWeatherTemp(String weatherTemp) {
         this.weatherTemp = weatherTemp;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WeatherCity that = (WeatherCity) o;
+
+        return cityName.equals(that.cityName);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return cityName.hashCode();
+    }
 }

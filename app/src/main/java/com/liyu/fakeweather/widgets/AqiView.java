@@ -1,5 +1,7 @@
 package com.liyu.fakeweather.widgets;
 
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.liyu.fakeweather.model.FakeWeather;
 import com.liyu.fakeweather.model.IFakeWeather;
@@ -46,6 +49,18 @@ public class AqiView extends View {
 
     private float speed;
 
+    private int[] aqiColors = new int[]{
+            0xFF62001E,
+            0xFF6BCD07,
+            0xFF6BCD07,
+            0xFFFBD029,
+            0xFFFE8800,
+            0xFFFE0000,
+            0xFF970454,
+            0xFF62001E};
+
+    int currentAqiColor;
+
     public AqiView(Context context) {
         this(context, null);
     }
@@ -70,7 +85,6 @@ public class AqiView extends View {
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint2 = new Paint();
         textPaint2.setAntiAlias(true);
-        textPaint2.setColor(Color.parseColor("#6BCD07"));
         textPaint2.setStyle(Paint.Style.FILL);
 
     }
@@ -94,15 +108,7 @@ public class AqiView extends View {
         }
 
         if (shader == null) {
-            shader = new SweepGradient(rectF.left + rectF.width() / 2, rectF.top + rectF.height() / 2, new int[]{
-                    Color.parseColor("#62001E"),
-                    Color.parseColor("#6BCD07"),
-                    Color.parseColor("#6BCD07"),
-                    Color.parseColor("#FBD029"),
-                    Color.parseColor("#FE8800"),
-                    Color.parseColor("#FE0000"),
-                    Color.parseColor("#970454"),
-                    Color.parseColor("#62001E")}, new float[]{
+            shader = new SweepGradient(rectF.left + rectF.width() / 2, rectF.top + rectF.height() / 2, aqiColors, new float[]{
                     0.125f,
                     0.125f,
                     0.3f,
@@ -134,7 +140,11 @@ public class AqiView extends View {
 
         canvas.drawText(String.valueOf((int) (aqiValue * speed)), rectF.centerX(), baseLineY, textPaint);
 
-        RectF textRectf = new RectF(getWidth() / 2 - rectF.width() / 8, rectF.bottom, getWidth() / 2 + rectF.width() / 8, rectF.bottom + rectF.width() / 4);
+        float qltyStringWidth = textPaint.measureText(aqi.getQlty());
+
+        RectF textRectf = new RectF(getWidth() / 2 - qltyStringWidth / 1.5f, rectF.bottom, getWidth() / 2 + qltyStringWidth / 1.5f, rectF.bottom + rectF.width() / 4);
+
+        textPaint2.setColor(currentAqiColor);
 
         canvas.drawRoundRect(textRectf, 8, 8, textPaint2);
 
@@ -192,8 +202,22 @@ public class AqiView extends View {
             return;
         }
         this.aqi = weather.getFakeAqi();
+        int apiValue = Integer.parseInt(aqi.getApi());
+        int targetColor;
+        if (apiValue <= 50) {
+            targetColor = aqiColors[2];
+        } else if (apiValue <= 100) {
+            targetColor = aqiColors[3];
+        } else if (apiValue <= 150) {
+            targetColor = aqiColors[4];
+        } else if (apiValue <= 200) {
+            targetColor = aqiColors[5];
+        } else if (apiValue <= 300) {
+            targetColor = aqiColors[6];
+        } else {
+            targetColor = aqiColors[7];
+        }
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-        animator.setDuration(2000);
         animator.setRepeatCount(0);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -203,7 +227,21 @@ public class AqiView extends View {
                 invalidate();
             }
         });
-        animator.start();
+        ValueAnimator animator2 = ValueAnimator.ofObject(new ArgbEvaluator(), aqiColors[2], targetColor);
+        animator2.setInterpolator(new LinearInterpolator());
+        animator2.setRepeatCount(0);
+        animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                currentAqiColor = (int) animation.getAnimatedValue();
+            }
+        });
+
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(animator).with(animator2);
+        animSet.setDuration(2000);
+        animSet.start();
+
         canRefresh = false;
         this.postDelayed(new Runnable() {
             @Override
