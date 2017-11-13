@@ -1,6 +1,7 @@
 package com.liyu.fakeweather.ui.weather;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -122,7 +123,16 @@ public class WeatherFragment extends BaseFragment {
                         WeatherCity city = new WeatherCity();
                         city.setCityIndex(0);
                         city.setCityName(nowCity);
-                        savedCities.add(city);
+                        int index = savedCities.indexOf(city);
+                        if (index >= 0) {
+                            savedCities.set(0, savedCities.get(index));
+                            ContentValues values = new ContentValues();
+                            values.put("cityIndex", 0);
+                            DataSupport.updateAll(WeatherCity.class, values, "cityName = ?", nowCity);
+                        } else {
+                            city.save();
+                            savedCities.add(0, city);
+                        }
                         return savedCities;
                     }
                 })
@@ -154,6 +164,7 @@ public class WeatherFragment extends BaseFragment {
                             adapter.addFrag(fragment, city.getCityName());
                         }
                         viewPager.setAdapter(adapter);
+                        viewPager.setOffscreenPageLimit(adapter.getCount());
                         pagerTitleView.setViewPager(viewPager);
                     }
                 });

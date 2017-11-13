@@ -1,6 +1,7 @@
 package com.liyu.fakeweather.ui.weather.adapter;
 
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -11,6 +12,7 @@ import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.model.WeatherBean;
 import com.liyu.fakeweather.model.WeatherCity;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
+import com.liyu.fakeweather.utils.ThemeUtil;
 import com.liyu.fakeweather.utils.WeatherUtil;
 
 import java.util.List;
@@ -41,9 +43,15 @@ public class CardWeatherAdapter extends BaseItemDraggableAdapter<WeatherCity, Ba
      */
     @Override
     protected void convert(BaseViewHolder helper, WeatherCity item) {
-        helper.setText(R.id.tv_card_city_name, item.getCityName());
+        TextView tvName = helper.getView(R.id.tv_card_city_name);
+        if (helper.getAdapterPosition() == 0) {
+            tvName.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                    ThemeUtil.setTintDrawable(R.drawable.ic_location, mContext,
+                            ThemeUtil.getCurrentColorPrimary(mContext)), null);
+        }
+        tvName.setText(item.getCityName());
         helper.setText(R.id.tv_card_weather, item.getWeatherText());
-        helper.setText(R.id.tv_card_temp, item.getWeatherTemp());
+        helper.setText(R.id.tv_card_temp, item.getWeatherTemp() + "℃");
         final ImageView imageView = helper.getView(R.id.iv_card_weather);
         WeatherUtil.getInstance().getWeatherDict(item.getWeatherCode()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SimpleSubscriber<WeatherBean>() {
             @Override

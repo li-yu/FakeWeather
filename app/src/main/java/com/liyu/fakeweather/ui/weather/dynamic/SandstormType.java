@@ -42,12 +42,11 @@ public class SandstormType extends BaseWeatherType {
 
     private Shader shader;
 
-    private int color = 0xFFE99E3C;
-
     Camera camera;
 
     public SandstormType(Context context) {
         super(context);
+        setColor(0xFFE99E3C);
         mPathFront = new Path();
         mPathRear = new Path();
         mPaint = new Paint();
@@ -64,7 +63,7 @@ public class SandstormType extends BaseWeatherType {
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         clearCanvas(canvas);
-        canvas.drawColor(color);
+        canvas.drawColor(getDynamicColor());
 
         shader = new LinearGradient(0, getHeight(), getWidth(), getHeight(), Color.parseColor("#33ffffff"), Color.parseColor("#ccffffff"), Shader.TileMode.CLAMP);
         mPaint.setShader(shader);
@@ -121,17 +120,13 @@ public class SandstormType extends BaseWeatherType {
     }
 
     @Override
-    public int getColor() {
-        return color;
-    }
-
-    @Override
     public void generateElements() {
 
     }
 
     @Override
-    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView) {
+    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+        super.startAnimation(dynamicWeatherView, fromColor);
         ValueAnimator animator1 = ValueAnimator.ofFloat(0, 1);
         animator1.setInterpolator(new OvershootInterpolator());
         animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

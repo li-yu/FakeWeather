@@ -1,5 +1,6 @@
 package com.liyu.fakeweather.ui.weather.dynamic;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,6 +16,8 @@ import android.graphics.PathMeasure;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.support.v4.view.animation.PathInterpolatorCompat;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
 import com.liyu.fakeweather.R;
@@ -51,7 +54,7 @@ public class SunnyType extends BaseWeatherType {
 
     private Shader shader;
 
-    private int color = 0xFF51C0F8;
+    private float boardSpeed;
 
     private static final int colorDay = 0xFF51C0F8;
 
@@ -88,10 +91,10 @@ public class SunnyType extends BaseWeatherType {
         currentSunPosition = TimeUtils.getTimeDiffPercent(info.getSunrise(), info.getSunset());
         currentMoonPosition = TimeUtils.getTimeDiffPercent(info.getMoonrise(), info.getMoonset());
         if (currentSunPosition >= 0 && currentSunPosition <= 1) {
-            color = colorDay;
+            setColor(colorDay);
             mBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_boat_day);
         } else {
-            color = colorNight;
+            setColor(colorNight);
             mBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_boat_night);
         }
 
@@ -105,7 +108,7 @@ public class SunnyType extends BaseWeatherType {
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         clearCanvas(canvas);
-        canvas.drawColor(color);
+        canvas.drawColor(getDynamicColor());
 
         if (currentSunPosition >= 0 && currentSunPosition <= 1) {
             mPaint.setMaskFilter(new BlurMaskFilter(10, BlurMaskFilter.Blur.SOLID));
@@ -117,7 +120,7 @@ public class SunnyType extends BaseWeatherType {
         } else {
             mPaint.setMaskFilter(new BlurMaskFilter(10, BlurMaskFilter.Blur.SOLID));
             canvas.drawCircle(moonPos[0], moonPos[1], 40, mPaint);
-            mPaint.setColor(color);
+            mPaint.setColor(getDynamicColor());
             canvas.drawCircle(moonPos[0] + 20, moonPos[1] - 20, 40, mPaint);
             mPaint.setColor(Color.WHITE);
             mPaint.setMaskFilter(null);
@@ -159,22 +162,19 @@ public class SunnyType extends BaseWeatherType {
         canvas.drawPath(mPathRear, mPaint);
 
         measure.setPath(mPathFront, false);
-        measure.getPosTan(measure.getLength() * 0.618f, pos, tan);
+        measure.getPosTan(measure.getLength() * 0.618f * boardSpeed, pos, tan);
         mMatrix.reset();
         float degrees = (float) (Math.atan2(tan[1], tan[0]) * 180.0 / Math.PI);
         mMatrix.postScale(bitmapScale, bitmapScale);
         mMatrix.postRotate(degrees, mBitmap.getWidth() * bitmapScale / 2, mBitmap.getHeight() * bitmapScale / 2);
         mMatrix.postTranslate(pos[0] - mBitmap.getWidth() / 2 * bitmapScale, pos[1] - mBitmap.getHeight() * bitmapScale + 4);
         mPaint.setAlpha(255);
-        canvas.drawBitmap(mBitmap, mMatrix, mPaint);
+        if (pos[0] > 0 && pos[0] < getWidth()) {
+            canvas.drawBitmap(mBitmap, mMatrix, mPaint);
+        }
         mPaint.setAlpha(100);
         canvas.drawPath(mPathFront, mPaint);
 
-    }
-
-    @Override
-    public int getColor() {
-        return color;
     }
 
     @Override
@@ -186,7 +186,8 @@ public class SunnyType extends BaseWeatherType {
     }
 
     @Override
-    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView) {
+    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+        super.startAnimation(dynamicWeatherView, fromColor);
         sunPos = new float[2];
         sunTan = new float[2];
         moonPos = new float[2];
@@ -203,6 +204,18 @@ public class SunnyType extends BaseWeatherType {
         });
         animator.start();
 
+        ValueAnimator animator2 = ValueAnimator.ofFloat(1.5f, 1);
+        animator2.setDuration(3000);
+        animator2.setRepeatCount(0);
+        animator2.setInterpolator(new DecelerateInterpolator());
+        animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                boardSpeed = (float) animation.getAnimatedValue();
+            }
+        });
+        animator2.start();
+
         ValueAnimator sunAnimator = ValueAnimator.ofFloat(0, 1);
         sunAnimator.setDuration(3000);
         sunAnimator.setRepeatCount(0);
@@ -215,5 +228,24 @@ public class SunnyType extends BaseWeatherType {
             }
         });
         sunAnimator.start();
+
+    }
+
+    @Override
+    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+        super.endAnimation(dynamicWeatherView, null);
+        ValueAnimator animator2 = ValueAnimator.ofFloat(1, 0);
+        animator2.setDuration(2000);
+        animator2.setRepeatCount(0);
+        animator2.setInterpolator(new AccelerateInterpolator());
+        animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                boardSpeed = (float) animation.getAnimatedValue();
+            }
+
+        });
+        animator2.addListener(listener);
+        animator2.start();
     }
 }

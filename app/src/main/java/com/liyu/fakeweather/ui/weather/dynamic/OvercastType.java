@@ -19,8 +19,6 @@ import android.view.animation.OvershootInterpolator;
 
 public class OvercastType extends BaseWeatherType {
 
-    private int color = 0xFF6D8DB1;                  //主题色
-
     private static final int hillColor = 0xFF59789D; //山坡的颜色
 
     private Paint mPaint;
@@ -51,6 +49,7 @@ public class OvercastType extends BaseWeatherType {
 
     public OvercastType(Context context, ShortWeatherInfo info) {
         super(context);
+        setColor(0xFF6D8DB1);
         mPathFront = new Path();
         mPathRear = new Path();
         mPaint = new Paint();
@@ -70,7 +69,7 @@ public class OvercastType extends BaseWeatherType {
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         clearCanvas(canvas);
-        canvas.drawColor(color);
+        canvas.drawColor(getDynamicColor());
 
         mPaint.setAlpha(100);
 
@@ -142,11 +141,6 @@ public class OvercastType extends BaseWeatherType {
     }
 
     @Override
-    public int getColor() {
-        return color;
-    }
-
-    @Override
     public void generateElements() {
         cloudShader = new LinearGradient(getWidth() / 2, 0, getWidth() / 2, getHeight() * 0.618f, Color.parseColor("#FFFFFFFF"),
                 Color.parseColor("#00FFFFFF"), Shader.TileMode.CLAMP);
@@ -173,7 +167,8 @@ public class OvercastType extends BaseWeatherType {
     }
 
     @Override
-    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView) {
+    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+        super.startAnimation(dynamicWeatherView, fromColor);
         ValueAnimator animator = ValueAnimator.ofFloat(-0.2f, 1.2f);
         animator.setDuration(30000);
         animator.setRepeatCount(-1);

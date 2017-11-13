@@ -24,8 +24,6 @@ import java.util.ArrayList;
 
 public class SnowType extends BaseWeatherType {
 
-    private int color = 0xFF62B1FF;
-
     public static final int SNOW_LEVEL_1 = 20;//小雪级别
     public static final int SNOW_LEVEL_2 = 40;//中雪级别
     public static final int SNOW_LEVEL_3 = 60;//大到暴雪级别
@@ -46,6 +44,7 @@ public class SnowType extends BaseWeatherType {
 
     public SnowType(Context context, @SnowLevel int snowLevel) {
         super(context);
+        setColor(0xFF62B1FF);
         this.snowLevel = snowLevel;
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -59,7 +58,7 @@ public class SnowType extends BaseWeatherType {
     @Override
     public void onDrawElements(Canvas canvas) {
         clearCanvas(canvas);
-        canvas.drawColor(color);
+        canvas.drawColor(getDynamicColor());
         mPaint.setAlpha(255);
         matrix.reset();
         matrix.postScale(0.25f, 0.25f);
@@ -80,11 +79,6 @@ public class SnowType extends BaseWeatherType {
                 snow.x = getRandom(0, getWidth());
             }
         }
-    }
-
-    @Override
-    public int getColor() {
-        return color;
     }
 
     @Override

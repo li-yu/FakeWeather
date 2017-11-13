@@ -20,18 +20,13 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             />
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/refeshLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_city_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#F2F7FA"
-                />
-        </android.support.v4.widget.SwipeRefreshLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_city_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F2F7FA"
+            />
 
     </LinearLayout>
 

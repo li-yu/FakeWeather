@@ -1,5 +1,6 @@
 package com.liyu.fakeweather.ui.weather.dynamic;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
@@ -23,6 +24,7 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
     private int mViewWidth;
     private int mViewHeight;
     private IFakeWeather originWeather;
+    int fromColor;
 
     public DynamicWeatherView2(Context context) {
         this(context, null);
@@ -52,15 +54,43 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
         return weatherType.getColor();
     }
 
-    public void setType(BaseWeatherType weatherType) {
+    public void setType(final BaseWeatherType type) {
         if (this.weatherType != null) {
-            this.weatherType.endAnimation(this);
+            this.weatherType.endAnimation(this, new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    fromColor = weatherType.getColor();
+                    weatherType = type;
+                    if (weatherType != null) {
+                        weatherType.onSizeChanged(mContext, mViewWidth, mViewHeight);
+                    }
+                    weatherType.startAnimation(DynamicWeatherView2.this, fromColor);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+        } else {
+            fromColor = type.getColor();
+            this.weatherType = type;
+            if (this.weatherType != null) {
+                this.weatherType.onSizeChanged(mContext, mViewWidth, mViewHeight);
+            }
+            this.weatherType.startAnimation(this, fromColor);
         }
-        this.weatherType = weatherType;
-        if (this.weatherType != null) {
-            this.weatherType.onSizeChanged(mContext, mViewWidth, mViewHeight);
-        }
-        this.weatherType.startAnimation(this);
+
     }
 
     public IFakeWeather getOriginWeather() {
@@ -99,7 +129,7 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
         mDrawThread.setRunning(false);
         getHolder().removeCallback(this);
         if (this.weatherType != null) {
-            this.weatherType.endAnimation(this);
+            this.weatherType.endAnimation(this, null);
         }
     }
 
@@ -109,7 +139,7 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
         mDrawThread.mSurface = holder;
         mDrawThread.setRunning(true);
         mDrawThread.start();
-        weatherType.startAnimation(this);
+        weatherType.startAnimation(this, weatherType.getColor());
     }
 
     @Override

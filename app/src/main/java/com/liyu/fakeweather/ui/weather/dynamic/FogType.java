@@ -21,8 +21,6 @@ import com.liyu.fakeweather.R;
 
 public class FogType extends BaseWeatherType {
 
-    private int color = 0xFF8CADD3;     // 主题色
-
     private Paint mPaint;               // 画笔
 
     private float fogFactor1;           // 雾变化因子1，动态改变圆半径
@@ -39,6 +37,7 @@ public class FogType extends BaseWeatherType {
 
     public FogType(Context context) {
         super(context);
+        setColor(0xFF8CADD3);
         mPaint = new Paint();
         matrix = new Matrix();
         bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_fog_ground);
@@ -52,7 +51,7 @@ public class FogType extends BaseWeatherType {
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         clearCanvas(canvas);
-        canvas.drawColor(color);
+        canvas.drawColor(getDynamicColor());
 
         matrix.reset();
         matrix.postScale(0.25f, 0.25f);
@@ -71,18 +70,14 @@ public class FogType extends BaseWeatherType {
     }
 
     @Override
-    public int getColor() {
-        return color;
-    }
-
-    @Override
     public void generateElements() {
         shader = new RadialGradient(getWidth() / 2 + getWidth() / 6, getHeight(), getWidth() / 2, Color.parseColor("#00ffffff"),
                 Color.parseColor("#ffffffff"), Shader.TileMode.CLAMP);
     }
 
     @Override
-    public void startAnimation(DynamicWeatherView2 dynamicWeatherView) {
+    public void startAnimation(DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+        super.startAnimation(dynamicWeatherView, fromColor);
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
         animator.setDuration(6000);
         animator.setRepeatCount(-1);

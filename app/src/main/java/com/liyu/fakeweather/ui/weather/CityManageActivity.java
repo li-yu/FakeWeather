@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +28,6 @@ import com.liyu.fakeweather.ui.base.BaseActivity;
 import com.liyu.fakeweather.ui.weather.adapter.CardWeatherAdapter;
 import com.liyu.fakeweather.utils.ACache;
 import com.liyu.fakeweather.utils.SettingsUtil;
-import com.liyu.fakeweather.utils.ThemeUtil;
 import com.liyu.fakeweather.utils.ToastUtil;
 import com.liyu.fakeweather.utils.WeatherUtil;
 
@@ -47,8 +47,6 @@ import rx.schedulers.Schedulers;
  */
 
 public class CityManageActivity extends BaseActivity {
-
-    private SwipeRefreshLayout refreshLayout;
 
     private RecyclerView recyclerView;
     private CardWeatherAdapter adapter;
@@ -72,20 +70,28 @@ public class CityManageActivity extends BaseActivity {
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         recyclerView = findView(R.id.rv_city_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);
-        refreshLayout = findView(R.id.refeshLayout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadData();
-            }
-        });
-        refreshLayout.setColorSchemeResources(ThemeUtil.getCurrentColorPrimary(this));
 
-        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(adapter);
+        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(adapter) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
+                if (source.getAdapterPosition() == 0 || target.getAdapterPosition() == 0)
+                    return false;
+                else
+                    return super.onMove(recyclerView, source, target);
+            }
+
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                if (viewHolder.getAdapterPosition() == 0)
+                    return makeMovementFlags(0, 0);
+                else
+                    return super.getMovementFlags(recyclerView, viewHolder);
+            }
+        };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+        itemDragAndSwipeCallback.setSwipeMoveFlags(ItemTouchHelper.START | ItemTouchHelper.END);
 
         // 开启拖拽
         adapter.enableDragItem(itemTouchHelper, R.id.card_root, true);
@@ -122,7 +128,8 @@ public class CityManageActivity extends BaseActivity {
             @Override
             public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int pos) {
                 DataSupport.deleteAll(WeatherCity.class, "cityName = ?", adapter.getItem(pos).getCityName());
-                ToastUtil.showShort("已删除 " + adapter.getItem(pos).getCityName());
+                Snackbar.make(getWindow().getDecorView().getRootView().findViewById(android.R.id.content), adapter.getItem(pos).getCityName() + " 删除成功!",
+                        Snackbar.LENGTH_LONG).setActionTextColor(getResources().getColor(R.color.actionColor)).show();
             }
 
             @Override

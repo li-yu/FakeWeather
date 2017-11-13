@@ -1,9 +1,13 @@
 package com.liyu.fakeweather.ui.weather.dynamic;
 
+import android.animation.Animator;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.view.animation.LinearInterpolator;
 
 import java.util.Random;
 
@@ -15,6 +19,10 @@ public abstract class BaseWeatherType implements WeatherHandler {
     private Context mContext;
     private int mWidth;
     private int mHeight;
+
+    protected int color;
+
+    protected int dynamicColor;
 
     public Context getContext() {
         return mContext;
@@ -33,15 +41,35 @@ public abstract class BaseWeatherType implements WeatherHandler {
         this.mHeight = height;
     }
 
-    public abstract int getColor();
+    public int getColor() {
+        return color;
+    }
+
+    public int getDynamicColor() {
+        return dynamicColor;
+    }
+
+    public void setColor(int color){
+        this.color = color;
+    }
 
     public abstract void generateElements();
 
-    public void startAnimation(DynamicWeatherView2 dynamicWeatherView) {
-
+    public void startAnimation(DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+        ValueAnimator animator = ValueAnimator.ofObject(new ArgbEvaluator(), fromColor, color);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.setDuration(1000);
+        animator.setRepeatCount(0);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                dynamicColor = (int) animation.getAnimatedValue();
+            }
+        });
+        animator.start();
     }
 
-    public void endAnimation(DynamicWeatherView2 dynamicWeatherView) {
+    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
 
     }
 

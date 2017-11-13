@@ -1,5 +1,7 @@
 package com.liyu.fakeweather.ui.weather;
 
+import android.content.ContentValues;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
@@ -18,10 +20,12 @@ import com.liyu.fakeweather.http.BaseWeatherResponse;
 import com.liyu.fakeweather.model.AqiDetailBean;
 import com.liyu.fakeweather.model.HeWeather5;
 import com.liyu.fakeweather.model.IFakeWeather;
+import com.liyu.fakeweather.model.WeatherCity;
 import com.liyu.fakeweather.ui.base.BaseContentFragment;
 import com.liyu.fakeweather.ui.weather.adapter.AqiAdapter;
 import com.liyu.fakeweather.ui.weather.adapter.HourlyAdapter;
 import com.liyu.fakeweather.ui.weather.adapter.SuggestionAdapter;
+import com.liyu.fakeweather.ui.weather.dynamic.BaseWeatherType;
 import com.liyu.fakeweather.ui.weather.dynamic.DynamicWeatherView2;
 import com.liyu.fakeweather.ui.weather.dynamic.ShortWeatherInfo;
 import com.liyu.fakeweather.ui.weather.dynamic.TypeUtil;
@@ -31,6 +35,8 @@ import com.liyu.fakeweather.utils.ThemeUtil;
 import com.liyu.fakeweather.utils.WeatherUtil;
 import com.liyu.fakeweather.widgets.AqiView;
 import com.liyu.fakeweather.widgets.WeatherChartView;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,6 +183,11 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
                     HeWeather5 heWeather5 = response.HeWeather5.get(0);
                     mCache.put(city, heWeather5, 30 * 60);
                     WeatherUtil.getInstance().saveDailyHistory(heWeather5);
+                    ContentValues values = new ContentValues();
+                    values.put("weatherCode", heWeather5.getFakeNow().getNowCode());
+                    values.put("weatherText", heWeather5.getFakeNow().getNowText());
+                    values.put("weatherTemp", heWeather5.getFakeNow().getNowTemp());
+                    DataSupport.updateAll(WeatherCity.class, values, "cityName = ?", heWeather5.getFakeBasic().getCityName());
                     return heWeather5;
                 }
             });
@@ -224,26 +235,32 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
     private void showWeather(IFakeWeather weather) {
         currentWeather = weather;
+        setDynamicWeatherView(weather);
+        hourlyAdapter.setNewData(weather.getFakeForecastHourly());
+        weatherChartView.setWeather(weather);
+        tvNowWeatherString.setText(weather.getFakeNow().getNowText());
+        tvNowTemp.setText(String.format("%s°", weather.getFakeNow().getNowTemp()));
+        tvTodayTempMax.setText(weather.getFakeForecastDaily().get(0).getMaxTemp() + "℃");
+        tvTodayTempMin.setText(weather.getFakeForecastDaily().get(0).getMinTemp() + "℃");
+        aqiView.setApi(weather);
+        setAqiDetail(weather);
+        setSuggesstion(weather);
+
+    }
+
+    private void setDynamicWeatherView(IFakeWeather weather) {
         ((WeatherFragment) getParentFragment()).getDynamicWeatherView().setOriginWeather(weather);
         ShortWeatherInfo info = new ShortWeatherInfo();
-        info.setCode(currentWeather.getFakeNow().getNowCode());
-        info.setWindSpeed(currentWeather.getFakeNow().getNowWindSpeed());
-        info.setSunrise(currentWeather.getFakeForecastDaily().get(0).getSunRise());
-        info.setSunset(currentWeather.getFakeForecastDaily().get(0).getSunSet());
-        info.setMoonrise(currentWeather.getFakeForecastDaily().get(0).getMoonRise());
-        info.setMoonset(currentWeather.getFakeForecastDaily().get(0).getMoonSet());
-        dynamicWeatherView.setType(TypeUtil.getType(getActivity(), info));
-        parentToolbar.setTitle(currentWeather.getFakeBasic().getCityName());
-        parentToolbar.setTitleTextColor(0x00FFFFFF);
-        hourlyAdapter.setNewData(currentWeather.getFakeForecastHourly());
-        weatherChartView.setWeather(currentWeather);
-        tvNowWeatherString.setText(currentWeather.getFakeNow().getNowText());
-        tvNowTemp.setText(String.format("%s°", currentWeather.getFakeNow().getNowTemp()));
-        tvTodayTempMax.setText(currentWeather.getFakeForecastDaily().get(0).getMaxTemp() + "℃");
-        tvTodayTempMin.setText(currentWeather.getFakeForecastDaily().get(0).getMinTemp() + "℃");
-        aqiView.setApi(currentWeather);
-        setAqiDetail(currentWeather);
-        setSuggesstion(currentWeather);
+        info.setCode(weather.getFakeNow().getNowCode());
+        info.setWindSpeed(weather.getFakeNow().getNowWindSpeed());
+        info.setSunrise(weather.getFakeForecastDaily().get(0).getSunRise());
+        info.setSunset(weather.getFakeForecastDaily().get(0).getSunSet());
+        info.setMoonrise(weather.getFakeForecastDaily().get(0).getMoonRise());
+        info.setMoonset(weather.getFakeForecastDaily().get(0).getMoonSet());
+        BaseWeatherType type = TypeUtil.getType(getActivity(), info);
+        parentToolbar.setTitle(weather.getFakeBasic().getCityName());
+        parentToolbar.setTitleTextColor(Color.TRANSPARENT);
+        dynamicWeatherView.setType(type);
 
     }
 
@@ -314,4 +331,14 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
             subscription.unsubscribe();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && currentWeather != null) {
+            setDynamicWeatherView(currentWeather);
+        }
+        if (!isVisibleToUser && weatherNestedScrollView != null) {
+            weatherNestedScrollView.scrollTo(0, 0);
+        }
+    }
 }

@@ -6,7 +6,6 @@ import android.graphics.SurfaceTexture;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.TextureView;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 
 /**
@@ -77,7 +76,7 @@ public class DynamicWeatherView extends TextureView implements TextureView.Surfa
         mDrawThread = new DrawThread();
         mDrawThread.setRunning(true);
         mDrawThread.start();
-        mWeather.startAnimation(null);
+        mWeather.startAnimation(null, mWeather.getColor());
 
     }
 

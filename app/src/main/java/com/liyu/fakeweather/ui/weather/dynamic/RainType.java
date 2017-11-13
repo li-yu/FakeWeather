@@ -1,5 +1,6 @@
 package com.liyu.fakeweather.ui.weather.dynamic;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -34,8 +35,6 @@ public class RainType extends BaseWeatherType {
     public static final int WIND_LEVEL_1 = 20;//小风
     public static final int WIND_LEVEL_2 = 30;//中风
     public static final int WIND_LEVEL_3 = 45;//大风
-
-    private int color = 0xFF6188DA;
 
     private ArrayList<Rain> mRains;
 
@@ -83,6 +82,7 @@ public class RainType extends BaseWeatherType {
 
     public RainType(Context context, @RainLevel int rainLevel, @WindLevel int windLevel) {
         super(context);
+        setColor(0xFF6188DA);
         this.rainLevel = rainLevel;
         this.windLevel = windLevel;
         mPaint = new Paint();
@@ -106,7 +106,7 @@ public class RainType extends BaseWeatherType {
     @Override
     public void onDrawElements(Canvas canvas) {
         clearCanvas(canvas);
-        canvas.drawColor(color);
+        canvas.drawColor(getDynamicColor());
         mPaint.setAlpha(255);
 
         if (mAnimatorValue < 1) {
@@ -243,11 +243,6 @@ public class RainType extends BaseWeatherType {
     }
 
     @Override
-    public int getColor() {
-        return color;
-    }
-
-    @Override
     public void generateElements() {
         mRains.clear();
         for (int i = 0; i < rainLevel; i++) {
@@ -264,8 +259,8 @@ public class RainType extends BaseWeatherType {
     }
 
     @Override
-    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView) {
-        super.startAnimation(dynamicWeatherView);
+    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+        super.startAnimation(dynamicWeatherView, fromColor);
         ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.2f);
         animator.setDuration(1000);
         animator.setRepeatCount(0);
@@ -300,8 +295,8 @@ public class RainType extends BaseWeatherType {
     }
 
     @Override
-    public void endAnimation(DynamicWeatherView2 dynamicWeatherView) {
-        super.endAnimation(dynamicWeatherView);
+    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+        super.endAnimation(dynamicWeatherView, listener);
         dynamicWeatherView.removeCallbacks(flashRunnable);
     }
 
