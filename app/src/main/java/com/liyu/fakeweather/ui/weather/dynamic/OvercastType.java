@@ -1,5 +1,6 @@
 package com.liyu.fakeweather.ui.weather.dynamic;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,6 +11,7 @@ import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 
@@ -74,8 +76,8 @@ public class OvercastType extends BaseWeatherType {
         mPaint.setAlpha(100);
 
         mPathRear.reset();
-        mPathRear.moveTo(getWidth(), getHeight() * 6 / 7);
-        mPathRear.rQuadTo(-getWidth() / 2, -20, -getWidth() * hillTransFactor, getHeight() / 10);
+        mPathRear.moveTo(getWidth(), getHeight() - getHeight() * 1 / 7 * hillTransFactor);
+        mPathRear.rQuadTo(-getWidth() / 2, -20 * hillTransFactor, -getWidth(), getHeight() / 10 * hillTransFactor);
         mPathRear.lineTo(0, getHeight());
         mPathRear.lineTo(getWidth(), getHeight());
         mPathRear.close();
@@ -84,15 +86,15 @@ public class OvercastType extends BaseWeatherType {
         mPaint.setAlpha(255);
 
         mPathFront.reset();
-        mPathFront.moveTo(0, getHeight() * 6 / 7);
-        mPathFront.rQuadTo(getWidth() / 2, -20, getWidth() * hillTransFactor, getHeight() / 10);
+        mPathFront.moveTo(0, getHeight() - getHeight() * 1 / 7 * hillTransFactor);
+        mPathFront.rQuadTo(getWidth() / 2, -20 * hillTransFactor, getWidth(), getHeight() / 10 * hillTransFactor);
         mPathFront.lineTo(getWidth(), getHeight());
         mPathFront.lineTo(0, getHeight());
         mPathFront.close();
 
-        drawFan(canvas, mPathFront, 0.618f, 1f);
+        drawFan(canvas, mPathFront, 0.618f * hillTransFactor, 1f);
 
-        drawFan(canvas, mPathRear, 0.15f, 0.4f);
+        drawFan(canvas, mPathRear, 0.15f * hillTransFactor, 0.4f);
 
         mPaint.reset();
         mPaint.setColor(hillColor);
@@ -191,6 +193,23 @@ public class OvercastType extends BaseWeatherType {
                 hillTransFactor = (float) animation.getAnimatedValue();
             }
         });
+        animator2.start();
+    }
+
+    @Override
+    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+        super.endAnimation(dynamicWeatherView, listener);
+        ValueAnimator animator2 = ValueAnimator.ofFloat(1, -1);
+        animator2.setDuration(1000);
+        animator2.setRepeatCount(0);
+        animator2.setInterpolator(new AccelerateInterpolator());
+        animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                hillTransFactor = (float) animation.getAnimatedValue();
+            }
+        });
+        animator2.addListener(listener);
         animator2.start();
     }
 }

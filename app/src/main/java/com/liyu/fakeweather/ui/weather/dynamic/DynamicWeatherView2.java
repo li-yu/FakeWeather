@@ -37,14 +37,7 @@ public class DynamicWeatherView2 extends SurfaceView implements SurfaceHolder.Ca
     public DynamicWeatherView2(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        ShortWeatherInfo info = new ShortWeatherInfo();
-        info.setCode("100");
-        info.setWindSpeed("2");
-        info.setSunrise("05:29");
-        info.setSunset("19:00");
-        info.setMoonrise("06:42");
-        info.setMoonset("19:39");
-        weatherType = new SunnyType(context, info);
+        weatherType = new DefaultType(context);
         getHolder().setFormat(PixelFormat.RGBA_8888);
         getHolder().addCallback(this);
 

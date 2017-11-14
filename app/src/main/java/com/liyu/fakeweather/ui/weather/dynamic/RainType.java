@@ -12,6 +12,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.support.annotation.IntDef;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
@@ -80,6 +81,10 @@ public class RainType extends BaseWeatherType {
 
     Runnable flashRunnable;
 
+    boolean isFlashing = false;
+
+    DynamicWeatherView2 dynamicWeatherView;
+
     public RainType(Context context, @RainLevel int rainLevel, @WindLevel int windLevel) {
         super(context);
         setColor(0xFF6188DA);
@@ -109,7 +114,7 @@ public class RainType extends BaseWeatherType {
         canvas.drawColor(getDynamicColor());
         mPaint.setAlpha(255);
 
-        if (mAnimatorValue < 1) {
+        if (isFlashing && mAnimatorValue < 1) {
             float stop = mFlashLength1 * mAnimatorValue;
             mDstFlash1.reset();
             flashPathMeasure1.getSegment(0, stop, mDstFlash1, true);
@@ -258,9 +263,18 @@ public class RainType extends BaseWeatherType {
         createFlash(getWidth() / 3, getHeight() / 2);
     }
 
+    public boolean isFlashing() {
+        return isFlashing;
+    }
+
+    public void setFlashing(boolean flashing) {
+        isFlashing = flashing;
+    }
+
     @Override
     public void startAnimation(final DynamicWeatherView2 dynamicWeatherView, int fromColor) {
         super.startAnimation(dynamicWeatherView, fromColor);
+        this.dynamicWeatherView = dynamicWeatherView;
         ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.2f);
         animator.setDuration(1000);
         animator.setRepeatCount(0);
@@ -298,6 +312,18 @@ public class RainType extends BaseWeatherType {
     public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
         super.endAnimation(dynamicWeatherView, listener);
         dynamicWeatherView.removeCallbacks(flashRunnable);
+        ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.2f, getWidth());
+        animator.setDuration(1000);
+        animator.setRepeatCount(0);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                speed = (float) animation.getAnimatedValue();
+            }
+        });
+        animator.addListener(listener);
+        animator.start();
     }
 
     private class Rain {

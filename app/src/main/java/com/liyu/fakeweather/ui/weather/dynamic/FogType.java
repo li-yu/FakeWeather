@@ -1,5 +1,7 @@
 package com.liyu.fakeweather.ui.weather.dynamic;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,6 +12,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
 import android.graphics.Shader;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 
@@ -115,5 +118,43 @@ public class FogType extends BaseWeatherType {
         });
         animator3.start();
 
+    }
+
+    @Override
+    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+        super.endAnimation(dynamicWeatherView, listener);
+
+        ValueAnimator animator = ValueAnimator.ofFloat(fogFactor1, 0);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                fogFactor1 = (float) animation.getAnimatedValue();
+            }
+        });
+
+        ValueAnimator animator2 = ValueAnimator.ofFloat(fogFactor2, 0);
+        animator2.setInterpolator(new LinearInterpolator());
+        animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                fogFactor2 = (float) animation.getAnimatedValue();
+            }
+        });
+
+        ValueAnimator animator3 = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.25f, getWidth());
+        animator3.setInterpolator(new AccelerateInterpolator());
+        animator3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                transFactor = (float) animation.getAnimatedValue();
+            }
+        });
+
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(animator).with(animator2).with(animator3);
+        animSet.setDuration(1000);
+        animSet.addListener(listener);
+        animSet.start();
     }
 }

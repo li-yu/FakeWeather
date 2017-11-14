@@ -1,7 +1,7 @@
 package com.liyu.fakeweather.ui.weather.dynamic;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,7 +14,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Shader;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import com.liyu.fakeweather.R;
@@ -137,20 +137,31 @@ public class SandstormType extends BaseWeatherType {
             }
         });
 
-        ValueAnimator animator2 = ValueAnimator.ofObject(new ArgbEvaluator(), 0xFF51C0F8, 0xffE99E3C);
-        animator2.setInterpolator(new LinearInterpolator());
-        animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(animator1);
+        animSet.setDuration(1000);
+        animSet.start();
+
+    }
+
+    @Override
+    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+        super.endAnimation(dynamicWeatherView, listener);
+
+        ValueAnimator animator1 = ValueAnimator.ofFloat(1, 0);
+        animator1.setInterpolator(new AccelerateInterpolator());
+        animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                color = (int) animation.getAnimatedValue();
+                speed = (float) animation.getAnimatedValue() * 32;
+                rotate = (float) animation.getAnimatedValue();
             }
         });
 
         AnimatorSet animSet = new AnimatorSet();
-        animSet.play(animator1).with(animator2);
+        animSet.play(animator1);
         animSet.setDuration(1000);
+        animSet.addListener(listener);
         animSet.start();
-
-
     }
 }

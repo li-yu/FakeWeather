@@ -237,13 +237,21 @@ public class WeatherFragment extends BaseFragment {
                 type = new SunnyType(getActivity(), info);
                 break;
             case "多云":
-                type = new OvercastType(getActivity(), info);
+                info.setSunrise("00:01");
+                info.setSunset("23:59");
+                info.setMoonrise("00:00");
+                info.setMoonset("00:01");
+                SunnyType sunnyType = new SunnyType(getActivity(), info);
+                sunnyType.setCloud(true);
+                type = sunnyType;
                 break;
             case "阴":
                 type = new OvercastType(getActivity(), info);
                 break;
             case "雨":
-                type = new RainType(getActivity(), RainType.RAIN_LEVEL_2, RainType.WIND_LEVEL_2);
+                RainType rainType = new RainType(getActivity(), RainType.RAIN_LEVEL_2, RainType.WIND_LEVEL_2);
+                rainType.setFlashing(true);
+                type = rainType;
                 break;
             case "雨夹雪":
                 type = new RainType(getActivity(), RainType.RAIN_LEVEL_1, RainType.WIND_LEVEL_1);
@@ -252,7 +260,7 @@ public class WeatherFragment extends BaseFragment {
                 type = new SnowType(getActivity(), SnowType.SNOW_LEVEL_2);
                 break;
             case "冰雹":
-                type = new SnowType(getActivity(), SnowType.SNOW_LEVEL_2);
+                type = new SnowType(getActivity(), SnowType.SNOW_LEVEL_3);
                 break;
             case "雾":
                 type = new FogType(getActivity());

@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.view.animation.LinearInterpolator;
 
+import com.thefinestartist.Base;
+
 import java.util.Random;
 
 /**
@@ -49,7 +51,7 @@ public abstract class BaseWeatherType implements WeatherHandler {
         return dynamicColor;
     }
 
-    public void setColor(int color){
+    public void setColor(int color) {
         this.color = color;
     }
 

@@ -1,6 +1,7 @@
 package com.liyu.fakeweather.ui.weather.dynamic;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -43,7 +44,7 @@ public class SunnyType extends BaseWeatherType {
 
     private float[] pos;                // 当前点的实际位置
     private float[] tan;                // 当前点的切线写角度值,用于计算图片所需旋转的角度
-    private Bitmap mBitmap;             // 小船儿
+    private Bitmap boat;             // 小船儿
     private Matrix mMatrix;             // 矩阵,用于对小船儿进行一些操作
 
     private static final float bitmapScale = 0.2f; //图片的缩小倍数
@@ -55,6 +56,10 @@ public class SunnyType extends BaseWeatherType {
     private Shader shader;
 
     private float boardSpeed;
+
+    private float cloudShake;
+
+    private float cloudSpeed;
 
     private static final int colorDay = 0xFF51C0F8;
 
@@ -77,6 +82,10 @@ public class SunnyType extends BaseWeatherType {
     private float[] moonPos;
     private float[] moonTan;
 
+    private boolean isCloud = false;
+
+    private Bitmap cloud;
+
     public SunnyType(Context context, ShortWeatherInfo info) {
         super(context);
         mPathFront = new Path();
@@ -92,12 +101,22 @@ public class SunnyType extends BaseWeatherType {
         currentMoonPosition = TimeUtils.getTimeDiffPercent(info.getMoonrise(), info.getMoonset());
         if (currentSunPosition >= 0 && currentSunPosition <= 1) {
             setColor(colorDay);
-            mBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_boat_day);
+            boat = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_boat_day);
         } else {
             setColor(colorNight);
-            mBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_boat_night);
+            boat = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_boat_night);
         }
 
+        cloud = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_cloud);
+
+    }
+
+    public boolean isCloud() {
+        return isCloud;
+    }
+
+    public void setCloud(boolean cloud) {
+        isCloud = cloud;
     }
 
     @Override
@@ -139,9 +158,9 @@ public class SunnyType extends BaseWeatherType {
 
         mPathRear.reset();
         mPathFront.reset();
-        mPathFront.moveTo(0, getHeight());
-        mPathRear.moveTo(0, getHeight());
-        for (float x = 0; x <= getWidth(); x += 20) {
+        mPathFront.moveTo(-boat.getWidth() * bitmapScale, getHeight());
+        mPathRear.moveTo(-boat.getWidth() * bitmapScale, getHeight());
+        for (float x = -boat.getWidth() * bitmapScale; x <= getWidth() + boat.getWidth() * bitmapScale; x += 20) {
             /**
              *  y=Asin(ωx+φ)+k
              *  A—振幅越大，波形在y轴上最大与最小值的差值越大
@@ -155,8 +174,8 @@ public class SunnyType extends BaseWeatherType {
             mPathRear.lineTo(x, y2);
         }
 
-        mPathFront.lineTo(getWidth(), getHeight());
-        mPathRear.lineTo(getWidth(), getHeight());
+        mPathFront.lineTo(getWidth() + boat.getWidth() * bitmapScale, getHeight());
+        mPathRear.lineTo(getWidth() + boat.getWidth() * bitmapScale, getHeight());
 
         mPaint.setAlpha(60);
         canvas.drawPath(mPathRear, mPaint);
@@ -166,14 +185,25 @@ public class SunnyType extends BaseWeatherType {
         mMatrix.reset();
         float degrees = (float) (Math.atan2(tan[1], tan[0]) * 180.0 / Math.PI);
         mMatrix.postScale(bitmapScale, bitmapScale);
-        mMatrix.postRotate(degrees, mBitmap.getWidth() * bitmapScale / 2, mBitmap.getHeight() * bitmapScale / 2);
-        mMatrix.postTranslate(pos[0] - mBitmap.getWidth() / 2 * bitmapScale, pos[1] - mBitmap.getHeight() * bitmapScale + 4);
+        mMatrix.postRotate(degrees, boat.getWidth() * bitmapScale / 2, boat.getHeight() * bitmapScale / 2);
+        mMatrix.postTranslate(pos[0] - boat.getWidth() / 2 * bitmapScale, pos[1] - boat.getHeight() * bitmapScale + 4);
         mPaint.setAlpha(255);
-        if (pos[0] > 0 && pos[0] < getWidth()) {
-            canvas.drawBitmap(mBitmap, mMatrix, mPaint);
-        }
+        canvas.drawBitmap(boat, mMatrix, mPaint);
         mPaint.setAlpha(100);
         canvas.drawPath(mPathFront, mPaint);
+
+        if (!isCloud)
+            return;
+
+        if (currentSunPosition >= 0 && currentSunPosition <= 1) {
+            mPaint.setAlpha(200);
+        } else {
+            mPaint.setAlpha(80);
+        }
+        mMatrix.reset();
+        mMatrix.postScale(bitmapScale, bitmapScale);
+        mMatrix.postTranslate(getWidth() / 2 * cloudSpeed, getHeight() / 2 + cloudShake);
+        canvas.drawBitmap(cloud, mMatrix, mPaint);
 
     }
 
@@ -216,6 +246,18 @@ public class SunnyType extends BaseWeatherType {
         });
         animator2.start();
 
+        ValueAnimator animator3 = ValueAnimator.ofFloat(-0.5f, 1);
+        animator3.setDuration(3000);
+        animator3.setRepeatCount(0);
+        animator3.setInterpolator(new DecelerateInterpolator());
+        animator3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                cloudSpeed = (float) animation.getAnimatedValue();
+            }
+        });
+        animator3.start();
+
         ValueAnimator sunAnimator = ValueAnimator.ofFloat(0, 1);
         sunAnimator.setDuration(3000);
         sunAnimator.setRepeatCount(0);
@@ -229,14 +271,35 @@ public class SunnyType extends BaseWeatherType {
         });
         sunAnimator.start();
 
+        ValueAnimator animatorCloud = ValueAnimator.ofFloat(-10, 10);
+        animatorCloud.setDuration(2000);
+        animatorCloud.setRepeatCount(-1);
+        animatorCloud.setRepeatMode(ValueAnimator.REVERSE);
+        animatorCloud.setInterpolator(new DecelerateInterpolator());
+        animatorCloud.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                cloudShake = (float) animation.getAnimatedValue();
+            }
+        });
+        animatorCloud.start();
+
     }
 
     @Override
     public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
         super.endAnimation(dynamicWeatherView, null);
+
+        ValueAnimator animator1 = ValueAnimator.ofFloat(currentSunPosition, 1);
+        animator1.setInterpolator(PathInterpolatorCompat.create(0.5f, 1));
+        animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                sunMeasure.getPosTan(sunMeasure.getLength() * (float) animation.getAnimatedValue(), sunPos, sunTan);
+            }
+        });
+
         ValueAnimator animator2 = ValueAnimator.ofFloat(1, 0);
-        animator2.setDuration(2000);
-        animator2.setRepeatCount(0);
         animator2.setInterpolator(new AccelerateInterpolator());
         animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -245,7 +308,30 @@ public class SunnyType extends BaseWeatherType {
             }
 
         });
-        animator2.addListener(listener);
-        animator2.start();
+
+        ValueAnimator animator3 = ValueAnimator.ofFloat(currentMoonPosition, 1);
+        animator3.setInterpolator(PathInterpolatorCompat.create(0.5f, 1));
+        animator3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                sunMeasure.getPosTan(sunMeasure.getLength() * (float) animation.getAnimatedValue(), moonPos, moonTan);
+            }
+        });
+
+        ValueAnimator animator4 = ValueAnimator.ofFloat(1, 2f);
+        animator4.setInterpolator(new AccelerateInterpolator());
+        animator4.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                cloudSpeed = (float) animation.getAnimatedValue();
+            }
+
+        });
+
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(animator1).with(animator2).with(animator3).with(animator4);
+        animSet.setDuration(1000);
+        animSet.addListener(listener);
+        animSet.start();
     }
 }

@@ -25,7 +25,9 @@ public class TypeUtil {
             if (code == 100) {//晴
                 return new SunnyType(context, info);
             } else if (code >= 101 && code <= 103) {//多云
-                return new SunnyType(context, info);
+                SunnyType sunnyType = new SunnyType(context, info);
+                sunnyType.setCloud(true);
+                return sunnyType;
             } else if (code == 104) {//阴
                 return new OvercastType(context, info);
             } else if (code >= 200 && code <= 213) {//各种风

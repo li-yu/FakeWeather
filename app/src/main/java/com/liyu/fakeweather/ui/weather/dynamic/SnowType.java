@@ -1,5 +1,7 @@
 package com.liyu.fakeweather.ui.weather.dynamic;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +12,8 @@ import android.graphics.Paint;
 import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.support.annotation.IntDef;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 
 
 import com.liyu.fakeweather.R;
@@ -35,6 +39,8 @@ public class SnowType extends BaseWeatherType {
     private Snow snow;
 
     private Shader shader;
+
+    float speed;
 
     private int snowLevel = SNOW_LEVEL_1;
 
@@ -62,20 +68,21 @@ public class SnowType extends BaseWeatherType {
         mPaint.setAlpha(255);
         matrix.reset();
         matrix.postScale(0.25f, 0.25f);
-        matrix.postTranslate(getWidth() - bitmap.getWidth() * 0.25f, getHeight() - bitmap.getHeight() * 0.25f);
+        matrix.postTranslate(speed, getHeight() - bitmap.getHeight() * 0.25f);
         canvas.drawBitmap(bitmap, matrix, mPaint);
         for (int i = 0; i < mSnows.size(); i++) {
             snow = mSnows.get(i);
-            shader = new RadialGradient(snow.x, snow.y, snow.size, 0x99FFFFFF,
-                    0x00FFFFFF, Shader.TileMode.CLAMP);
-            mPaint.setShader(shader);
+            //            shader = new RadialGradient(snow.x, snow.y, snow.size, 0x99FFFFFF,
+            //                    0x00FFFFFF, Shader.TileMode.CLAMP);
+            //            mPaint.setShader(shader);
+            mPaint.setAlpha((int) (255 * ((float) snow.y / (float) getHeight())));
             canvas.drawCircle(snow.x, snow.y, snow.size, mPaint);
         }
         for (int i = 0; i < mSnows.size(); i++) {
             snow = mSnows.get(i);
             snow.y += snow.speed;
-            if (snow.y > getHeight() + snow.size) {
-                snow.y = 0 - snow.size;
+            if (snow.y > getHeight() + snow.size * 2) {
+                snow.y = 0 - snow.size * 2;
                 snow.x = getRandom(0, getWidth());
             }
         }
@@ -88,11 +95,45 @@ public class SnowType extends BaseWeatherType {
             Snow snow = new Snow(
                     getRandom(0, getWidth()),
                     getRandom(0, getHeight()),
-                    getRandom(dp2px(8), dp2px(20)),
-                    getRandom(1, snowLevel / 10)
+                    getRandom(dp2px(1), dp2px(6)),
+                    getRandom(1, snowLevel / 12)
             );
             mSnows.add(snow);
         }
+    }
+
+    @Override
+    public void startAnimation(DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+        super.startAnimation(dynamicWeatherView, fromColor);
+        ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.25f);
+        animator.setDuration(1000);
+        animator.setRepeatCount(0);
+        animator.setInterpolator(new OvershootInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                speed = (float) animation.getAnimatedValue();
+            }
+        });
+
+        animator.start();
+    }
+
+    @Override
+    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+        super.endAnimation(dynamicWeatherView, listener);
+        ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.25f, getWidth());
+        animator.setDuration(1000);
+        animator.setRepeatCount(0);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                speed = (float) animation.getAnimatedValue();
+            }
+        });
+        animator.addListener(listener);
+        animator.start();
     }
 
     private class Snow {
