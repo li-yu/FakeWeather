@@ -11,9 +11,18 @@ public class WeatherCity extends DataSupport {
 
     private int cityIndex;
     private String cityName;
+    private String cityId;
     private String weatherCode;
     private String weatherText;
     private String weatherTemp;
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
 
     public int getCityIndex() {
         return cityIndex;
@@ -62,7 +71,7 @@ public class WeatherCity extends DataSupport {
 
         WeatherCity that = (WeatherCity) o;
 
-        return cityName.equals(that.cityName);
+        return cityId.equals(that.cityId);
 
     }
 

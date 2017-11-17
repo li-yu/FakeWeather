@@ -1,7 +1,6 @@
 package com.liyu.fakeweather.http.api;
 
 import com.liyu.fakeweather.http.BaseAppResponse;
-import com.liyu.fakeweather.http.BaseCityResponse;
 import com.liyu.fakeweather.http.BaseHeWeatherCityResponse;
 import com.liyu.fakeweather.model.UpdateInfo;
 
@@ -19,9 +18,6 @@ public interface AppController {
 
     @GET("http://api.caoliyu.cn/weatherkey.json")
     Observable<BaseAppResponse<String>> getWeatherKey();
-
-    @GET("http://api.caoliyu.cn/xiaomicitys.json")
-    Observable<BaseCityResponse> getWeatherCityList();
 
     @GET("http://api.caoliyu.cn/heweather_city_list.json")
     Observable<BaseHeWeatherCityResponse> getHeWeatherCityList();

@@ -92,7 +92,7 @@ public class WeatherUtil {
 
     private String readFromAssets() {
         try {
-            InputStream is = App.getContext().getAssets().open("weather1.json");
+            InputStream is = App.getContext().getAssets().open("weather_map.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);

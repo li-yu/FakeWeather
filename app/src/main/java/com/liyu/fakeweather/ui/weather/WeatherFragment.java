@@ -1,13 +1,13 @@
 package com.liyu.fakeweather.ui.weather;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -18,14 +18,14 @@ import android.view.View;
 import com.baidu.location.BDLocation;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.location.RxLocation;
+import com.liyu.fakeweather.model.HeWeatherCity;
 import com.liyu.fakeweather.model.IFakeWeather;
 import com.liyu.fakeweather.model.WeatherCity;
 import com.liyu.fakeweather.ui.MainActivity;
 import com.liyu.fakeweather.ui.base.BaseFragment;
 import com.liyu.fakeweather.ui.base.BaseViewPagerAdapter;
-import com.liyu.fakeweather.ui.girl.MzituFragment;
 import com.liyu.fakeweather.ui.weather.dynamic.BaseWeatherType;
-import com.liyu.fakeweather.ui.weather.dynamic.DynamicWeatherView2;
+import com.liyu.fakeweather.ui.weather.dynamic.DynamicWeatherView;
 import com.liyu.fakeweather.ui.weather.dynamic.FogType;
 import com.liyu.fakeweather.ui.weather.dynamic.OvercastType;
 import com.liyu.fakeweather.ui.weather.dynamic.RainType;
@@ -42,14 +42,12 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 import org.litepal.crud.DataSupport;
 import org.litepal.crud.callback.FindMultiCallback;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by liyu on 2017/8/24.
@@ -57,22 +55,24 @@ import rx.schedulers.Schedulers;
 
 public class WeatherFragment extends BaseFragment {
 
-    private DynamicWeatherView2 dynamicWeatherView;
+    private DynamicWeatherView dynamicWeatherView;
     private Toolbar mToolbar;
-    ViewPager viewPager;
-
+    private ViewPager viewPager;
+    private BaseViewPagerAdapter adapter;
     private SimplePagerIndicator pagerTitleView;
+
+    private static final int REQUEST_CITY_MANAGE = 280;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_weather4;
+        return R.layout.fragment_weather;
     }
 
     public Toolbar getmToolbar() {
         return mToolbar;
     }
 
-    public DynamicWeatherView2 getDynamicWeatherView() {
+    public DynamicWeatherView getDynamicWeatherView() {
         return dynamicWeatherView;
     }
 
@@ -100,7 +100,7 @@ public class WeatherFragment extends BaseFragment {
                     });
                     return true;
                 } else if (id == R.id.menu_city_manage) {
-                    startActivity(new Intent(getActivity(), CityManageActivity.class));
+                    startActivityForResult(new Intent(getActivity(), CityManageActivity.class), REQUEST_CITY_MANAGE);
                     return true;
                 } else if (id == R.id.menu_preview) {
                     previewDynamicWeather();
@@ -119,10 +119,19 @@ public class WeatherFragment extends BaseFragment {
                     @Override
                     public List<WeatherCity> call(BDLocation bdLocation) {
                         String nowCity = TextUtils.isEmpty(bdLocation.getCity()) ? "苏州" : bdLocation.getCity().replace("市", "");
+                        String nowProvince = TextUtils.isEmpty(bdLocation.getProvince()) ? "江苏" : bdLocation.getCity().replace("省", "");
+                        HeWeatherCity heWeatherCity = DataSupport.where("provinceZh = ? and cityZh = ?", nowProvince, nowCity).findFirst(HeWeatherCity.class);
                         List<WeatherCity> savedCities = DataSupport.order("cityIndex").find(WeatherCity.class);
                         WeatherCity city = new WeatherCity();
                         city.setCityIndex(0);
-                        city.setCityName(nowCity);
+                        if (heWeatherCity == null) {
+                            city.setCityId("CN101190401");
+                            city.setCityName("苏州");
+                        } else {
+                            city.setCityId(heWeatherCity.getId());
+                            city.setCityName(heWeatherCity.getCityZh());
+                        }
+
                         int index = savedCities.indexOf(city);
                         if (index >= 0) {
                             savedCities.set(0, savedCities.get(index));
@@ -155,11 +164,11 @@ public class WeatherFragment extends BaseFragment {
 
                     @Override
                     public void onNext(List<WeatherCity> weatherCities) {
-                        BaseViewPagerAdapter adapter = new BaseViewPagerAdapter(getChildFragmentManager());
+                        adapter = new BaseViewPagerAdapter(getChildFragmentManager());
                         for (WeatherCity city : weatherCities) {
                             Fragment fragment = new CityWeatherFragment();
                             Bundle data = new Bundle();
-                            data.putString("city", city.getCityName());
+                            data.putString("city", city.getCityId());
                             fragment.setArguments(data);
                             adapter.addFrag(fragment, city.getCityName());
                         }
@@ -276,5 +285,40 @@ public class WeatherFragment extends BaseFragment {
         }
         dynamicWeatherView.setType(type);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CITY_MANAGE && resultCode == Activity.RESULT_OK && data != null) {
+            final boolean changed = data.getBooleanExtra(CityManageActivity.EXTRA_DATA_CHANGED, false);
+            final int selectedItem = data.getIntExtra(CityManageActivity.EXTRA_SELECTED_ITEM, 0);
+            if (changed) {
+                DataSupport.order("cityIndex").findAsync(WeatherCity.class).listen(new FindMultiCallback() {
+                    @Override
+                    public <T> void onFinish(List<T> t) {
+                        List<WeatherCity> weatherCities = (List<WeatherCity>) t;
+                        if (adapter != null) {
+                            adapter.clear();
+                            adapter = null;
+                        }
+                        adapter = new BaseViewPagerAdapter(getChildFragmentManager());
+                        for (WeatherCity city : weatherCities) {
+                            Fragment fragment = new CityWeatherFragment();
+                            Bundle data = new Bundle();
+                            data.putString("city", city.getCityId());
+                            fragment.setArguments(data);
+                            adapter.addFrag(fragment, city.getCityName());
+                        }
+                        viewPager.setAdapter(adapter);
+                        viewPager.setOffscreenPageLimit(adapter.getCount());
+                        pagerTitleView.notifyDataSetChanged();
+                    }
+                });
+            }
+            if (selectedItem > -1) {
+                viewPager.setCurrentItem(selectedItem);
+            }
+        }
     }
 }

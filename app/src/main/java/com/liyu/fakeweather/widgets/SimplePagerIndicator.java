@@ -143,7 +143,8 @@ public class SimplePagerIndicator extends View implements ViewPager.OnPageChange
         notifyDataSetChanged();
     }
 
-    private void notifyDataSetChanged() {
+    public void notifyDataSetChanged() {
+        selectedPosition = 0;
         titles.clear();
         PagerAdapter adapter = mViewPager.getAdapter();
         final int count = adapter.getCount();

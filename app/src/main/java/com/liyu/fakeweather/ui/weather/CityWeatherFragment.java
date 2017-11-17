@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -26,7 +27,7 @@ import com.liyu.fakeweather.ui.weather.adapter.AqiAdapter;
 import com.liyu.fakeweather.ui.weather.adapter.HourlyAdapter;
 import com.liyu.fakeweather.ui.weather.adapter.SuggestionAdapter;
 import com.liyu.fakeweather.ui.weather.dynamic.BaseWeatherType;
-import com.liyu.fakeweather.ui.weather.dynamic.DynamicWeatherView2;
+import com.liyu.fakeweather.ui.weather.dynamic.DynamicWeatherView;
 import com.liyu.fakeweather.ui.weather.dynamic.ShortWeatherInfo;
 import com.liyu.fakeweather.ui.weather.dynamic.TypeUtil;
 import com.liyu.fakeweather.utils.ACache;
@@ -63,11 +64,11 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
     private RecyclerView suggesstionRecyclerView;
 
-    HourlyAdapter hourlyAdapter;
+    private HourlyAdapter hourlyAdapter;
 
-    AqiAdapter aqiAdapter;
+    private AqiAdapter aqiAdapter;
 
-    SuggestionAdapter suggestionAdapter;
+    private SuggestionAdapter suggestionAdapter;
 
     private ACache mCache;
 
@@ -79,6 +80,8 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
     private Toolbar parentToolbar;
 
+    private LinearLayout layoutNow;
+
     private TextView tvNowWeatherString;
     private TextView tvNowTemp;
 
@@ -87,9 +90,9 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
     private AqiView aqiView;
 
-    Rect localRect = new Rect();
+    private Rect localRect = new Rect();
 
-    private DynamicWeatherView2 dynamicWeatherView;
+    private DynamicWeatherView dynamicWeatherView;
 
     private boolean weatherChartViewLastVisible = false;
 
@@ -109,6 +112,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         parentToolbar = ((WeatherFragment) getParentFragment()).getmToolbar();
         dynamicWeatherView = ((WeatherFragment) getParentFragment()).getDynamicWeatherView();
 
+        layoutNow = findView(R.id.layout_now);
         tvNowWeatherString = findView(R.id.tv_weather_string);
         tvNowTemp = findView(R.id.tv_temp);
         aqiView = findView(R.id.aqiview);
@@ -236,6 +240,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
     private void showWeather(IFakeWeather weather) {
         currentWeather = weather;
         setDynamicWeatherView(weather);
+        layoutNow.setVisibility(View.VISIBLE);
         hourlyAdapter.setNewData(weather.getFakeForecastHourly());
         weatherChartView.setWeather(weather);
         tvNowWeatherString.setText(weather.getFakeNow().getNowText());

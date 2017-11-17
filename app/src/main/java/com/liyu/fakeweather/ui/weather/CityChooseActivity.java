@@ -13,6 +13,7 @@ import com.liyu.fakeweather.model.HeWeatherCity;
 import com.liyu.fakeweather.model.SimpleItem;
 import com.liyu.fakeweather.ui.base.BaseActivity;
 import com.liyu.fakeweather.ui.weather.adapter.SimpleListAdapter;
+import com.liyu.fakeweather.utils.ToastUtil;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.crud.callback.FindMultiCallback;
@@ -97,9 +98,17 @@ public class CityChooseActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent i = new Intent();
-                i.putExtra(EXTRA_CITY_NAME, cityAdapter.getItem(position).getItem());
+                HeWeatherCity city = DataSupport.where("provinceZh = ? and leaderZh = ? and cityZh = ?", provinceAdapter.getSelectedItem().getItem(), leaderAdapter.getSelectedItem().getItem(), cityAdapter.getItem(position).getItem())
+                        .findFirst(HeWeatherCity.class);
+
+                if (city == null) {
+                    ToastUtil.showShort("理论上不应该为 null ！");
+                    return;
+                }
+                i.putExtra(EXTRA_CITY_NAME, city);
                 setResult(RESULT_OK, i);
                 onBackPressed();
+
             }
         });
     }

@@ -39,4 +39,10 @@ public class SimpleListAdapter extends BaseQuickAdapter<SimpleItem, BaseViewHold
         notifyItemChanged(position);
     }
 
+    public SimpleItem getSelectedItem() {
+        if (lastSelectedIndex != -1) {
+            return getItem(lastSelectedIndex);
+        } else return null;
+    }
+
 }

@@ -9,7 +9,6 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseHeWeatherCityResponse;
-import com.liyu.fakeweather.model.City;
 import com.liyu.fakeweather.model.HeWeatherCity;
 import com.liyu.fakeweather.ui.base.BaseActivity;
 import com.liyu.fakeweather.utils.ToastUtil;

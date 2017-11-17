@@ -169,7 +169,7 @@ public class OvercastType extends BaseWeatherType {
     }
 
     @Override
-    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+    public void startAnimation(final DynamicWeatherView dynamicWeatherView, int fromColor) {
         super.startAnimation(dynamicWeatherView, fromColor);
         ValueAnimator animator = ValueAnimator.ofFloat(-0.2f, 1.2f);
         animator.setDuration(30000);
@@ -197,7 +197,7 @@ public class OvercastType extends BaseWeatherType {
     }
 
     @Override
-    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+    public void endAnimation(DynamicWeatherView dynamicWeatherView, Animator.AnimatorListener listener) {
         super.endAnimation(dynamicWeatherView, listener);
         ValueAnimator animator2 = ValueAnimator.ofFloat(1, -1);
         animator2.setDuration(1000);

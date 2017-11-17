@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.support.annotation.IntDef;
 import android.view.animation.AccelerateInterpolator;
@@ -103,7 +102,7 @@ public class SnowType extends BaseWeatherType {
     }
 
     @Override
-    public void startAnimation(DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+    public void startAnimation(DynamicWeatherView dynamicWeatherView, int fromColor) {
         super.startAnimation(dynamicWeatherView, fromColor);
         ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.25f);
         animator.setDuration(1000);
@@ -120,7 +119,7 @@ public class SnowType extends BaseWeatherType {
     }
 
     @Override
-    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+    public void endAnimation(DynamicWeatherView dynamicWeatherView, Animator.AnimatorListener listener) {
         super.endAnimation(dynamicWeatherView, listener);
         ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.25f, getWidth());
         animator.setDuration(1000);

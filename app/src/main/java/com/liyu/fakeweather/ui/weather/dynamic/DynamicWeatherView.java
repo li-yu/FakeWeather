@@ -1,24 +1,30 @@
 package com.liyu.fakeweather.ui.weather.dynamic;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.SurfaceTexture;
+import android.graphics.PixelFormat;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.view.TextureView;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.animation.AnimationUtils;
+
+import com.liyu.fakeweather.model.IFakeWeather;
 
 /**
  * Created by liyu on 2017/8/16.
  */
 
-public class DynamicWeatherView extends TextureView implements TextureView.SurfaceTextureListener {
+public class DynamicWeatherView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Context mContext;
     private DrawThread mDrawThread;
-    private BaseWeatherType mWeather;
+    private BaseWeatherType weatherType;
     private int mViewWidth;
     private int mViewHeight;
+    private IFakeWeather originWeather;
+    int fromColor;
 
     public DynamicWeatherView(Context context) {
         this(context, null);
@@ -31,16 +37,65 @@ public class DynamicWeatherView extends TextureView implements TextureView.Surfa
     public DynamicWeatherView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        mWeather = new RainType(context, RainType.RAIN_LEVEL_1, RainType.WIND_LEVEL_1);
-        setSurfaceTextureListener(this);
+        weatherType = new DefaultType(context);
+        getHolder().setFormat(PixelFormat.RGBA_8888);
+        getHolder().addCallback(this);
+
     }
 
     public int getColor() {
-        return mWeather.getColor();
+        return weatherType.getColor();
     }
 
-    public void setType(BaseWeatherType weatherType) {
-        this.mWeather = weatherType;
+    public void setType(final BaseWeatherType type) {
+        if (this.weatherType != null) {
+            this.weatherType.endAnimation(this, new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    fromColor = weatherType.getColor();
+                    weatherType = type;
+                    if (weatherType != null) {
+                        weatherType.onSizeChanged(mContext, mViewWidth, mViewHeight);
+                    }
+                    weatherType.startAnimation(DynamicWeatherView.this, fromColor);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+        } else {
+            fromColor = type.getColor();
+            this.weatherType = type;
+            if (this.weatherType != null) {
+                this.weatherType.onSizeChanged(mContext, mViewWidth, mViewHeight);
+            }
+            this.weatherType.startAnimation(this, fromColor);
+        }
+
+    }
+
+    public IFakeWeather getOriginWeather() {
+        return originWeather;
+    }
+
+    public void setOriginWeather(IFakeWeather originWeather) {
+        this.originWeather = originWeather;
+    }
+
+    public BaseWeatherType getWeather() {
+        return weatherType;
     }
 
     @Override
@@ -48,138 +103,96 @@ public class DynamicWeatherView extends TextureView implements TextureView.Surfa
         super.onSizeChanged(w, h, oldw, oldh);
         mViewWidth = w;
         mViewHeight = h;
-        if (mWeather != null) {
-            mWeather.onSizeChanged(mContext, w, h);
+        if (weatherType != null) {
+            weatherType.onSizeChanged(mContext, w, h);
         }
     }
 
-    public void resume() {
-        mDrawThread.reStart();
-    }
-
-    public void pause() {
-        if (mDrawThread != null && mDrawThread.isRunning) {
-            mDrawThread.pause();
+    public void onResume() {
+        if (mDrawThread != null) {
+            mDrawThread.setSuspend(false);
         }
     }
 
-    /**
-     * Invoked when a {@link TextureView}'s SurfaceTexture is ready for use.
-     *
-     * @param surface The surface returned by
-     *                {@link TextureView#getSurfaceTexture()}
-     * @param width   The width of the surface
-     * @param height  The height of the surface
-     */
+    public void onPause() {
+        mDrawThread.setSuspend(true);
+    }
+
+    public void onDestroy() {
+        mDrawThread.setRunning(false);
+        getHolder().removeCallback(this);
+        if (this.weatherType != null) {
+            this.weatherType.endAnimation(this, null);
+        }
+    }
+
     @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+    public void surfaceCreated(SurfaceHolder holder) {
         mDrawThread = new DrawThread();
+        mDrawThread.mSurface = holder;
         mDrawThread.setRunning(true);
         mDrawThread.start();
-        mWeather.startAnimation(null, mWeather.getColor());
-
+        weatherType.startAnimation(this, weatherType.getColor());
     }
 
-    /**
-     * Invoked when the {@link SurfaceTexture}'s buffers size changed.
-     *
-     * @param surface The surface returned by
-     *                {@link TextureView#getSurfaceTexture()}
-     * @param width   The new width of the surface
-     * @param height  The new height of the surface
-     */
     @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        mViewWidth = width;
-        mViewHeight = height;
-        if (mWeather != null) {
-            mWeather.onSizeChanged(mContext, width, height);
-        }
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
     }
 
-    /**
-     * Invoked when the specified {@link SurfaceTexture} is about to be destroyed.
-     * If returns true, no rendering should happen inside the surface texture after this method
-     * is invoked. If returns false, the client needs to call {@link SurfaceTexture#release()}.
-     * Most applications should return true.
-     *
-     * @param surface The surface about to be destroyed
-     */
     @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+    public void surfaceDestroyed(SurfaceHolder holder) {
         mDrawThread.setRunning(false);
-        return true;
-    }
-
-    /**
-     * Invoked when the specified {@link SurfaceTexture} is updated through
-     * {@link SurfaceTexture#updateTexImage()}.
-     *
-     * @param surface The surface just updated
-     */
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
     }
 
     private class DrawThread extends Thread {
+
+        private SurfaceHolder mSurface;
 
         private boolean isRunning = false;
 
         private boolean suspended = false;
 
+        private final Object control = new Object();
+
         public void setRunning(boolean running) {
             isRunning = running;
         }
 
-        public boolean isRunning() {
-            return isRunning;
-        }
+        public void setSuspend(boolean suspend) {
+            if (!suspend) {
+                synchronized (control) {
+                    control.notifyAll();
+                }
+            }
 
-        /**
-         * 暂停
-         */
-        public void pause() {
-            suspended = true;
-        }
-
-        /**
-         * 继续
-         */
-        public synchronized void reStart() {
-            suspended = false;
-            notify();
+            this.suspended = suspend;
         }
 
         @Override
         public void run() {
             while (isRunning) {
-                try {
-                    synchronized (this) {
-                        while (suspended) {
-                            wait();
+                if (suspended) {
+                    try {
+                        synchronized (control) {
+                            control.wait();
                         }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (InterruptedException e) {
+                }
+                final long startTime = AnimationUtils.currentAnimationTimeMillis();
+                Canvas canvas = mSurface.lockCanvas();
+                if (canvas != null) {
+                    weatherType.onDrawElements(canvas);
+                    mSurface.unlockCanvasAndPost(canvas);
+                    System.out.print("fuck");//如果不加这一行，在某些手机上竟然会 ANR
+                }
+                final long drawTime = AnimationUtils.currentAnimationTimeMillis() - startTime;
+                final long needSleepTime = 16 - drawTime;
+                if (needSleepTime > 0) {
+                    SystemClock.sleep(needSleepTime);
+                }
 
-                }
-                if (mWeather != null && mViewWidth != 0 && mViewHeight != 0) {
-                    final long startTime = AnimationUtils.currentAnimationTimeMillis();
-                    Canvas canvas = lockCanvas();
-                    if (canvas != null) {
-                        mWeather.onDrawElements(canvas);
-                        final long drawTime = AnimationUtils.currentAnimationTimeMillis() - startTime;
-                        final long needSleepTime = 16 - drawTime;
-                        if (needSleepTime > 0) {
-                            SystemClock.sleep(needSleepTime);
-                        }
-                        if (isRunning) {
-                            unlockCanvasAndPost(canvas);
-                        } else {
-                            break;
-                        }
-                    }
-                }
             }
         }
     }

@@ -136,7 +136,7 @@ public class SunnyType extends BaseWeatherType {
             if (shader == null) {
                 shader = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartDay, colorWaveEndDay, Shader.TileMode.CLAMP);
             }
-        } else {
+        } else if (currentMoonPosition >= 0 && currentMoonPosition <= 1) {
             mPaint.setMaskFilter(new BlurMaskFilter(10, BlurMaskFilter.Blur.SOLID));
             canvas.drawCircle(moonPos[0], moonPos[1], 40, mPaint);
             mPaint.setColor(getDynamicColor());
@@ -216,7 +216,7 @@ public class SunnyType extends BaseWeatherType {
     }
 
     @Override
-    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+    public void startAnimation(final DynamicWeatherView dynamicWeatherView, int fromColor) {
         super.startAnimation(dynamicWeatherView, fromColor);
         sunPos = new float[2];
         sunTan = new float[2];
@@ -287,7 +287,7 @@ public class SunnyType extends BaseWeatherType {
     }
 
     @Override
-    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+    public void endAnimation(DynamicWeatherView dynamicWeatherView, Animator.AnimatorListener listener) {
         super.endAnimation(dynamicWeatherView, null);
 
         ValueAnimator animator1 = ValueAnimator.ofFloat(currentSunPosition, 1);

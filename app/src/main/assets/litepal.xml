@@ -13,10 +13,6 @@
 
         <mapping class="com.liyu.fakeweather.model.StandInfoBean"></mapping>
 
-        <mapping class="com.liyu.fakeweather.model.City"></mapping>
-
-        <mapping class="com.liyu.fakeweather.model.Province"></mapping>
-
         <mapping class="com.liyu.fakeweather.model.WeatherCity"></mapping>
 
         <mapping class="com.liyu.fakeweather.model.HeWeatherCity"></mapping>

@@ -22,6 +22,7 @@ import com.liyu.fakeweather.model.IFakeWeather;
 import com.liyu.fakeweather.utils.SizeUtils;
 
 /**
+ * 自定义空气质量环形控件
  * Created by liyu on 2017/8/23.
  */
 
@@ -39,7 +40,7 @@ public class AqiView extends View {
 
     private int textColor; //文字颜色
 
-    private float textSize; //文字代销
+    private float textSize; //文字大小
 
     private float roundWidth = 28; //圆环宽度
 

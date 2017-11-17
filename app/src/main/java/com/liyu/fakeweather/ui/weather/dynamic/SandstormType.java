@@ -125,7 +125,7 @@ public class SandstormType extends BaseWeatherType {
     }
 
     @Override
-    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+    public void startAnimation(final DynamicWeatherView dynamicWeatherView, int fromColor) {
         super.startAnimation(dynamicWeatherView, fromColor);
         ValueAnimator animator1 = ValueAnimator.ofFloat(0, 1);
         animator1.setInterpolator(new OvershootInterpolator());
@@ -145,7 +145,7 @@ public class SandstormType extends BaseWeatherType {
     }
 
     @Override
-    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+    public void endAnimation(DynamicWeatherView dynamicWeatherView, Animator.AnimatorListener listener) {
         super.endAnimation(dynamicWeatherView, listener);
 
         ValueAnimator animator1 = ValueAnimator.ofFloat(1, 0);

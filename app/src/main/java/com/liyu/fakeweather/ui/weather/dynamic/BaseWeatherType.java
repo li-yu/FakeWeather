@@ -9,8 +9,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.view.animation.LinearInterpolator;
 
-import com.thefinestartist.Base;
-
 import java.util.Random;
 
 /**
@@ -57,7 +55,7 @@ public abstract class BaseWeatherType implements WeatherHandler {
 
     public abstract void generateElements();
 
-    public void startAnimation(DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+    public void startAnimation(DynamicWeatherView dynamicWeatherView, int fromColor) {
         ValueAnimator animator = ValueAnimator.ofObject(new ArgbEvaluator(), fromColor, color);
         animator.setInterpolator(new LinearInterpolator());
         animator.setDuration(1000);
@@ -71,7 +69,7 @@ public abstract class BaseWeatherType implements WeatherHandler {
         animator.start();
     }
 
-    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+    public void endAnimation(DynamicWeatherView dynamicWeatherView, Animator.AnimatorListener listener) {
 
     }
 

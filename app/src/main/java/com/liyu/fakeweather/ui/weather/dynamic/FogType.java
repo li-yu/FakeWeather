@@ -79,7 +79,7 @@ public class FogType extends BaseWeatherType {
     }
 
     @Override
-    public void startAnimation(DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+    public void startAnimation(DynamicWeatherView dynamicWeatherView, int fromColor) {
         super.startAnimation(dynamicWeatherView, fromColor);
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
         animator.setDuration(6000);
@@ -121,7 +121,7 @@ public class FogType extends BaseWeatherType {
     }
 
     @Override
-    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+    public void endAnimation(DynamicWeatherView dynamicWeatherView, Animator.AnimatorListener listener) {
         super.endAnimation(dynamicWeatherView, listener);
 
         ValueAnimator animator = ValueAnimator.ofFloat(fogFactor1, 0);

@@ -2,7 +2,6 @@ package com.liyu.fakeweather.ui.weather.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -13,7 +12,6 @@ import com.liyu.fakeweather.model.FakeWeather;
 import com.liyu.fakeweather.model.WeatherBean;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
 import com.liyu.fakeweather.utils.SizeUtils;
-import com.liyu.fakeweather.utils.TimeUtils;
 import com.liyu.fakeweather.utils.WeatherUtil;
 
 import java.util.List;

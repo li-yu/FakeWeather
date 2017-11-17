@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
@@ -22,6 +20,7 @@ import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseWeatherResponse;
 import com.liyu.fakeweather.model.HeWeather5;
+import com.liyu.fakeweather.model.HeWeatherCity;
 import com.liyu.fakeweather.model.IFakeWeather;
 import com.liyu.fakeweather.model.WeatherCity;
 import com.liyu.fakeweather.ui.base.BaseActivity;
@@ -51,7 +50,17 @@ public class CityManageActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private CardWeatherAdapter adapter;
 
+    private boolean dataChanged = false;
+
+    private int dragStartPosition = 0;
+
+    private int selectedItem = -1;
+
     private static final int REQUEST_CHOOSE_CITY = 114;
+
+    public static final String EXTRA_DATA_CHANGED = "extra_data_changed";
+
+    public static final String EXTRA_SELECTED_ITEM = "extra_selected_item";
 
     @Override
     protected int getLayoutId() {
@@ -88,6 +97,8 @@ public class CityManageActivity extends BaseActivity {
                 else
                     return super.getMovementFlags(recyclerView, viewHolder);
             }
+
+
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -98,7 +109,7 @@ public class CityManageActivity extends BaseActivity {
         adapter.setOnItemDragListener(new OnItemDragListener() {
             @Override
             public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
-
+                dragStartPosition = pos;
             }
 
             @Override
@@ -108,7 +119,9 @@ public class CityManageActivity extends BaseActivity {
 
             @Override
             public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-
+                if (dragStartPosition != pos) {
+                    dataChanged = true;
+                }
             }
         });
 
@@ -130,6 +143,7 @@ public class CityManageActivity extends BaseActivity {
                 DataSupport.deleteAll(WeatherCity.class, "cityName = ?", adapter.getItem(pos).getCityName());
                 Snackbar.make(getWindow().getDecorView().getRootView().findViewById(android.R.id.content), adapter.getItem(pos).getCityName() + " 删除成功!",
                         Snackbar.LENGTH_LONG).setActionTextColor(getResources().getColor(R.color.actionColor)).show();
+                dataChanged = true;
             }
 
             @Override
@@ -137,6 +151,15 @@ public class CityManageActivity extends BaseActivity {
 
             }
         });
+
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                selectedItem = position;
+                onBackPressed();
+            }
+        });
+
     }
 
     @Override
@@ -238,6 +261,10 @@ public class CityManageActivity extends BaseActivity {
                 DataSupport.updateAll(WeatherCity.class, values, "cityName = ?", adapter.getItem(i).getCityName());
             }
         }
+        Intent i = new Intent();
+        i.putExtra(EXTRA_SELECTED_ITEM, selectedItem);
+        i.putExtra(EXTRA_DATA_CHANGED, dataChanged);
+        setResult(RESULT_OK, i);
         super.onBackPressed();
     }
 
@@ -245,15 +272,17 @@ public class CityManageActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CHOOSE_CITY && resultCode == Activity.RESULT_OK && data != null) {
-            String city = data.getStringExtra(CityChooseActivity.EXTRA_CITY_NAME);
-            if (!TextUtils.isEmpty(city)) {
+            HeWeatherCity city = (HeWeatherCity) data.getSerializableExtra(CityChooseActivity.EXTRA_CITY_NAME);
+            if (city != null) {
                 WeatherCity weatherCity = new WeatherCity();
                 weatherCity.setCityIndex(adapter.getData().size());
-                weatherCity.setCityName(city);
+                weatherCity.setCityName(city.getCityZh());
+                weatherCity.setCityId(city.getId());
                 if (!adapter.getData().contains(weatherCity)) {
                     adapter.addData(weatherCity);
                     weatherCity.save();
-                    queryWeather(city);
+                    queryWeather(city.getId());
+                    dataChanged = true;
                 } else {
                     ToastUtil.showShort("重复的城市！");
                 }

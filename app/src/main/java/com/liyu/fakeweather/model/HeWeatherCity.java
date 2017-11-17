@@ -2,14 +2,16 @@ package com.liyu.fakeweather.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
+
+import java.io.Serializable;
 
 /**
  * Created by liyu on 2017/11/9.
  */
 
-public class HeWeatherCity extends DataSupport {
-
+public class HeWeatherCity extends DataSupport implements Serializable{
 
     /**
      * id : CN101010100
@@ -39,6 +41,17 @@ public class HeWeatherCity extends DataSupport {
     private String leaderZh;
     private String lat;
     private String lon;
+
+    @Column(ignore = true)
+    private boolean selected;
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 
     public String getId() {
         return cityId;

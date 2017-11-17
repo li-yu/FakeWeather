@@ -83,7 +83,7 @@ public class RainType extends BaseWeatherType {
 
     boolean isFlashing = false;
 
-    DynamicWeatherView2 dynamicWeatherView;
+    DynamicWeatherView dynamicWeatherView;
 
     public RainType(Context context, @RainLevel int rainLevel, @WindLevel int windLevel) {
         super(context);
@@ -272,7 +272,7 @@ public class RainType extends BaseWeatherType {
     }
 
     @Override
-    public void startAnimation(final DynamicWeatherView2 dynamicWeatherView, int fromColor) {
+    public void startAnimation(final DynamicWeatherView dynamicWeatherView, int fromColor) {
         super.startAnimation(dynamicWeatherView, fromColor);
         this.dynamicWeatherView = dynamicWeatherView;
         ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.2f);
@@ -309,7 +309,7 @@ public class RainType extends BaseWeatherType {
     }
 
     @Override
-    public void endAnimation(DynamicWeatherView2 dynamicWeatherView, Animator.AnimatorListener listener) {
+    public void endAnimation(DynamicWeatherView dynamicWeatherView, Animator.AnimatorListener listener) {
         super.endAnimation(dynamicWeatherView, listener);
         dynamicWeatherView.removeCallbacks(flashRunnable);
         ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.2f, getWidth());

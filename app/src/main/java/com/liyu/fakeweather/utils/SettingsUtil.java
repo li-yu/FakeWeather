@@ -16,7 +16,6 @@ public class SettingsUtil {
     public static final String THEME = "theme_color";//主题
     public static final String CLEAR_CACHE = "clean_cache";//清空缓存
     public static final String BUS_REFRESH_FREQ = "bus_refresh_freq";//公交自动刷新频率
-    public static final String TTS_VOICE_TYPE = "tts_voice_type";//讯飞语音人声
 
     public static final int WEATHER_DATE_TYPE_WEEK = 0;
 
@@ -25,14 +24,6 @@ public class SettingsUtil {
     public static final int WEATHER_SRC_HEFENG = 0;
 
     public static final int WEATHER_SRC_XIAOMI = 1;
-
-    public static void setTtsVoiceType(String type) {
-        SPUtil.put(App.getContext(), TTS_VOICE_TYPE, type);
-    }
-
-    public static String getTtsVoiceType() {
-        return (String) SPUtil.get(App.getContext(), TTS_VOICE_TYPE, App.getContext().getResources().getStringArray(R.array.tts_voice_value)[0]);
-    }
 
     public static void setWeatherShareType(String type) {
         SPUtil.put(App.getContext(), WEATHER_SHARE_TYPE, type);
