@@ -83,7 +83,13 @@ public class RainType extends BaseWeatherType {
 
     boolean isFlashing = false;
 
+    boolean isSnowing = false;
+
     DynamicWeatherView dynamicWeatherView;
+
+    private ArrayList<SnowType.Snow> mSnows;
+
+    private SnowType.Snow snow;
 
     public RainType(Context context, @RainLevel int rainLevel, @WindLevel int windLevel) {
         super(context);
@@ -96,6 +102,7 @@ public class RainType extends BaseWeatherType {
         mPaint.setStrokeWidth(5);
         mPaint.setStyle(Paint.Style.STROKE);
         mRains = new ArrayList<>();
+        mSnows = new ArrayList<>();
         matrix = new Matrix();
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_rain_ground);
         mDstFlash1 = new Path();
@@ -113,6 +120,7 @@ public class RainType extends BaseWeatherType {
         clearCanvas(canvas);
         canvas.drawColor(getDynamicColor());
         mPaint.setAlpha(255);
+        mPaint.setStyle(Paint.Style.STROKE);
 
         if (isFlashing && mAnimatorValue < 1) {
             float stop = mFlashLength1 * mAnimatorValue;
@@ -151,6 +159,23 @@ public class RainType extends BaseWeatherType {
             if (rain.x > getWidth() || rain.y > getHeight()) {
                 rain.x = getRandom(getWidth() / 3, getWidth() - getWidth() / 5);
                 rain.y = getRandom(getHeight() / 2, getHeight() - getHeight() / 5);
+            }
+        }
+        if (isSnowing) {
+            mPaint.setStyle(Paint.Style.FILL);
+            for (int i = 0; i < mSnows.size(); i++) {
+                snow = mSnows.get(i);
+                mPaint.setAlpha((int) (255 * (((float) snow.y - getHeight() / 2) / (float) getHeight())));
+                canvas.drawCircle(snow.x, snow.y, snow.size, mPaint);
+            }
+            for (int i = 0; i < mSnows.size(); i++) {
+                snow = mSnows.get(i);
+                snow.x += getRandom(1, 5);
+                snow.y += snow.size;
+                if (snow.y > getHeight() + snow.size * 2) {
+                    snow.x = getRandom(getWidth() / 4, getWidth());
+                    snow.y = getHeight() / 2;
+                }
             }
         }
     }
@@ -261,6 +286,17 @@ public class RainType extends BaseWeatherType {
             mRains.add(rain);
         }
         createFlash(getWidth() / 3, getHeight() / 2);
+
+        mSnows.clear();
+        for (int i = 0; i < rainLevel; i++) {
+            SnowType.Snow snow = new SnowType.Snow(
+                    getRandom(getWidth() / 4, getWidth() - getWidth() / 5),
+                    getRandom(getHeight() / 2, getHeight() - getHeight() / 5),
+                    getRandom(dp2px(1), dp2px(6)),
+                    getRandom(1, 5)
+            );
+            mSnows.add(snow);
+        }
     }
 
     public boolean isFlashing() {
@@ -269,6 +305,16 @@ public class RainType extends BaseWeatherType {
 
     public void setFlashing(boolean flashing) {
         isFlashing = flashing;
+        setColor(0xFF7187DB);
+    }
+
+    public boolean isSnowing() {
+        return isSnowing;
+    }
+
+    public void setSnowing(boolean snowing) {
+        isSnowing = snowing;
+        setColor(0xFF5697D8);
     }
 
     @Override

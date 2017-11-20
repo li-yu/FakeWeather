@@ -27,6 +27,8 @@ import com.liyu.fakeweather.ui.base.BaseViewPagerAdapter;
 import com.liyu.fakeweather.ui.weather.dynamic.BaseWeatherType;
 import com.liyu.fakeweather.ui.weather.dynamic.DynamicWeatherView;
 import com.liyu.fakeweather.ui.weather.dynamic.FogType;
+import com.liyu.fakeweather.ui.weather.dynamic.HailType;
+import com.liyu.fakeweather.ui.weather.dynamic.HazeType;
 import com.liyu.fakeweather.ui.weather.dynamic.OvercastType;
 import com.liyu.fakeweather.ui.weather.dynamic.RainType;
 import com.liyu.fakeweather.ui.weather.dynamic.SandstormType;
@@ -263,19 +265,21 @@ public class WeatherFragment extends BaseFragment {
                 type = rainType;
                 break;
             case "雨夹雪":
-                type = new RainType(getActivity(), RainType.RAIN_LEVEL_1, RainType.WIND_LEVEL_1);
+                RainType rainSnowType = new RainType(getActivity(), RainType.RAIN_LEVEL_1, RainType.WIND_LEVEL_1);
+                rainSnowType.setSnowing(true);
+                type = rainSnowType;
                 break;
             case "雪":
                 type = new SnowType(getActivity(), SnowType.SNOW_LEVEL_2);
                 break;
             case "冰雹":
-                type = new SnowType(getActivity(), SnowType.SNOW_LEVEL_3);
+                type = new HailType(getActivity());
                 break;
             case "雾":
                 type = new FogType(getActivity());
                 break;
             case "雾霾":
-                type = new FogType(getActivity());
+                type = new HazeType(getActivity());
                 break;
             case "沙尘暴":
                 type = new SandstormType(getActivity());

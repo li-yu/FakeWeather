@@ -1,6 +1,7 @@
 package com.liyu.fakeweather.ui;
 
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -68,6 +69,7 @@ public class MainActivity extends BaseActivity {
         //取消状态栏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         super.onCreate(savedInstanceState);
     }
 
