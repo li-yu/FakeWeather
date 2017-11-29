@@ -98,7 +98,7 @@ public class HazeType extends BaseWeatherType {
         canvas.save();
 
         camera.save(); // 保存 Camera 的状态
-        camera.rotateX(90 - 90 * rotate); // 旋转 Camera 的三维空间
+        camera.rotateY(90 - 90 * rotate);
         canvas.translate(getWidth() - mBitmap.getWidth() * 0.3f * 4 / 3, getHeight()); // 旋转之后把投影移动回来
         camera.applyToCanvas(canvas); // 把旋转投影到 Canvas
         canvas.translate(-(getWidth() - mBitmap.getWidth() * 0.3f * 4 / 3), -(getHeight())); // 旋转之前把绘制内容移动到轴心（原点）

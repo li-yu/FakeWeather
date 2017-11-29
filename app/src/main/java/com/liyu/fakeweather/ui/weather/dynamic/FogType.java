@@ -106,7 +106,7 @@ public class FogType extends BaseWeatherType {
         });
         animator2.start();
 
-        ValueAnimator animator3 = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.25f);
+        ValueAnimator animator3 = ValueAnimator.ofFloat(-bitmap.getWidth() * 0.25f, getWidth() - bitmap.getWidth() * 0.25f);
         animator3.setDuration(1000);
         animator3.setRepeatCount(0);
         animator3.setInterpolator(new OvershootInterpolator());

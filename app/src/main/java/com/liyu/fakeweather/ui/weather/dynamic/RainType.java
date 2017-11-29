@@ -47,7 +47,7 @@ public class RainType extends BaseWeatherType {
 
     private int windLevel = WIND_LEVEL_1;
 
-    float speed;
+    float transFactor;
 
     Bitmap bitmap;
 
@@ -145,7 +145,7 @@ public class RainType extends BaseWeatherType {
         mPaint.setStrokeWidth(5);
         matrix.reset();
         matrix.postScale(0.2f, 0.2f);
-        matrix.postTranslate(speed, getHeight() - bitmap.getHeight() * 0.2f + 2f);
+        matrix.postTranslate(transFactor, getHeight() - bitmap.getHeight() * 0.2f + 2f);
         canvas.drawBitmap(bitmap, matrix, mPaint);
         for (int i = 0; i < mRains.size(); i++) {
             rain = mRains.get(i);
@@ -170,8 +170,8 @@ public class RainType extends BaseWeatherType {
             }
             for (int i = 0; i < mSnows.size(); i++) {
                 snow = mSnows.get(i);
-                snow.x += getRandom(1, 5);
-                snow.y += snow.size;
+                snow.x += 1;
+                snow.y += snow.speed;
                 if (snow.y > getHeight() + snow.size * 2) {
                     snow.x = getRandom(getWidth() / 4, getWidth());
                     snow.y = getHeight() / 2;
@@ -321,14 +321,14 @@ public class RainType extends BaseWeatherType {
     public void startAnimation(final DynamicWeatherView dynamicWeatherView, int fromColor) {
         super.startAnimation(dynamicWeatherView, fromColor);
         this.dynamicWeatherView = dynamicWeatherView;
-        ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.2f);
+        ValueAnimator animator = ValueAnimator.ofFloat(-bitmap.getWidth() * 0.2f, getWidth() - bitmap.getWidth() * 0.2f);
         animator.setDuration(1000);
         animator.setRepeatCount(0);
         animator.setInterpolator(new OvershootInterpolator());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                speed = (float) animation.getAnimatedValue();
+                transFactor = (float) animation.getAnimatedValue();
             }
         });
 
@@ -365,7 +365,7 @@ public class RainType extends BaseWeatherType {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                speed = (float) animation.getAnimatedValue();
+                transFactor = (float) animation.getAnimatedValue();
             }
         });
         animator.addListener(listener);

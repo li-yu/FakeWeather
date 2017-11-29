@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -38,6 +39,7 @@ import com.liyu.fakeweather.widgets.AqiView;
 import com.liyu.fakeweather.widgets.WeatherChartView;
 
 import org.litepal.crud.DataSupport;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,9 +83,15 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
     private Toolbar parentToolbar;
 
     private LinearLayout layoutNow;
+    private RelativeLayout layoutDetails;
 
     private TextView tvNowWeatherString;
     private TextView tvNowTemp;
+
+    private TextView tvNowHum;
+    private TextView tvNowPres;
+    private TextView tvNowWindSc;
+    private TextView tvNowWindDir;
 
     private TextView tvTodayTempMax;
     private TextView tvTodayTempMin;
@@ -113,11 +121,17 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         dynamicWeatherView = ((WeatherFragment) getParentFragment()).getDynamicWeatherView();
 
         layoutNow = findView(R.id.layout_now);
+        layoutDetails = findView(R.id.layout_details);
         tvNowWeatherString = findView(R.id.tv_weather_string);
         tvNowTemp = findView(R.id.tv_temp);
         aqiView = findView(R.id.aqiview);
         tvTodayTempMax = findView(R.id.tv_temp_max);
         tvTodayTempMin = findView(R.id.tv_temp_min);
+
+        tvNowHum = findView(R.id.tv_now_hum);
+        tvNowPres = findView(R.id.tv_now_pres);
+        tvNowWindSc = findView(R.id.tv_now_wind_sc);
+        tvNowWindDir = findView(R.id.tv_now_wind_dir);
 
         weatherNestedScrollView = findView(R.id.weatherNestedScrollView);
         weatherNestedScrollView.setOnScrollChangeListener(this);
@@ -241,6 +255,17 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         currentWeather = weather;
         setDynamicWeatherView(weather);
         layoutNow.setVisibility(View.VISIBLE);
+        layoutDetails.setVisibility(View.VISIBLE);
+        tvNowHum.setText(weather.getFakeNow().getNowHum() + "%");
+        tvNowPres.setText(weather.getFakeNow().getNowPres());
+        tvNowWindSc.setText(weather.getFakeNow().getNowWindSc());
+        tvNowWindDir.setText(weather.getFakeNow().getNowWindDir());
+        layoutNow.setAlpha(0);
+        layoutDetails.setAlpha(0);
+        layoutNow.animate().alpha(1).setDuration(1000);
+        layoutDetails.setTranslationY(-100.0f);
+        layoutDetails.animate().translationY(0).setDuration(1000);
+        layoutDetails.animate().alpha(1).setDuration(1000);
         hourlyAdapter.setNewData(weather.getFakeForecastHourly());
         weatherChartView.setWeather(weather);
         tvNowWeatherString.setText(weather.getFakeNow().getNowText());

@@ -162,6 +162,9 @@ public class HeWeather5 implements Serializable, Cloneable, IFakeWeather {
         fakeNow.setNowText(now.getCond().getTxt());
         fakeNow.setNowWindDir(now.getWind().getDir());
         fakeNow.setNowWindSpeed(now.getWind().getSpd());
+        fakeNow.setNowWindSc(now.getWind().getSc());
+        fakeNow.setNowHum(now.getHum());
+        fakeNow.setNowPres(now.getPres());
         fakeNow.setUpdateTime(basic.getUpdate().getLoc());
         return fakeNow;
     }

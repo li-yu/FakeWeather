@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Shader;
 import android.support.annotation.IntDef;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -37,7 +36,7 @@ public class SnowType extends BaseWeatherType {
 
     private Snow snow;
 
-    float speed;
+    float transFactor;
 
     private int snowLevel = SNOW_LEVEL_1;
 
@@ -65,7 +64,7 @@ public class SnowType extends BaseWeatherType {
         mPaint.setAlpha(255);
         matrix.reset();
         matrix.postScale(0.25f, 0.25f);
-        matrix.postTranslate(speed, getHeight() - bitmap.getHeight() * 0.23f);
+        matrix.postTranslate(transFactor, getHeight() - bitmap.getHeight() * 0.23f);
         canvas.drawBitmap(bitmap, matrix, mPaint);
         for (int i = 0; i < mSnows.size(); i++) {
             snow = mSnows.get(i);
@@ -99,14 +98,14 @@ public class SnowType extends BaseWeatherType {
     @Override
     public void startAnimation(DynamicWeatherView dynamicWeatherView, int fromColor) {
         super.startAnimation(dynamicWeatherView, fromColor);
-        ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.25f);
+        ValueAnimator animator = ValueAnimator.ofFloat(-bitmap.getWidth() * 0.25f, getWidth() - bitmap.getWidth() * 0.25f);
         animator.setDuration(1000);
         animator.setRepeatCount(0);
         animator.setInterpolator(new OvershootInterpolator());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                speed = (float) animation.getAnimatedValue();
+                transFactor = (float) animation.getAnimatedValue();
             }
         });
 
@@ -123,7 +122,7 @@ public class SnowType extends BaseWeatherType {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                speed = (float) animation.getAnimatedValue();
+                transFactor = (float) animation.getAnimatedValue();
             }
         });
         animator.addListener(listener);

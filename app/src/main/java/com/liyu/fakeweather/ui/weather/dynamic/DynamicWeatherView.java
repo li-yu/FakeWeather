@@ -115,7 +115,9 @@ public class DynamicWeatherView extends SurfaceView implements SurfaceHolder.Cal
     }
 
     public void onPause() {
-        mDrawThread.setSuspend(true);
+        if (mDrawThread != null) {
+            mDrawThread.setSuspend(true);
+        }
     }
 
     public void onDestroy() {
@@ -180,18 +182,18 @@ public class DynamicWeatherView extends SurfaceView implements SurfaceHolder.Cal
                         e.printStackTrace();
                     }
                 }
-                final long startTime = AnimationUtils.currentAnimationTimeMillis();
+                //                final long startTime = AnimationUtils.currentAnimationTimeMillis();
                 Canvas canvas = mSurface.lockCanvas();
                 if (canvas != null) {
                     weatherType.onDrawElements(canvas);
                     mSurface.unlockCanvasAndPost(canvas);
-                    System.out.print("fuck");//如果不加这一行，在某些手机上竟然会 ANR
+                    //                    System.out.print("fuck");//如果不加这一行，在某些手机上竟然会 ANR
                 }
-                final long drawTime = AnimationUtils.currentAnimationTimeMillis() - startTime;
-                final long needSleepTime = 16 - drawTime;
-                if (needSleepTime > 0) {
-                    SystemClock.sleep(needSleepTime);
-                }
+                //                final long drawTime = AnimationUtils.currentAnimationTimeMillis() - startTime;
+                //                final long needSleepTime = 16 - drawTime;
+                //                if (needSleepTime > 0) {
+                //                    SystemClock.sleep(needSleepTime);
+                //                }
 
             }
         }

@@ -9,16 +9,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.support.annotation.IntDef;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import com.liyu.fakeweather.R;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +28,7 @@ public class HailType extends BaseWeatherType {
 
     private Hail hail;
 
-    float speed;
+    float transFactor;
 
     Bitmap bitmap;
 
@@ -58,7 +53,7 @@ public class HailType extends BaseWeatherType {
         mPaint.setAlpha(255);
         matrix.reset();
         matrix.postScale(0.25f, 0.25f);
-        matrix.postTranslate(speed, getHeight() - bitmap.getHeight() * 0.25f);
+        matrix.postTranslate(transFactor, getHeight() - bitmap.getHeight() * 0.25f);
         canvas.drawBitmap(bitmap, matrix, mPaint);
 
         for (int i = 0; i < hails.size(); i++) {
@@ -96,14 +91,14 @@ public class HailType extends BaseWeatherType {
     @Override
     public void startAnimation(DynamicWeatherView dynamicWeatherView, int fromColor) {
         super.startAnimation(dynamicWeatherView, fromColor);
-        ValueAnimator animator = ValueAnimator.ofFloat(getWidth() - bitmap.getWidth() * 0.25f);
+        ValueAnimator animator = ValueAnimator.ofFloat(-bitmap.getWidth() * 0.25f, getWidth() - bitmap.getWidth() * 0.25f);
         animator.setDuration(1000);
         animator.setRepeatCount(0);
         animator.setInterpolator(new OvershootInterpolator());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                speed = (float) animation.getAnimatedValue();
+                transFactor = (float) animation.getAnimatedValue();
             }
         });
 
@@ -120,7 +115,7 @@ public class HailType extends BaseWeatherType {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                speed = (float) animation.getAnimatedValue();
+                transFactor = (float) animation.getAnimatedValue();
             }
         });
         animator.addListener(listener);

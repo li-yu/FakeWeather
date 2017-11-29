@@ -17,7 +17,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/transparent">
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true">
 
                 <android.support.v4.widget.Space
                     android:id="@+id/spacer"
@@ -25,12 +26,119 @@
                     android:layout_height="1dp"
                     android:layout_centerInParent="true"/>
 
+                <RelativeLayout
+                    android:id="@+id/layout_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/spacer"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="invisible">
+
+                    <LinearLayout
+                        android:id="@+id/layout_details_humidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/layout_details_aqi"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp">
+
+                        <TextView
+                            android:id="@+id/tv_now_hum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="30%"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="湿度"
+                            android:textColor="@color/white"
+                            android:textSize="10sp"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="26dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/layout_details_humidity"
+                        android:background="#80ffffff"/>
+
+                    <LinearLayout
+                        android:id="@+id/layout_details_aqi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp">
+
+                        <TextView
+                            android:id="@+id/tv_now_pres"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="56"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="气压"
+                            android:textColor="@color/white"
+                            android:textSize="10sp"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="26dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/layout_details_wind"
+                        android:background="#80ffffff"/>
+
+                    <LinearLayout
+                        android:id="@+id/layout_details_wind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/layout_details_aqi"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp">
+
+                        <TextView
+                            android:id="@+id/tv_now_wind_sc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3级"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:id="@+id/tv_now_wind_dir"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="北风"
+                            android:textColor="@color/white"
+                            android:textSize="10sp"/>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
                 <LinearLayout
                     android:id="@+id/layout_now"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/spacer"
-                    android:layout_marginBottom="32dp"
+                    android:layout_above="@+id/layout_details"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:visibility="invisible">
@@ -142,6 +250,16 @@
                     />
 
             </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="数据来源：和风天气"
+                android:textColor="@color/colorTextDark2nd"
+                android:textSize="12sp"/>
 
         </com.liyu.fakeweather.widgets.WeatherLinearLayout>
     </android.support.v4.widget.NestedScrollView>

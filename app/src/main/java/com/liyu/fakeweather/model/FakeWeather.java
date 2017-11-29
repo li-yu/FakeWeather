@@ -41,11 +41,38 @@ public class FakeWeather {
     public static class FakeNow implements Serializable {
 
         private String nowTemp;
+        private String nowHum;
+        private String nowPres;
         private String nowCode;
         private String nowText;
         private String nowWindDir;
         private String nowWindSpeed;
+        private String nowWindSc;
         private String updateTime;
+
+        public String getNowHum() {
+            return nowHum;
+        }
+
+        public void setNowHum(String nowHum) {
+            this.nowHum = nowHum;
+        }
+
+        public String getNowPres() {
+            return nowPres;
+        }
+
+        public void setNowPres(String nowPres) {
+            this.nowPres = nowPres;
+        }
+
+        public String getNowWindSc() {
+            return nowWindSc;
+        }
+
+        public void setNowWindSc(String nowWindSc) {
+            this.nowWindSc = nowWindSc;
+        }
 
         public String getNowTemp() {
             return nowTemp;
