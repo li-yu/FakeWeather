@@ -74,8 +74,8 @@ public class FogType extends BaseWeatherType {
 
     @Override
     public void generateElements() {
-        shader = new RadialGradient(getWidth() / 2 + getWidth() / 6, getHeight(), getWidth() / 2, Color.parseColor("#00ffffff"),
-                Color.parseColor("#ffffffff"), Shader.TileMode.CLAMP);
+        shader = new RadialGradient(getWidth() / 2 + getWidth() / 6, getHeight(), getWidth() / 2, 0x00ffffff,
+                0xffffffff, Shader.TileMode.CLAMP);
     }
 
     @Override

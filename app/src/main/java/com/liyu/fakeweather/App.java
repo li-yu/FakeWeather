@@ -21,7 +21,6 @@ public class App extends Application {
         if (!BuildConfig.DEBUG) {
             AppExceptionHandler.getInstance().setCrashHanler(this);
         }
-
     }
 
     public static Context getContext() {

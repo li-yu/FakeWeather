@@ -65,7 +65,7 @@ public class HazeType extends BaseWeatherType {
         clearCanvas(canvas);
         canvas.drawColor(getDynamicColor());
 
-        shader = new LinearGradient(0, getHeight(), getWidth(), getHeight(), Color.parseColor("#33ffffff"), Color.parseColor("#ccffffff"), Shader.TileMode.CLAMP);
+        shader = new LinearGradient(0, getHeight(), getWidth(), getHeight(), 0x33ffffff, 0xccffffff, Shader.TileMode.CLAMP);
         mPaint.setShader(shader);
 
         φ -= 0.05f;
@@ -98,7 +98,7 @@ public class HazeType extends BaseWeatherType {
         canvas.save();
 
         camera.save(); // 保存 Camera 的状态
-        camera.rotateY(90 - 90 * rotate);
+        camera.rotateX(90 - 90 * rotate);
         canvas.translate(getWidth() - mBitmap.getWidth() * 0.3f * 4 / 3, getHeight()); // 旋转之后把投影移动回来
         camera.applyToCanvas(canvas); // 把旋转投影到 Canvas
         canvas.translate(-(getWidth() - mBitmap.getWidth() * 0.3f * 4 / 3), -(getHeight())); // 旋转之前把绘制内容移动到轴心（原点）

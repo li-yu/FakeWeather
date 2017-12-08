@@ -144,8 +144,8 @@ public class OvercastType extends BaseWeatherType {
 
     @Override
     public void generateElements() {
-        cloudShader = new LinearGradient(getWidth() / 2, 0, getWidth() / 2, getHeight() * 0.618f, Color.parseColor("#FFFFFFFF"),
-                Color.parseColor("#00FFFFFF"), Shader.TileMode.CLAMP);
+        cloudShader = new LinearGradient(getWidth() / 2, 0, getWidth() / 2, getHeight() * 0.618f, 0xFFFFFFFF,
+                0x00FFFFFF, Shader.TileMode.CLAMP);
         final float textSize = getHeight() / 32f;
         fanPath.reset();
         final float fanSize = textSize * 0.2f;// 风扇底部半圆的半径
@@ -199,17 +199,17 @@ public class OvercastType extends BaseWeatherType {
     @Override
     public void endAnimation(DynamicWeatherView dynamicWeatherView, Animator.AnimatorListener listener) {
         super.endAnimation(dynamicWeatherView, listener);
-        ValueAnimator animator2 = ValueAnimator.ofFloat(1, -1);
-        animator2.setDuration(1000);
-        animator2.setRepeatCount(0);
-        animator2.setInterpolator(new AccelerateInterpolator());
-        animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        ValueAnimator animator = ValueAnimator.ofFloat(1, -1);
+        animator.setDuration(1000);
+        animator.setRepeatCount(0);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 hillTransFactor = (float) animation.getAnimatedValue();
             }
         });
-        animator2.addListener(listener);
-        animator2.start();
+        animator.addListener(listener);
+        animator.start();
     }
 }

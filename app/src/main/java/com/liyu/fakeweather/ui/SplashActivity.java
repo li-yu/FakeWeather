@@ -11,6 +11,7 @@ import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseHeWeatherCityResponse;
 import com.liyu.fakeweather.model.HeWeatherCity;
 import com.liyu.fakeweather.ui.base.BaseActivity;
+import com.liyu.fakeweather.utils.SPUtil;
 import com.liyu.fakeweather.utils.ToastUtil;
 
 import org.litepal.crud.DataSupport;
@@ -28,6 +29,8 @@ public class SplashActivity extends BaseActivity {
 
     LottieAnimationView lottieAnimationView;
     TextView tvInfo;
+
+    static final String SAVED_CITY_COUNT = "saved_city_count";
 
     @Override
     protected int getLayoutId() {
@@ -47,7 +50,8 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
-        if (DataSupport.count(HeWeatherCity.class) <= 0) {
+        int count = (int) SPUtil.get(this, SAVED_CITY_COUNT, 0);
+        if (count <= 0) {
             ApiFactory
                     .getAppController()
                     .getHeWeatherCityList()
@@ -57,6 +61,7 @@ public class SplashActivity extends BaseActivity {
                         public BaseHeWeatherCityResponse call(BaseHeWeatherCityResponse cityResponse) {
                             DataSupport.deleteAll(HeWeatherCity.class);
                             DataSupport.saveAll(cityResponse.citys);
+                            SPUtil.put(SplashActivity.this, SAVED_CITY_COUNT, cityResponse.citys.size());
                             return cityResponse;
                         }
                     })

@@ -146,6 +146,11 @@ public class SunnyType extends BaseWeatherType {
             if (shader == null) {
                 shader = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartNight, colorWaveEndNight, Shader.TileMode.CLAMP);
             }
+        } else {
+            mPaint.setMaskFilter(null);
+            if (shader == null) {
+                shader = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartNight, colorWaveEndNight, Shader.TileMode.CLAMP);
+            }
         }
 
         mPaint.setShader(shader);

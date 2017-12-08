@@ -65,7 +65,7 @@ public class SandstormType extends BaseWeatherType {
         clearCanvas(canvas);
         canvas.drawColor(getDynamicColor());
 
-        shader = new LinearGradient(0, getHeight(), getWidth(), getHeight(), Color.parseColor("#33ffffff"), Color.parseColor("#ccffffff"), Shader.TileMode.CLAMP);
+        shader = new LinearGradient(0, getHeight(), getWidth(), getHeight(), 0x33ffffff, 0xccffffff, Shader.TileMode.CLAMP);
         mPaint.setShader(shader);
 
         φ -= 0.05f;
