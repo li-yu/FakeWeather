@@ -199,7 +199,6 @@ public class CityManageActivity extends BaseActivity {
                 public IFakeWeather call(BaseWeatherResponse<HeWeather5> response) {
                     HeWeather5 heWeather5 = response.HeWeather5.get(0);
                     ACache.get(CityManageActivity.this).put(city, heWeather5, 30 * 60);
-                    WeatherUtil.getInstance().saveDailyHistory(heWeather5);
                     return heWeather5;
                 }
             });

@@ -104,29 +104,6 @@ public class WeatherUtil {
         }
     }
 
-    public void saveDailyHistory(IFakeWeather weather) {
-        Observable.just(weather).filter(new Func1<IFakeWeather, Boolean>() {
-            @Override
-            public Boolean call(IFakeWeather weather5) {
-                return weather5 != null;
-            }
-        }).map(new Func1<IFakeWeather, Boolean>() {
-            @Override
-            public Boolean call(IFakeWeather weather) {
-                ACache mCache = ACache.get(App.getContext());
-                for (FakeWeather.FakeForecastDaily bean : weather.getFakeForecastDaily()) {
-                    mCache.put(bean.getDate(), bean, 7 * 24 * 60 * 60);//每天的情况缓存7天，供后面查询
-                }
-                return true;
-            }
-        }).subscribeOn(Schedulers.io()).subscribe();
-    }
-
-    public FakeWeather.FakeForecastDaily getYesterday() {
-        return (FakeWeather.FakeForecastDaily) ACache.get(App.getContext())
-                .getAsObject(TimeUtils.getPreviousDay(TimeUtils.getCurTimeString(TimeUtils.DATE_SDF), 1));
-    }
-
     public String getShareMessage(IFakeWeather weather) {
         StringBuffer message = new StringBuffer();
         message.append(weather.getFakeBasic().getCityName());

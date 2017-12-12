@@ -43,6 +43,8 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rx.Observable;
 import rx.Observer;
@@ -200,7 +202,6 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
                 public IFakeWeather call(BaseWeatherResponse<HeWeather5> response) {
                     HeWeather5 heWeather5 = response.HeWeather5.get(0);
                     mCache.put(city, heWeather5, 30 * 60);
-                    WeatherUtil.getInstance().saveDailyHistory(heWeather5);
                     ContentValues values = new ContentValues();
                     values.put("weatherCode", heWeather5.getFakeNow().getNowCode());
                     values.put("weatherText", heWeather5.getFakeNow().getNowText());
@@ -258,7 +259,8 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         layoutDetails.setVisibility(View.VISIBLE);
         tvNowHum.setText(weather.getFakeNow().getNowHum() + "%");
         tvNowPres.setText(weather.getFakeNow().getNowPres());
-        tvNowWindSc.setText(weather.getFakeNow().getNowWindSc());
+        tvNowWindSc.setText(hasDigit(weather.getFakeNow().getNowWindSc()) ? weather.getFakeNow().getNowWindSc() + "级"
+                : weather.getFakeNow().getNowWindSc());
         tvNowWindDir.setText(weather.getFakeNow().getNowWindDir());
         layoutNow.setAlpha(0);
         layoutDetails.setAlpha(0);
@@ -276,6 +278,17 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         setAqiDetail(weather);
         setSuggesstion(weather);
 
+    }
+
+    // 判断一个字符串是否含有数字
+    private boolean hasDigit(String content) {
+        boolean flag = false;
+        Pattern p = Pattern.compile(".*\\d+.*");
+        Matcher m = p.matcher(content);
+        if (m.matches()) {
+            flag = true;
+        }
+        return flag;
     }
 
     private void setDynamicWeatherView(IFakeWeather weather) {

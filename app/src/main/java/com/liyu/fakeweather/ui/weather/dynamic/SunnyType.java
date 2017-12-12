@@ -124,6 +124,7 @@ public class SunnyType extends BaseWeatherType {
         mPaint.reset();
         mPaint.setColor(Color.WHITE);
         mPaint.setAntiAlias(true);
+        mPaint.setDither(true);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         clearCanvas(canvas);
