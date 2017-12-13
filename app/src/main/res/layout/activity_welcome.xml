@@ -23,7 +23,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:text="正在初始化城市数据库..."
+        android:text="正在下载城市数据库..."
         android:textColor="@color/colorTextDark2nd"
         android:textSize="12sp"/>
 

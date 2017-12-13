@@ -108,7 +108,7 @@ public class SplashActivity extends BaseActivity {
 
                         @Override
                         public void onNext(BaseHeWeatherCityResponse cityResponse) {
-
+                            tvInfo.setText("下载成功！处理中...");
                         }
                     });
         } else {
