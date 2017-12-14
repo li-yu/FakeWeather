@@ -12,16 +12,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.baidu.location.BDLocation;
-import com.liyu.fakeweather.App;
-import com.liyu.fakeweather.AppGlobal;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.location.RxLocation;
-import com.liyu.fakeweather.model.HeWeatherCity;
 import com.liyu.fakeweather.model.IFakeWeather;
 import com.liyu.fakeweather.model.WeatherCity;
 import com.liyu.fakeweather.ui.MainActivity;
@@ -68,6 +64,8 @@ public class WeatherFragment extends BaseFragment {
     private SimplePagerIndicator pagerTitleView;
 
     private static final int REQUEST_CITY_MANAGE = 280;
+
+    private static final String LAST_LOCATED_CITY = "last_located_city";
 
     @Override
     protected int getLayoutId() {
@@ -124,25 +122,27 @@ public class WeatherFragment extends BaseFragment {
                 .map(new Func1<BDLocation, List<WeatherCity>>() {
                     @Override
                     public List<WeatherCity> call(BDLocation bdLocation) {
-                        String nowCity = TextUtils.isEmpty(bdLocation.getCity()) ? "苏州" : bdLocation.getCity().replace("市", "");
-                        String nowProvince = TextUtils.isEmpty(bdLocation.getProvince()) ? "江苏" : bdLocation.getCity().replace("省", "");
-                        HeWeatherCity heWeatherCity = DataSupport.where("provinceZh = ? and cityZh = ?", nowProvince, nowCity).findFirst(HeWeatherCity.class);
+                        String lastLocatedCity = (String) SPUtil.get(getActivity(), LAST_LOCATED_CITY, "苏州");
+                        String nowCity;
                         List<WeatherCity> savedCities = DataSupport.order("cityIndex").find(WeatherCity.class);
                         WeatherCity city = new WeatherCity();
                         city.setCityIndex(0);
-                        if (heWeatherCity == null) {
-                            city.setCityId("CN101190401");
-                            city.setCityName("苏州");
+                        if (TextUtils.isEmpty(bdLocation.getDistrict())) {
+                            nowCity = lastLocatedCity;
+                            city.setCityId(nowCity);
                         } else {
-                            city.setCityId(heWeatherCity.getId());
-                            city.setCityName(heWeatherCity.getCityZh());
+                            nowCity = bdLocation.getDistrict();
+                            city.setCityId(bdLocation.getLatitude() + "," + bdLocation.getLongitude());
+                            SPUtil.put(getActivity(), LAST_LOCATED_CITY, nowCity);
                         }
 
+                        city.setCityName(nowCity);
                         int index = savedCities.indexOf(city);
                         if (index >= 0) {
                             savedCities.set(0, savedCities.get(index));
                             ContentValues values = new ContentValues();
                             values.put("cityIndex", 0);
+                            values.put("cityId", city.getCityId());
                             DataSupport.updateAll(WeatherCity.class, values, "cityName = ?", nowCity);
                         } else {
                             city.save();
@@ -174,7 +174,8 @@ public class WeatherFragment extends BaseFragment {
                         for (WeatherCity city : weatherCities) {
                             Fragment fragment = new CityWeatherFragment();
                             Bundle data = new Bundle();
-                            data.putString("city", city.getCityId());
+                            data.putString("cityId", city.getCityId());
+                            data.putString("cityName", city.getCityName());
                             fragment.setArguments(data);
                             adapter.addFrag(fragment, city.getCityName());
                         }
@@ -314,7 +315,8 @@ public class WeatherFragment extends BaseFragment {
                         for (WeatherCity city : weatherCities) {
                             Fragment fragment = new CityWeatherFragment();
                             Bundle data = new Bundle();
-                            data.putString("city", city.getCityId());
+                            data.putString("cityId", city.getCityId());
+                            data.putString("cityName", city.getCityName());
                             fragment.setArguments(data);
                             adapter.addFrag(fragment, city.getCityName());
                         }

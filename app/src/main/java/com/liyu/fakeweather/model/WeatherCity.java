@@ -71,7 +71,7 @@ public class WeatherCity extends DataSupport {
 
         WeatherCity that = (WeatherCity) o;
 
-        return cityId.equals(that.cityId);
+        return cityName.equals(that.cityName);
 
     }
 

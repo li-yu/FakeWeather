@@ -39,7 +39,6 @@ import com.liyu.fakeweather.widgets.AqiView;
 import com.liyu.fakeweather.widgets.WeatherChartView;
 
 import org.litepal.crud.DataSupport;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +107,9 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
     private boolean aqiViewLastVisible = false;
 
-    private String city = "苏州";
+    private String cityId = "苏州";
+
+    private String cityName = "苏州";
 
     @Override
     protected int getLayoutId() {
@@ -176,7 +177,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
             @Override
             public void call(Subscriber<? super IFakeWeather> subscriber) {
-                IFakeWeather cacheWeather = (IFakeWeather) mCache.getAsObject(city);
+                IFakeWeather cacheWeather = (IFakeWeather) mCache.getAsObject(cityId);
                 if (cacheWeather == null) {
                     subscriber.onCompleted();
                 } else {
@@ -194,19 +195,23 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
                 public Observable<BaseWeatherResponse<HeWeather5>> call(String key) {
                     return ApiFactory
                             .getWeatherController()
-                            .getWeather(key, city)
+                            .getWeather(key, cityId)
                             .subscribeOn(Schedulers.io());
                 }
             }).map(new Func1<BaseWeatherResponse<HeWeather5>, IFakeWeather>() {
                 @Override
                 public IFakeWeather call(BaseWeatherResponse<HeWeather5> response) {
                     HeWeather5 heWeather5 = response.HeWeather5.get(0);
-                    mCache.put(city, heWeather5, 30 * 60);
+                    if (cityId.contains(",")) {
+                        mCache.put(cityName, heWeather5, 30 * 60);
+                    } else {
+                        mCache.put(cityId, heWeather5, 30 * 60);
+                    }
                     ContentValues values = new ContentValues();
                     values.put("weatherCode", heWeather5.getFakeNow().getNowCode());
                     values.put("weatherText", heWeather5.getFakeNow().getNowText());
                     values.put("weatherTemp", heWeather5.getFakeNow().getNowTemp());
-                    DataSupport.updateAll(WeatherCity.class, values, "cityName = ?", heWeather5.getFakeBasic().getCityName());
+                    DataSupport.updateAll(WeatherCity.class, values, "cityName = ?", cityName);
                     return heWeather5;
                 }
             });
@@ -221,7 +226,8 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
     @Override
     protected void lazyFetchData() {
-        city = getArguments().getString("city");
+        cityId = getArguments().getString("cityId");
+        cityName = getArguments().getString("cityName");
         showRefreshing(true);
         subscription = Observable
                 .concat(getLocalCache(), getFromNetwork())
@@ -274,6 +280,8 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         tvNowTemp.setText(String.format("%s°", weather.getFakeNow().getNowTemp()));
         tvTodayTempMax.setText(weather.getFakeForecastDaily().get(0).getMaxTemp() + "℃");
         tvTodayTempMin.setText(weather.getFakeForecastDaily().get(0).getMinTemp() + "℃");
+        parentToolbar.setTitle(cityName);
+        parentToolbar.setTitleTextColor(Color.TRANSPARENT);
         aqiView.setApi(weather);
         setAqiDetail(weather);
         setSuggesstion(weather);
@@ -301,8 +309,6 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         info.setMoonrise(weather.getFakeForecastDaily().get(0).getMoonRise());
         info.setMoonset(weather.getFakeForecastDaily().get(0).getMoonSet());
         BaseWeatherType type = TypeUtil.getType(getActivity(), info);
-        parentToolbar.setTitle(weather.getFakeBasic().getCityName());
-        parentToolbar.setTitleTextColor(Color.TRANSPARENT);
         dynamicWeatherView.setType(type);
 
     }
