@@ -9,6 +9,7 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 
 import com.liyu.fakeweather.model.IFakeWeather;
@@ -26,6 +27,7 @@ public class DynamicWeatherView extends SurfaceView implements SurfaceHolder.Cal
     private int mViewHeight;
     private IFakeWeather originWeather;
     int fromColor;
+    private SurfaceHolder holder;
 
     public DynamicWeatherView(Context context) {
         this(context, null);
@@ -39,9 +41,9 @@ public class DynamicWeatherView extends SurfaceView implements SurfaceHolder.Cal
         super(context, attrs, defStyleAttr);
         mContext = context;
         weatherType = new DefaultType(context);
-        getHolder().setFormat(PixelFormat.RGBA_8888);
-        getHolder().addCallback(this);
-
+        holder = getHolder();
+        holder.addCallback(this);
+        holder.setFormat(PixelFormat.RGBA_8888);
     }
 
     public int getColor() {
@@ -132,7 +134,6 @@ public class DynamicWeatherView extends SurfaceView implements SurfaceHolder.Cal
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         mDrawThread = new DrawThread();
-        mDrawThread.mSurface = holder;
         mDrawThread.setRunning(true);
         mDrawThread.start();
         weatherType.startAnimation(this, weatherType.getColor());
@@ -148,8 +149,6 @@ public class DynamicWeatherView extends SurfaceView implements SurfaceHolder.Cal
     }
 
     private class DrawThread extends Thread {
-
-        private SurfaceHolder mSurface;
 
         private boolean isRunning = false;
 
@@ -183,17 +182,17 @@ public class DynamicWeatherView extends SurfaceView implements SurfaceHolder.Cal
                         e.printStackTrace();
                     }
                 }
-//                final long startTime = AnimationUtils.currentAnimationTimeMillis();
-                Canvas canvas = mSurface.lockCanvas();
+                final long startTime = AnimationUtils.currentAnimationTimeMillis();
+                Canvas canvas = holder.lockCanvas();
                 if (canvas != null) {
                     weatherType.onDrawElements(canvas);
-                    mSurface.unlockCanvasAndPost(canvas);
-//                    final long drawTime = AnimationUtils.currentAnimationTimeMillis() - startTime;
-//                    final long needSleepTime = 16 - drawTime;
+                    holder.unlockCanvasAndPost(canvas);
+                    final long drawTime = AnimationUtils.currentAnimationTimeMillis() - startTime;
+                    final long needSleepTime = 16 - drawTime;
                     System.out.print("fuck");
-//                    if (needSleepTime > 0) {
-                    //                        SystemClock.sleep(needSleepTime);
-                    //                    }
+                    if (needSleepTime > 0) {
+                        SystemClock.sleep(needSleepTime);
+                    }
                 }
 
             }

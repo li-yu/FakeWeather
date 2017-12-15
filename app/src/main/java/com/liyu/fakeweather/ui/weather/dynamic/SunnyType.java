@@ -53,7 +53,8 @@ public class SunnyType extends BaseWeatherType {
 
     private float φ;
 
-    private Shader shader;
+    private Shader shaderRear;
+    private Shader shaderFront;
 
     private float boardSpeed;
 
@@ -65,13 +66,17 @@ public class SunnyType extends BaseWeatherType {
 
     private static final int colorNight = 0xFF7F9EE9;
 
-    private static final int colorWaveStartNight = 0x337187DB;
+    private static final int colorWaveStartNight = 0x1A3A66CF;
 
-    private static final int colorWaveEndNight = 0xFF7187DB;
+    private static final int colorWaveEndNightRear = 0x803A66CF;
 
-    private static final int colorWaveStartDay = 0x33FFFFFF;
+    private static final int colorWaveEndNightFront = 0xE63A66CF;
 
-    private static final int colorWaveEndDay = 0xFFFFFFFF;
+    private static final int colorWaveStartDay = 0x1AFFFFFF;
+
+    private static final int colorWaveEndDayRear = 0x80FFFFFF;
+
+    private static final int colorWaveEndDayFront = 0xE6FFFFFF;
 
     private float currentSunPosition;
     private float currentMoonPosition;
@@ -134,8 +139,11 @@ public class SunnyType extends BaseWeatherType {
             mPaint.setMaskFilter(new BlurMaskFilter(10, BlurMaskFilter.Blur.SOLID));
             canvas.drawCircle(sunPos[0], sunPos[1], 40, mPaint);
             mPaint.setMaskFilter(null);
-            if (shader == null) {
-                shader = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartDay, colorWaveEndDay, Shader.TileMode.CLAMP);
+            if (shaderRear == null) {
+                shaderRear = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartDay, colorWaveEndDayRear, Shader.TileMode.CLAMP);
+            }
+            if (shaderFront == null) {
+                shaderFront = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartDay, colorWaveEndDayFront, Shader.TileMode.CLAMP);
             }
         } else if (currentMoonPosition >= 0 && currentMoonPosition <= 1) {
             mPaint.setMaskFilter(new BlurMaskFilter(10, BlurMaskFilter.Blur.SOLID));
@@ -144,17 +152,21 @@ public class SunnyType extends BaseWeatherType {
             canvas.drawCircle(moonPos[0] + 20, moonPos[1] - 20, 40, mPaint);
             mPaint.setColor(Color.WHITE);
             mPaint.setMaskFilter(null);
-            if (shader == null) {
-                shader = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartNight, colorWaveEndNight, Shader.TileMode.CLAMP);
+            if (shaderRear == null) {
+                shaderRear = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartNight, colorWaveEndNightRear, Shader.TileMode.CLAMP);
+            }
+            if (shaderFront == null) {
+                shaderFront = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartNight, colorWaveEndNightFront, Shader.TileMode.CLAMP);
             }
         } else {
             mPaint.setMaskFilter(null);
-            if (shader == null) {
-                shader = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartNight, colorWaveEndNight, Shader.TileMode.CLAMP);
+            if (shaderRear == null) {
+                shaderRear = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartNight, colorWaveEndNightRear, Shader.TileMode.CLAMP);
+            }
+            if (shaderFront == null) {
+                shaderFront = new LinearGradient(0, getHeight(), getWidth(), getHeight(), colorWaveStartNight, colorWaveEndNightFront, Shader.TileMode.CLAMP);
             }
         }
-
-        mPaint.setShader(shader);
 
         φ -= 0.05f;
 
@@ -183,7 +195,7 @@ public class SunnyType extends BaseWeatherType {
         mPathFront.lineTo(getWidth() + boat.getWidth() * bitmapScale, getHeight());
         mPathRear.lineTo(getWidth() + boat.getWidth() * bitmapScale, getHeight());
 
-        mPaint.setAlpha(60);
+        mPaint.setShader(shaderRear);
         canvas.drawPath(mPathRear, mPaint);
 
         measure.setPath(mPathFront, false);
@@ -195,7 +207,8 @@ public class SunnyType extends BaseWeatherType {
         mMatrix.postTranslate(pos[0] - boat.getWidth() / 2 * bitmapScale, pos[1] - boat.getHeight() * bitmapScale + 4);
         mPaint.setAlpha(255);
         canvas.drawBitmap(boat, mMatrix, mPaint);
-        mPaint.setAlpha(100);
+
+        mPaint.setShader(shaderFront);
         canvas.drawPath(mPathFront, mPaint);
 
         if (!isCloud)

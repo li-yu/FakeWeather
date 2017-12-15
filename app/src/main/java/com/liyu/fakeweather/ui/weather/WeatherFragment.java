@@ -145,6 +145,7 @@ public class WeatherFragment extends BaseFragment {
                             values.put("cityId", city.getCityId());
                             DataSupport.updateAll(WeatherCity.class, values, "cityName = ?", nowCity);
                         } else {
+                            DataSupport.deleteAll(WeatherCity.class, "cityIndex = 0");
                             city.save();
                             savedCities.add(0, city);
                         }
