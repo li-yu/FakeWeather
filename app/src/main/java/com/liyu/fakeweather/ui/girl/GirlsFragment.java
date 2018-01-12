@@ -7,10 +7,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.ui.MainActivity;
 import com.liyu.fakeweather.ui.base.BaseFragment;
+import com.liyu.fakeweather.utils.SizeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,8 @@ public class GirlsFragment extends BaseFragment {
 
     private Toolbar mToolbar;
 
+    private View fakeStatusBar;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_tab_viewpager;
@@ -32,6 +37,16 @@ public class GirlsFragment extends BaseFragment {
     protected void initViews() {
         mToolbar = findView(R.id.toolbar);
         mToolbar.setTitle("福利");
+        fakeStatusBar = findView(R.id.fakeStatusBar);
+        fakeStatusBar.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams layoutParams = fakeStatusBar.getLayoutParams();
+                int statusBarHeight = SizeUtils.getStatusBarHeight(getActivity());
+                layoutParams.height = statusBarHeight;
+                fakeStatusBar.setLayoutParams(layoutParams);
+            }
+        });
         ((MainActivity) getActivity()).initDrawer(mToolbar);
         initTabLayout();
     }

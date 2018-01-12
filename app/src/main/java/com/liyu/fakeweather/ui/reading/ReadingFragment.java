@@ -9,12 +9,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.model.XianduCategory;
 import com.liyu.fakeweather.ui.MainActivity;
 import com.liyu.fakeweather.ui.base.BaseFragment;
 import com.liyu.fakeweather.utils.ACache;
+import com.liyu.fakeweather.utils.SizeUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,6 +47,8 @@ public class ReadingFragment extends BaseFragment {
 
     private ACache mCache;
 
+    private View fakeStatusBar;
+
     private Subscription subscription;
 
     @Override
@@ -57,6 +61,16 @@ public class ReadingFragment extends BaseFragment {
         mCache = ACache.get(getActivity());
         mToolbar = findView(R.id.toolbar);
         mToolbar.setTitle("闲读");
+        fakeStatusBar = findView(R.id.fakeStatusBar);
+        fakeStatusBar.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams layoutParams = fakeStatusBar.getLayoutParams();
+                int statusBarHeight = SizeUtils.getStatusBarHeight(getActivity());
+                layoutParams.height = statusBarHeight;
+                fakeStatusBar.setLayoutParams(layoutParams);
+            }
+        });
         ((MainActivity) getActivity()).initDrawer(mToolbar);
     }
 

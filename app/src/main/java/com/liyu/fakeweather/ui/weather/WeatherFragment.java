@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.baidu.location.BDLocation;
 import com.liyu.fakeweather.R;
@@ -37,6 +38,7 @@ import com.liyu.fakeweather.ui.weather.dynamic.SunnyType;
 import com.liyu.fakeweather.utils.SPUtil;
 import com.liyu.fakeweather.utils.SettingsUtil;
 import com.liyu.fakeweather.utils.ShareUtils;
+import com.liyu.fakeweather.utils.SizeUtils;
 import com.liyu.fakeweather.utils.WeatherUtil;
 import com.liyu.fakeweather.widgets.SimplePagerIndicator;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -59,6 +61,7 @@ public class WeatherFragment extends BaseFragment {
 
     private DynamicWeatherView dynamicWeatherView;
     private Toolbar mToolbar;
+    private View fakeStatusBar;
     private ViewPager viewPager;
     private BaseViewPagerAdapter adapter;
     private SimplePagerIndicator pagerTitleView;
@@ -76,6 +79,10 @@ public class WeatherFragment extends BaseFragment {
         return mToolbar;
     }
 
+    public View getfakeStatusBar() {
+        return fakeStatusBar;
+    }
+
     public DynamicWeatherView getDynamicWeatherView() {
         return dynamicWeatherView;
     }
@@ -88,6 +95,17 @@ public class WeatherFragment extends BaseFragment {
         dynamicWeatherView = findView(R.id.dynamicWeather);
         pagerTitleView = findView(R.id.pager_title);
         viewPager = findView(R.id.weatherViewPager);
+        fakeStatusBar = findView(R.id.fakeStatusBar);
+        fakeStatusBar.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams layoutParams = fakeStatusBar.getLayoutParams();
+                int statusBarHeight = SizeUtils.getStatusBarHeight(getActivity());
+                layoutParams.height = statusBarHeight;
+                pagerTitleView.setPadding(0, statusBarHeight, 0, 0);
+                fakeStatusBar.setLayoutParams(layoutParams);
+            }
+        });
         viewPager.setPageTransformer(true, new WeatherPageTransformer());
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -146,6 +164,9 @@ public class WeatherFragment extends BaseFragment {
                             DataSupport.updateAll(WeatherCity.class, values, "cityName = ?", nowCity);
                         } else {
                             DataSupport.deleteAll(WeatherCity.class, "cityIndex = 0");
+                            if (savedCities.size() > 0) {
+                                savedCities.remove(0);
+                            }
                             city.save();
                             savedCities.add(0, city);
                         }

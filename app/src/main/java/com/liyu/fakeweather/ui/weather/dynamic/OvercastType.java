@@ -15,6 +15,8 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 
+import com.liyu.fakeweather.utils.SizeUtils;
+
 /**
  * Created by liyu on 2017/8/19.
  */
@@ -49,6 +51,8 @@ public class OvercastType extends BaseWeatherType {
 
     private float hillTransFactor;
 
+    private float cloudOffset = 0;
+
     public OvercastType(Context context, ShortWeatherInfo info) {
         super(context);
         setColor(0xFF6D8DB1);
@@ -60,6 +64,7 @@ public class OvercastType extends BaseWeatherType {
         measure = new PathMeasure();
         windSpeed = info.getWindSpeed();
         cloudPath = new Path();
+        cloudOffset = SizeUtils.dp2px(context, 32);
     }
 
     @Override
@@ -104,10 +109,10 @@ public class OvercastType extends BaseWeatherType {
 
         mPaint.setShader(cloudShader);
         cloudPath.reset();
-        cloudPath.addCircle(getWidth() * cloudTransFactor, getHeight() * 0.618f - 120.0f, getHeight() / 22, Path.Direction.CW);
+        cloudPath.addCircle(getWidth() * cloudTransFactor, getHeight() * 0.618f - cloudOffset, getHeight() / 22, Path.Direction.CW);
         cloudPath.addCircle(getWidth() * cloudTransFactor, getHeight() * 0.618f, getHeight() / 22, Path.Direction.CW);
-        cloudPath.addCircle(getWidth() * cloudTransFactor - getHeight() / 20, getHeight() * 0.618f - 80.0f, getHeight() / 24, Path.Direction.CW);
-        cloudPath.addCircle(getWidth() * cloudTransFactor + getHeight() / 22, getHeight() * 0.618f - 80.0f, getHeight() / 26, Path.Direction.CW);
+        cloudPath.addCircle(getWidth() * cloudTransFactor - getHeight() / 19, getHeight() * 0.618f - cloudOffset * 2 / 3, getHeight() / 26, Path.Direction.CW);
+        cloudPath.addCircle(getWidth() * cloudTransFactor + getHeight() / 20, getHeight() * 0.618f - cloudOffset * 2 / 3, getHeight() / 30, Path.Direction.CW);
         canvas.drawPath(cloudPath, mPaint);
 
     }
@@ -209,7 +214,9 @@ public class OvercastType extends BaseWeatherType {
                 hillTransFactor = (float) animation.getAnimatedValue();
             }
         });
-        animator.addListener(listener);
+        if (listener != null) {
+            animator.addListener(listener);
+        }
         animator.start();
     }
 }

@@ -17,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -33,6 +34,7 @@ import com.liyu.fakeweather.ui.MainActivity;
 import com.liyu.fakeweather.ui.base.BaseFragment;
 import com.liyu.fakeweather.ui.bus.adapter.LineSearchAdapter;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
+import com.liyu.fakeweather.utils.SizeUtils;
 import com.liyu.fakeweather.utils.WebUtils;
 
 import org.jsoup.Jsoup;
@@ -63,6 +65,7 @@ public class BusFragment extends BaseFragment {
     private PopupWindow popupWindow;
     private RecyclerView recyclerView;
     private LineSearchAdapter searchAdapter;
+    private View fakeStatusBar;
 
     @Override
     protected int getLayoutId() {
@@ -73,6 +76,16 @@ public class BusFragment extends BaseFragment {
     protected void initViews() {
         mToolbar = findView(R.id.toolbar);
         mToolbar.setTitle("公交");
+        fakeStatusBar = findView(R.id.fakeStatusBar);
+        fakeStatusBar.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams layoutParams = fakeStatusBar.getLayoutParams();
+                int statusBarHeight = SizeUtils.getStatusBarHeight(getActivity());
+                layoutParams.height = statusBarHeight;
+                fakeStatusBar.setLayoutParams(layoutParams);
+            }
+        });
         ((MainActivity) getActivity()).initDrawer(mToolbar);
         initTabLayout();
         inflateMenu();

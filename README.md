@@ -23,9 +23,14 @@
 
 ### 下载 
 
-[直接下载 v1.3.0_20171218](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/FakeWeather_v1.3.0_20171218.apk)
+[直接下载 v1.3.1_20180122](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/FakeWeather_v1.3.1_20180112.apk)
 
 ![qcode](qcode.png)
+
+### 编译环境 ###
+- Android Studio 2.3.3
+- jdk1.8.0_144
+
 
 ### 特别感谢 ###
 - [天气视觉探索-尝试方案](http://www.zcool.com.cn/work/ZMjE1MDgwMjQ=.html)

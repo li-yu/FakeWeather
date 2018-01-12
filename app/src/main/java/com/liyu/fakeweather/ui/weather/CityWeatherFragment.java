@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -83,6 +84,8 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
     private Toolbar parentToolbar;
 
+    private View fakeStatusBar;
+
     private LinearLayout layoutNow;
     private RelativeLayout layoutDetails;
 
@@ -121,6 +124,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         super.initViews();
         mCache = ACache.get(getActivity());
         parentToolbar = ((WeatherFragment) getParentFragment()).getmToolbar();
+        fakeStatusBar = ((WeatherFragment) getParentFragment()).getfakeStatusBar();
         dynamicWeatherView = ((WeatherFragment) getParentFragment()).getDynamicWeatherView();
 
         layoutNow = findView(R.id.layout_now);
@@ -177,7 +181,11 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
 
             @Override
             public void call(Subscriber<? super IFakeWeather> subscriber) {
-                IFakeWeather cacheWeather = (IFakeWeather) mCache.getAsObject(cityId);
+                String cacheKey = cityId;
+                if (cityId.contains(",")) {
+                    cacheKey = cityName; //当 key 是经纬度坐标时，按城市名取缓存，否则按城市 ID 取
+                }
+                IFakeWeather cacheWeather = (IFakeWeather) mCache.getAsObject(cacheKey);
                 if (cacheWeather == null) {
                     subscriber.onCompleted();
                 } else {
@@ -351,8 +359,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         int titleColor = ThemeUtil.changeAlpha(0xFFFFFFFF, fraction);
         parentToolbar.setBackgroundColor(newColor);
         parentToolbar.setTitleTextColor(titleColor);
-
-        ViewCompat.setElevation(parentToolbar, fraction);
+        fakeStatusBar.setBackgroundColor(newColor);
 
         if (weatherChartView.getLocalVisibleRect(localRect)) {
             if (!weatherChartViewLastVisible) {
@@ -385,6 +392,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && currentWeather != null) {
             setDynamicWeatherView(currentWeather);
+            parentToolbar.setTitle(cityName);
         }
         if (!isVisibleToUser && weatherNestedScrollView != null) {
             weatherNestedScrollView.scrollTo(0, 0);

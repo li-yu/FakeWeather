@@ -161,7 +161,9 @@ public class HazeType extends BaseWeatherType {
         AnimatorSet animSet = new AnimatorSet();
         animSet.play(animator1);
         animSet.setDuration(1000);
-        animSet.addListener(listener);
+        if (listener != null) {
+            animSet.addListener(listener);
+        }
         animSet.start();
     }
 }

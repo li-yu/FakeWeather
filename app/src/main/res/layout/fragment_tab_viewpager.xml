@@ -10,6 +10,12 @@
         android:layout_height="wrap_content"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
+        <View
+            android:id="@+id/fakeStatusBar"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:background="?attr/colorPrimary"/>
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -44,11 +50,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="8dp"
-        app:srcCompat="@drawable/ic_msg"
+        android:visibility="invisible"
         app:borderWidth="0dp"
         app:layout_anchor="@+id/viewPager"
         app:layout_anchorGravity="end|bottom"
-        android:visibility="invisible"/>
+        app:srcCompat="@drawable/ic_msg"/>
 
 </android.support.design.widget.CoordinatorLayout>
 

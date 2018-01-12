@@ -118,7 +118,9 @@ public class HailType extends BaseWeatherType {
                 transFactor = (float) animation.getAnimatedValue();
             }
         });
-        animator.addListener(listener);
+        if (listener != null) {
+            animator.addListener(listener);
+        }
         animator.start();
     }
 

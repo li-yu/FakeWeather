@@ -1,6 +1,7 @@
 package com.liyu.fakeweather.utils;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
@@ -77,6 +78,15 @@ public class SizeUtils {
         windowManager.getDefaultDisplay().getMetrics(dm);// 给白纸设置宽高
         screenWidth = dm.widthPixels;
         return screenWidth - sp2px(context, padding);
+    }
+
+    public static int getStatusBarHeight(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+            return resourceId > 0 ? context.getResources().getDimensionPixelSize(resourceId) : 0;
+        } else {
+            return 0;
+        }
     }
 
 }
