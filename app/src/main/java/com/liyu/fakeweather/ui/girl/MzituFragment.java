@@ -29,7 +29,6 @@ public class MzituFragment extends BaseGirlsListFragment {
         showRefreshing(true);
         String url = getArguments().getString("url") + "/page/" + currentPage;
         final String fakeRefer = getArguments().getString("url") + "/"; //伪造 refer 破解防盗链
-        final String realUrl = "http://api.caoliyu.cn/meizitu.php?url=%s&refer=%s";// 然后用自己的服务器进行转发
         subscription = Observable.just(url).subscribeOn(Schedulers.io()).map(new Func1<String, List<Girl>>() {
             @Override
             public List<Girl> call(String url) {
@@ -39,8 +38,9 @@ public class MzituFragment extends BaseGirlsListFragment {
                     Element total = doc.select("div.postlist").first();
                     Elements items = total.select("li");
                     for (Element element : items) {
-                        Girl girl = new Girl(String.format(realUrl, element.select("img").first().attr("data-original"), fakeRefer));
+                        Girl girl = new Girl(element.select("img").first().attr("data-original"));
                         girl.setLink(element.select("a[href]").attr("href"));
+                        girl.setRefer(fakeRefer);
                         girls.add(girl);
                     }
                 } catch (IOException e) {

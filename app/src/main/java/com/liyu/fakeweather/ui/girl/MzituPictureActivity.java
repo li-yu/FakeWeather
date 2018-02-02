@@ -95,7 +95,6 @@ public class MzituPictureActivity extends BaseActivity {
     private void getMeiziFromServer(int page) {
         String url = baseUrl + "/" + page;
         final String fakeRefer = baseUrl + "/"; //伪造 refer 破解防盗链
-        final String realUrl = "http://api.caoliyu.cn/meizitu.php?url=%s&refer=%s";// 然后用自己的服务器进行转发
         getPicSubscription = Observable.just(url).subscribeOn(Schedulers.io()).map(new Func1<String, List<Girl>>() {
             @Override
             public List<Girl> call(String url) {
@@ -104,7 +103,9 @@ public class MzituPictureActivity extends BaseActivity {
                     Document doc = Jsoup.connect(url).timeout(10000).get();
                     Element total = doc.select("div.main-image").first();
                     String s = total.select("img").first().attr("src");
-                    girls.add(new Girl(String.format(realUrl, s, fakeRefer)));
+                    Girl girl = new Girl(s);
+                    girl.setRefer(fakeRefer);
+                    girls.add(girl);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

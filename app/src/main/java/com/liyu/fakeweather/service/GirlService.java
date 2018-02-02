@@ -4,9 +4,12 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.target.Target;
 import com.liyu.fakeweather.event.GirlsComingEvent;
 import com.liyu.fakeweather.model.Girl;
@@ -46,16 +49,33 @@ public class GirlService extends IntentService {
         List<Girl> girls = (List<Girl>) intent.getSerializableExtra(KEY_EXTRA_GIRL_LIST);
         for (final Girl girl : girls) {
             Bitmap bitmap = null;
-            try {
-                bitmap = Glide.with(GirlService.this)
-                        .load(girl.getUrl())
-                        .asBitmap()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                        .get();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (!TextUtils.isEmpty(girl.getRefer())) {
+                GlideUrl glideUrl = new GlideUrl(girl.getUrl(), new LazyHeaders.Builder()
+                        .addHeader("Referer", girl.getRefer())
+                        .build());
+                try {
+                    bitmap = Glide.with(GirlService.this)
+                            .load(glideUrl)
+                            .asBitmap()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    bitmap = Glide.with(GirlService.this)
+                            .load(girl.getUrl())
+                            .asBitmap()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
             if (bitmap != null) {
                 girl.setHeight(bitmap.getHeight());
                 girl.setWidth(bitmap.getWidth());

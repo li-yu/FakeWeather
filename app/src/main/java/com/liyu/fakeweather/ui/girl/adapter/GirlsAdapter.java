@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaderFactory;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.model.Girl;
 import com.liyu.fakeweather.ui.girl.MzituPictureActivity;
@@ -89,7 +92,16 @@ public class GirlsAdapter extends RecyclerView.Adapter<GirlsAdapter.GirlViewHold
                 }
             }
         });
-        Glide.with(context).load(girl.getUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ic_glide_holder).crossFade(500).into(holder.iv);
+        if (TextUtils.isEmpty(girl.getRefer())) {
+            Glide.with(context).load(girl.getUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ic_glide_holder).crossFade(500).into(holder.iv);
+        } else {
+            GlideUrl glideUrl = new GlideUrl(girl.getUrl(), new LazyHeaders.Builder()
+                    .addHeader("Referer", girl.getRefer())
+                    .build());
+
+            Glide.with(context).load(glideUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ic_glide_holder).crossFade(500).into(holder.iv);
+        }
+
     }
 
     @Override

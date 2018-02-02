@@ -11,6 +11,7 @@ public class Girl implements Serializable {
     private int width = 0;
     private int height = 0;
     private String link;//仅妹子图网站需要
+    private String refer;//仅妹子图网站需要
 
     public Girl(String url) {
         this.url = url;
@@ -46,5 +47,13 @@ public class Girl implements Serializable {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getRefer() {
+        return refer;
+    }
+
+    public void setRefer(String refer) {
+        this.refer = refer;
     }
 }
