@@ -4,9 +4,12 @@ import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.annotation.DrawableRes;
 import android.view.animation.LinearInterpolator;
 
 import java.util.Random;
@@ -23,6 +26,16 @@ public abstract class BaseWeatherType implements WeatherHandler {
     protected int color;
 
     protected int dynamicColor;
+
+    public float lastUpdatedTime;
+
+    public float getLastUpdatedTime() {
+        return lastUpdatedTime;
+    }
+
+    public void setLastUpdatedTime(float lastUpdatedTime) {
+        this.lastUpdatedTime = lastUpdatedTime;
+    }
 
     public Context getContext() {
         return mContext;
@@ -98,5 +111,16 @@ public abstract class BaseWeatherType implements WeatherHandler {
     public int dp2px(float dpValue) {
         final float scale = mContext.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+
+    protected Bitmap decodeResource(Bitmap inBitmap, @DrawableRes int res) {
+        BitmapFactory.Options option = new BitmapFactory.Options();
+        option.inSampleSize = 1;
+        if (inBitmap != null) {
+            option.inBitmap = inBitmap;
+        }
+        option.inMutable = true;
+        inBitmap = BitmapFactory.decodeResource(getContext().getResources(), res, option);
+        return inBitmap;
     }
 }

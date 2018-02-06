@@ -124,7 +124,9 @@ public class DynamicWeatherView extends SurfaceView implements SurfaceHolder.Cal
     }
 
     public void onDestroy() {
-        mDrawThread.setRunning(false);
+        if (mDrawThread != null) {
+            mDrawThread.setRunning(false);
+        }
         getHolder().removeCallback(this);
         if (this.weatherType != null) {
             this.weatherType.endAnimation(this, null);

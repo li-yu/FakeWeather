@@ -4,13 +4,11 @@ import android.content.ContentValues;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -113,6 +111,9 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
     private String cityId = "苏州";
 
     private String cityName = "苏州";
+
+    private BaseWeatherType type;
+
 
     @Override
     protected int getLayoutId() {
@@ -316,7 +317,10 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
         info.setSunset(weather.getFakeForecastDaily().get(0).getSunSet());
         info.setMoonrise(weather.getFakeForecastDaily().get(0).getMoonRise());
         info.setMoonset(weather.getFakeForecastDaily().get(0).getMoonSet());
-        BaseWeatherType type = TypeUtil.getType(getActivity(), info);
+        if (type == null || System.currentTimeMillis() - type.getLastUpdatedTime() > 30 * 60 * 1000) {
+            type = TypeUtil.getType(getActivity(), info);
+            type.setLastUpdatedTime(System.currentTimeMillis());
+        }
         dynamicWeatherView.setType(type);
 
     }

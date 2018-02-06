@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -106,13 +105,13 @@ public class SunnyType extends BaseWeatherType {
         currentMoonPosition = TimeUtils.getTimeDiffPercent(info.getMoonrise(), info.getMoonset());
         if (currentSunPosition >= 0 && currentSunPosition <= 1) {
             setColor(colorDay);
-            boat = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_boat_day);
+            boat = decodeResource(boat, R.drawable.ic_boat_day);
         } else {
             setColor(colorNight);
-            boat = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_boat_night);
+            boat = decodeResource(boat, R.drawable.ic_boat_night);
         }
 
-        cloud = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_cloud);
+        cloud = decodeResource(cloud, R.drawable.ic_cloud);
 
     }
 

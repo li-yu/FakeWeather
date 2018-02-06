@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -52,7 +51,7 @@ public class HazeType extends BaseWeatherType {
         mPaint = new Paint();
         mMatrix = new Matrix();
         camera = new Camera();
-        mBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_haze_ground);
+        mBitmap = decodeResource(mBitmap, R.drawable.ic_haze_ground);
     }
 
     @Override

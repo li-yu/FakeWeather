@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -104,7 +103,7 @@ public class RainType extends BaseWeatherType {
         mRains = new ArrayList<>();
         mSnows = new ArrayList<>();
         matrix = new Matrix();
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_rain_ground);
+        bitmap = decodeResource(bitmap, R.drawable.ic_rain_ground);
         mDstFlash1 = new Path();
         flashPathMeasure1 = new PathMeasure();
 

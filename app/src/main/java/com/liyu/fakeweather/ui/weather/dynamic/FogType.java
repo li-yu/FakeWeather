@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -43,7 +42,7 @@ public class FogType extends BaseWeatherType {
         setColor(0xFF8CADD3);
         mPaint = new Paint();
         matrix = new Matrix();
-        bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_fog_ground);
+        bitmap = decodeResource(bitmap, R.drawable.ic_fog_ground);
     }
 
     @Override
