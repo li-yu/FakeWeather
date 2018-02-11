@@ -98,4 +98,7 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="WebViewTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    </style>
+
 </resources>

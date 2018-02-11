@@ -85,7 +85,8 @@
         <activity
             android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/WebViewTheme"/>
 
         <activity
             android:name="com.liyu.fakeweather.ui.bus.AllLineActivity"
