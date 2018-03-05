@@ -104,6 +104,11 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name="com.liyu.fakeweather.ui.setting.ModuleManageActivity"
+            android:label="模块管理"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name="com.liyu.fakeweather.ui.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -1,7 +1,6 @@
 package com.liyu.fakeweather.ui;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -21,7 +20,9 @@ import android.view.WindowManager;
 
 import com.liyu.fakeweather.AppGlobal;
 import com.liyu.fakeweather.R;
+import com.liyu.fakeweather.event.ModuleChangedEvent;
 import com.liyu.fakeweather.event.ThemeChangedEvent;
+import com.liyu.fakeweather.model.Module;
 import com.liyu.fakeweather.ui.base.BaseActivity;
 import com.liyu.fakeweather.ui.bus.BusFragment;
 import com.liyu.fakeweather.ui.girl.GirlsFragment;
@@ -37,6 +38,11 @@ import com.liyu.fakeweather.utils.UpdateUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
+import org.litepal.crud.callback.FindMultiCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -48,10 +54,11 @@ public class MainActivity extends BaseActivity {
     private FragmentManager fragmentManager;
     private String currentFragmentTag;
 
-    private static final String FRAGMENT_TAG_BUS = "bus";
-    private static final String FRAGMENT_TAG_WEATHER = "weeather";
-    private static final String FRAGMENT_TAG_GANK = "gank";
-    private static final String FRAGMENT_TAG_READING = "reading";
+    private static final String FRAGMENT_TAG_BUS = "公交";
+    private static final String FRAGMENT_TAG_WEATHER = "天气";
+    private static final String FRAGMENT_TAG_GANK = "福利";
+    private static final String FRAGMENT_TAG_READING = "闲读";
+    private static final String FRAGMENT_TAG_EMPTY = "四大皆空";
 
     @Override
     protected int getLayoutId() {
@@ -85,12 +92,33 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initFragment(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            switchContent(FRAGMENT_TAG_WEATHER);
-        } else {
-            currentFragmentTag = savedInstanceState.getString(AppGlobal.CURRENT_INDEX);
-            switchContent(currentFragmentTag);
-        }
+        DataSupport.order("index").findAsync(Module.class).listen(new FindMultiCallback() {
+            @Override
+            public <T> void onFinish(List<T> t) {
+                List<Module> modules = (List<Module>) t;
+                List<Module> enabledModule = new ArrayList<>();
+                if (t == null || t.size() == 0) {
+                    modules.add(new Module("天气", R.drawable.ic_weather, R.id.navigation_item_2, 0, true));
+                    modules.add(new Module("公交", R.drawable.ic_bus, R.id.navigation_item_1, 1, true));
+                    modules.add(new Module("闲读", R.drawable.ic_reading, R.id.navigation_item_4, 2, true));
+                    modules.add(new Module("福利", R.drawable.ic_gank, R.id.navigation_item_3, 3, true));
+                    DataSupport.saveAll(modules);
+                }
+                for (Module module : modules) {
+                    if (module.isEnable()) {
+                        enabledModule.add(module);
+                        navigationView.getMenu().add(R.id.module_group, module.getMenuId(), module.getIndex(), module.getName()).setIcon(module.getResIcon());
+                    }
+                }
+                if (enabledModule.size() > 0) {
+                    switchContent(enabledModule.get(0).getName());
+                }else {
+                    switchContent(FRAGMENT_TAG_EMPTY);
+                }
+
+            }
+        });
+
     }
 
     @Override
@@ -192,6 +220,9 @@ public class MainActivity extends BaseActivity {
                 case FRAGMENT_TAG_READING:
                     foundFragment = new ReadingFragment();
                     break;
+                case FRAGMENT_TAG_EMPTY:
+                    foundFragment = new FourEmptyFragment();
+                    break;
             }
         }
 
@@ -209,6 +240,11 @@ public class MainActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemeChanged(ThemeChangedEvent event) {
+        this.recreate();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onModuleChanged(ModuleChangedEvent event) {
         this.recreate();
     }
 

@@ -25,6 +25,12 @@
         <Preference
             android:key="theme_color"
             android:title="主题色"/>
+
+        <Preference
+            android:key="module_manage"
+            android:title="模块管理"
+            android:summary="启用/关闭模块"/>
+
         <Preference
             android:key="clean_cache"
             android:title="清除缓存"/>

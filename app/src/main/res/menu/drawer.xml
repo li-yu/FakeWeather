@@ -1,46 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
     <group
-        android:checkableBehavior="single">
-
-        <item
-            android:id="@+id/navigation_item_2"
-            android:icon="@drawable/ic_weather"
-            android:checked="true"
-            android:title="天气" />
-
-        <item
-            android:id="@+id/navigation_item_1"
-            android:icon="@drawable/ic_bus"
-            android:title="公交" />
-
-        <item
-            android:id="@+id/navigation_item_4"
-            android:icon="@drawable/ic_reading"
-            android:title="闲读" />
-
-        <item
-            android:id="@+id/navigation_item_3"
-            android:icon="@drawable/ic_gank"
-            android:title="福利" />
-
+        android:id="@+id/module_group"
+        android:checkableBehavior="single"
+        android:orderInCategory="100">
     </group>
 
-    <item android:title="@string/app_name">
-        <menu>
-            <item
-                android:id="@+id/navigation_item_settings"
-                android:icon="@drawable/ic_settings"
-                android:title="设置"/>
+    <group
+        android:id="@+id/module_other"
+        android:orderInCategory="20">
+        <item android:title="@string/app_name">
+            <menu>
+                <item
+                    android:id="@+id/navigation_item_settings"
+                    android:icon="@drawable/ic_settings"
+                    android:title="设置"/>
 
-            <item
-                android:id="@+id/navigation_item_about"
-                android:icon="@drawable/ic_about"
-                android:title="关于"/>
-        </menu>
-    </item>
+                <item
+                    android:id="@+id/navigation_item_about"
+                    android:icon="@drawable/ic_about"
+                    android:title="关于"/>
+            </menu>
+        </item>
+    </group>
 
 </menu>

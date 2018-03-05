@@ -3,7 +3,7 @@
 
     <dbname value="fakeweather_db"></dbname>
 
-    <version value="4"></version>
+    <version value="5"></version>
 
     <list>
 
@@ -16,6 +16,8 @@
         <mapping class="com.liyu.fakeweather.model.WeatherCity"></mapping>
 
         <mapping class="com.liyu.fakeweather.model.HeWeatherCity"></mapping>
+
+        <mapping class="com.liyu.fakeweather.model.Module"></mapping>
 
     </list>
 

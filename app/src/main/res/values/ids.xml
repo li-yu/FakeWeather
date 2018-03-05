@@ -2,4 +2,8 @@
 <resources>
     <item type="id" name="toolbar"/>
     <item type="id" name="swipe_container"/>
+    <item type="id" name="navigation_item_1"/>
+    <item type="id" name="navigation_item_2"/>
+    <item type="id" name="navigation_item_3"/>
+    <item type="id" name="navigation_item_4"/>
 </resources>

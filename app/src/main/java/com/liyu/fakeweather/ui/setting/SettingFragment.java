@@ -1,5 +1,6 @@
 package com.liyu.fakeweather.ui.setting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -30,6 +31,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     private ListPreference busRefreshFreq;
     private Preference cleanCache;
     private Preference theme;
+    private Preference moduleManage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         busRefreshFreq = (ListPreference) findPreference(SettingsUtil.BUS_REFRESH_FREQ);
         cleanCache = findPreference(SettingsUtil.CLEAR_CACHE);
         theme = findPreference(SettingsUtil.THEME);
+        moduleManage = findPreference("module_manage");
 
         weatherShareType.setSummary(weatherShareType.getValue());
         busRefreshFreq.setSummary(String.format("%s 秒，长按『刷新』按钮即可开启自动模式。", busRefreshFreq.getValue()));
@@ -55,6 +58,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         busRefreshFreq.setOnPreferenceChangeListener(this);
         cleanCache.setOnPreferenceClickListener(this);
         theme.setOnPreferenceClickListener(this);
+        moduleManage.setOnPreferenceClickListener(this);
 
         String[] cachePaths = new String[]{FileUtil.getInternalCacheDir(App.getContext()), FileUtil.getExternalCacheDir(App.getContext())};
         Observable
@@ -116,6 +120,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                     .allowUserColorInput(false)
                     .allowUserColorInputAlpha(false)
                     .show();
+        } else if (preference == moduleManage) {
+            getActivity().startActivity(new Intent(getActivity(), ModuleManageActivity.class));
         }
         return true;
     }

@@ -2,6 +2,8 @@ package com.liyu.fakeweather.ui.bus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -177,14 +180,14 @@ public class BusFragment extends BaseFragment {
                     @Override
                     public void onNext(BaseBusResponse<BusLineSearch> listBaseBusResponse) {
                         searchAdapter.setNewData(listBaseBusResponse.data.getList());
-                        popupWindow.showAsDropDown(searchView);
+                        showAsDropDown(popupWindow, searchView);
                     }
                 });
 
         MenuItemCompat.setOnActionExpandListener(search, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                popupWindow.showAsDropDown(mToolbar);
+                showAsDropDown(popupWindow, mToolbar);
                 return true;
             }
 
@@ -223,6 +226,16 @@ public class BusFragment extends BaseFragment {
                 return false;
             }
         });
+    }
+
+    public void showAsDropDown(PopupWindow window, View anchor) {
+        if (Build.VERSION.SDK_INT >= 24) {
+            Rect visibleFrame = new Rect();
+            anchor.getGlobalVisibleRect(visibleFrame);
+            int height = anchor.getResources().getDisplayMetrics().heightPixels - visibleFrame.bottom;
+            window.setHeight(height);
+        }
+        popupWindow.showAsDropDown(anchor);
     }
 
     private void initTabLayout() {

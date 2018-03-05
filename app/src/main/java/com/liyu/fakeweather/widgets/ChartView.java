@@ -99,8 +99,8 @@ public class ChartView extends View {
                 maxValue = n;
             }
         }
-        minValue = minValue - 3;
-        maxValue = maxValue + 3;
+        minValue = minValue - 5;
+        maxValue = maxValue + 5;
         final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
