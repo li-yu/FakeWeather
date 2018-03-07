@@ -10,15 +10,11 @@ import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseHeWeatherCityResponse;
 import com.liyu.fakeweather.model.HeWeatherCity;
-import com.liyu.fakeweather.model.Module;
 import com.liyu.fakeweather.ui.base.BaseActivity;
 import com.liyu.fakeweather.utils.SPUtil;
 import com.liyu.fakeweather.utils.ToastUtil;
 
 import org.litepal.crud.DataSupport;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
