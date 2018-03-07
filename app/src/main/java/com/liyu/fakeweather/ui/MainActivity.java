@@ -88,10 +88,10 @@ public class MainActivity extends BaseActivity {
         fragmentManager = getSupportFragmentManager();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         initNavigationViewHeader();
-        initFragment(savedInstanceState);
+        initFragment();
     }
 
-    private void initFragment(Bundle savedInstanceState) {
+    private void initFragment() {
         DataSupport.order("index").findAsync(Module.class).listen(new FindMultiCallback() {
             @Override
             public <T> void onFinish(List<T> t) {
@@ -107,12 +107,13 @@ public class MainActivity extends BaseActivity {
                 for (Module module : modules) {
                     if (module.isEnable()) {
                         enabledModule.add(module);
-                        navigationView.getMenu().add(R.id.module_group, module.getMenuId(), module.getIndex(), module.getName()).setIcon(module.getResIcon());
+                        navigationView.getMenu().add(R.id.module_group, module.getMenuId(), module.getIndex(), module.getName()).setIcon(module.getResIcon()).setCheckable(true);
                     }
                 }
                 if (enabledModule.size() > 0) {
+                    navigationView.getMenu().getItem(0).setChecked(true);
                     switchContent(enabledModule.get(0).getName());
-                }else {
+                } else {
                     switchContent(FRAGMENT_TAG_EMPTY);
                 }
 

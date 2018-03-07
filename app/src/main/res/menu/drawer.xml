@@ -5,7 +5,6 @@
       android:layout_height="wrap_content">
     <group
         android:id="@+id/module_group"
-        android:checkableBehavior="single"
         android:orderInCategory="100">
     </group>
 
