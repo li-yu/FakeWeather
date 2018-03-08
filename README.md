@@ -23,7 +23,7 @@
 
 ### 下载 
 
-[直接下载 v1.3.2_20180202](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/FakeWeather_v1.3.2_20180202.apk)
+[直接下载 v1.3.3_20180308](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/FakeWeather_v1.3.3_20180308.apk)
 
 ![qcode](qcode.png)
 
