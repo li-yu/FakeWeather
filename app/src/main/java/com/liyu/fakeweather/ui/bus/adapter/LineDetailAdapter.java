@@ -2,12 +2,14 @@ package com.liyu.fakeweather.ui.bus.adapter;
 
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.model.StandInfoBean;
 import com.liyu.fakeweather.ui.bus.StationDetailActivity;
+import com.liyu.fakeweather.utils.ThemeUtil;
 import com.liyu.fakeweather.widgets.StationIndicator;
 
 import java.util.List;
@@ -24,7 +26,13 @@ public class LineDetailAdapter extends BaseQuickAdapter<StandInfoBean, BaseViewH
 
     @Override
     protected void convert(BaseViewHolder holder, final StandInfoBean item) {
-        holder.setText(R.id.tv_station_name, item.getSName());
+        TextView tvName = holder.getView(R.id.tv_station_name);
+        tvName.setText(item.getSName());
+        if (item.getIs_vicinity() == 1) {
+            tvName.setCompoundDrawablesWithIntrinsicBounds(null, null, ThemeUtil.setTintDrawable(mContext.getDrawable(R.drawable.ic_location), mContext), null);
+        } else {
+            tvName.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        }
         holder.setText(R.id.tv_station_status, item.getS_num_str());
         StationIndicator indicator = holder.getView(R.id.bus_indicator);
         if (item.getIs_vicinity() == 0 && !TextUtils.isEmpty(item.getS_num_str())) {
@@ -39,4 +47,6 @@ public class LineDetailAdapter extends BaseQuickAdapter<StandInfoBean, BaseViewH
             }
         });
     }
+
+
 }

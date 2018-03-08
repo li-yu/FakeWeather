@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,11 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.event.BusFavoritesEvent;
 import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseBusResponse;
 import com.liyu.fakeweather.http.api.BusController;
+import com.liyu.fakeweather.location.RxLocation;
 import com.liyu.fakeweather.model.BusLineDetail;
 import com.liyu.fakeweather.model.FavoritesBusBean;
 import com.liyu.fakeweather.model.StandInfoBean;
@@ -62,6 +65,7 @@ public class LineDetailActivity extends BaseActivity {
     private FloatingActionButton fabLike;
     private FloatingActionButton fabRefresh;
     private SwipeRefreshLayout refreshLayout;
+    private AppBarLayout appBarLayout;
 
     private boolean isFavorite = false;
     private String guid;
@@ -113,6 +117,7 @@ public class LineDetailActivity extends BaseActivity {
         tvLineInfoSTime = (TextView) findViewById(R.id.tv_info_stime);
         tvLineInfoETime = (TextView) findViewById(R.id.tv_info_etime);
         tvLineInfoTotal = (TextView) findViewById(R.id.tv_info_total);
+        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         recyclerView = (RecyclerView) findViewById(R.id.rv_line_search);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LineDetailAdapter(R.layout.item_bus_line_detail, null);
@@ -190,14 +195,22 @@ public class LineDetailActivity extends BaseActivity {
                         }
                     }
                 })
-                .flatMap(new Func1<BusLineDetail, Observable<BaseBusResponse<BusLineDetail>>>() {
+                .flatMap(new Func1<BusLineDetail, Observable<BDLocation>>() {
                     @Override
-                    public Observable<BaseBusResponse<BusLineDetail>> call(BusLineDetail busLineDetail) {
+                    public Observable<BDLocation> call(BusLineDetail busLineDetail) {
+                        return RxLocation.get().locate(LineDetailActivity.this);
+                    }
+                })
+                .flatMap(new Func1<BDLocation, Observable<BaseBusResponse<BusLineDetail>>>() {
+                    @Override
+                    public Observable<BaseBusResponse<BusLineDetail>> call(BDLocation bdLocation) {
                         Map<String, String> options = new HashMap<>();
                         options.put("Guid", guid);
                         options.put("uid", BusController.uid);
                         options.put("DeviceID", BusController.deviceID);
                         options.put("sign", BusController.sign);
+                        options.put("lat", String.valueOf(bdLocation.getLatitude()));
+                        options.put("lng", String.valueOf(bdLocation.getLongitude()));
                         return ApiFactory.getBusController().getLineInfo(options).subscribeOn(Schedulers.io());
                     }
                 })
@@ -225,8 +238,23 @@ public class LineDetailActivity extends BaseActivity {
                         line.setStandInfo(stations);
                         line.setFavorite(isFavorite);
                         RxDataBase.deleteThenSave(line, "LGUID = ?", response.data.getLGUID());
+                        scrollToCurrentStation();
                     }
                 });
+    }
+
+    private void scrollToCurrentStation() {
+        int currentStation = -1;
+        for (int i = 0; i < adapter.getData().size(); i++) {
+            if (adapter.getData().get(i).getIs_vicinity() == 1) {
+                currentStation = i;
+                break;
+            }
+        }
+        if (currentStation > 0) {
+            appBarLayout.setExpanded(false, true);
+            recyclerView.smoothScrollToPosition(currentStation);
+        }
     }
 
     private void showFabStatus(boolean isFavorite) {
