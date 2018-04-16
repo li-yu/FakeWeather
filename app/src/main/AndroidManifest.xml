@@ -38,6 +38,7 @@
 
         <activity
             android:name="com.liyu.fakeweather.ui.MainActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait">
         </activity>
 

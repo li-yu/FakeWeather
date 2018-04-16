@@ -19,6 +19,7 @@ import com.liyu.fakeweather.ui.base.BaseActivity;
 import com.liyu.fakeweather.utils.RxImage;
 import com.liyu.fakeweather.utils.ShareUtils;
 import com.liyu.fakeweather.utils.ToastUtil;
+import com.liyu.fakeweather.widgets.DragLayout;
 
 import java.io.IOException;
 
@@ -35,6 +36,7 @@ public class PictureActivity extends BaseActivity {
     public static final String EXTRA_IMAGE_TITLE = "image_title";
     public static final String TRANSIT_PIC = "picture";
 
+    private DragLayout dragLayout;
     private ImageView mImageView;
     private String mImageUrl;
     private String mImageTitle;
@@ -61,7 +63,15 @@ public class PictureActivity extends BaseActivity {
         showSystemUI();
         setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setShowHideAnimationEnabled(true);
-        mImageView = (ImageView) findViewById(R.id.picture);
+        dragLayout = findView(R.id.drag_layout);
+        dragLayout.bind(this).setDragListener(new DragLayout.DragListener() {
+            @Override
+            public void onDragFinished() {
+                PictureActivity.this.onBackPressed();
+            }
+
+        });
+        mImageView = findViewById(R.id.picture);
         ViewCompat.setTransitionName(mImageView, TRANSIT_PIC);
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override

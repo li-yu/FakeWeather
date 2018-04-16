@@ -119,7 +119,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                     .cancelButton(R.string.cancel)
                     .allowUserColorInput(false)
                     .allowUserColorInputAlpha(false)
-                    .show();
+                    .show(((SettingActivity) getActivity()).getSupportFragmentManager());
         } else if (preference == moduleManage) {
             getActivity().startActivity(new Intent(getActivity(), ModuleManageActivity.class));
         }

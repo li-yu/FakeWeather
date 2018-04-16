@@ -4,6 +4,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.liyu.fakeweather.R;
@@ -74,5 +79,10 @@ public class SettingActivity extends BaseActivity implements ColorChooserDialog.
         }
         getFragmentManager().beginTransaction().replace(R.id.contentLayout, new SettingFragment()).commit();
         EventBus.getDefault().post(new ThemeChangedEvent(selectedColor));
+    }
+
+    @Override
+    public void onColorChooserDismissed(@NonNull ColorChooserDialog dialog) {
+
     }
 }

@@ -1,5 +1,7 @@
 package com.liyu.fakeweather.ui.bus;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -125,6 +128,13 @@ public class LineDetailActivity extends BaseActivity {
         fabLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ObjectAnimator scaleX = ObjectAnimator.ofFloat(fabLike, "scaleX", 0.5f, 1);
+                ObjectAnimator scaleY = ObjectAnimator.ofFloat(fabLike, "scaleY", 0.5f, 1);
+                AnimatorSet animSet = new AnimatorSet();
+                animSet.play(scaleX).with(scaleY);
+                animSet.setDuration(300);
+                animSet.setInterpolator(new OvershootInterpolator());
+                animSet.start();
                 isFavorite = !isFavorite;
                 ContentValues values = new ContentValues();
                 values.put("isFavorite", isFavorite);

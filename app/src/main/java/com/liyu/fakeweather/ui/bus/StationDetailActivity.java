@@ -113,6 +113,7 @@ public class StationDetailActivity extends BaseActivity {
                     @Override
                     public void onNext(BaseBusResponse<BusLineStation> response) {
                         adapter.setNewData(response.data.getList());
+                        getSupportActionBar().setSubtitle(response.data.getInfo().getAddress());
                     }
                 });
     }
