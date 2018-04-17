@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
@@ -105,7 +106,7 @@ public class LineDetailActivity extends BaseActivity {
         desc = getIntent().getStringExtra(KEY_EXTRA_DESC);
         getSupportActionBar().setTitle(name);
         getSupportActionBar().setSubtitle(desc);
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refeshLayout);
+        refreshLayout = findViewById(R.id.refeshLayout);
         refreshLayout.setColorSchemeResources(ThemeUtil.getCurrentColorPrimary(this));
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -113,15 +114,15 @@ public class LineDetailActivity extends BaseActivity {
                 loadData();
             }
         });
-        fabLike = (FloatingActionButton) findViewById(R.id.fab);
-        fabRefresh = (FloatingActionButton) findViewById(R.id.fab_refesh);
-        tvLineInfoName = (TextView) findViewById(R.id.tv_info_name);
-        tvLineInfodirection = (TextView) findViewById(R.id.tv_info_direction);
-        tvLineInfoSTime = (TextView) findViewById(R.id.tv_info_stime);
-        tvLineInfoETime = (TextView) findViewById(R.id.tv_info_etime);
-        tvLineInfoTotal = (TextView) findViewById(R.id.tv_info_total);
-        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
-        recyclerView = (RecyclerView) findViewById(R.id.rv_line_search);
+        fabLike = findViewById(R.id.fab);
+        fabRefresh = findViewById(R.id.fab_refesh);
+        tvLineInfoName = findViewById(R.id.tv_info_name);
+        tvLineInfodirection = findViewById(R.id.tv_info_direction);
+        tvLineInfoSTime = findViewById(R.id.tv_info_stime);
+        tvLineInfoETime = findViewById(R.id.tv_info_etime);
+        tvLineInfoTotal = findViewById(R.id.tv_info_total);
+        appBarLayout = findViewById(R.id.app_bar);
+        recyclerView = findViewById(R.id.rv_line_search);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LineDetailAdapter(R.layout.item_bus_line_detail, null);
         recyclerView.setAdapter(adapter);
@@ -163,10 +164,12 @@ public class LineDetailActivity extends BaseActivity {
             @Override
             public boolean onLongClick(View view) {
                 if (isAutoRefresh) {
+                    LineDetailActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     fabRefresh.setImageResource(R.drawable.ic_refresh);
                     if (!subscription.isUnsubscribed())
                         subscription.unsubscribe();
                 } else {
+                    LineDetailActivity.this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     showAutoRefreshFabStatus(autoFreq);
                     subscription = autoRefreshObservable.subscribe(new Action1<Long>() {
                         @Override
@@ -298,6 +301,7 @@ public class LineDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LineDetailActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (subscription != null && !subscription.isUnsubscribed())
             subscription.unsubscribe();
     }

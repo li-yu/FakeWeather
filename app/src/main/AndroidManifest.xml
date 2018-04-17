@@ -57,7 +57,6 @@
         <activity
             android:name="com.liyu.fakeweather.ui.girl.PictureActivity"
             android:label=""
-            android:screenOrientation="portrait"
             android:theme="@style/PictureTheme"/>
 
         <service

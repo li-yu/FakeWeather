@@ -8,15 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.liyu.fakeweather.AppGlobal;
 import com.liyu.fakeweather.R;
@@ -77,8 +73,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            currentFragmentTag = savedInstanceState.getString(AppGlobal.CURRENT_INDEX);
+        }
         fragmentManager = getSupportFragmentManager();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         initNavigationViewHeader();
         initFragment();
     }
@@ -144,7 +143,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initNavigationViewHeader() {
-        navigationView = (NavigationView) findViewById(R.id.navigation);
+        navigationView = findViewById(R.id.navigation);
         navigationView.inflateHeaderView(R.layout.drawer_header);
         navigationView.setNavigationItemSelectedListener(new NavigationItemSelected());
     }

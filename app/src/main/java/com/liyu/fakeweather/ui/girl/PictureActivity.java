@@ -86,7 +86,7 @@ public class PictureActivity extends BaseActivity {
         mImageUrl = getIntent().getStringExtra(EXTRA_IMAGE_URL);
         mImageTitle = getIntent().getStringExtra(EXTRA_IMAGE_TITLE);
         ViewCompat.setTransitionName(mImageView, TRANSIT_PIC);
-        Glide.with(this).load(mImageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.IMMEDIATE).crossFade(0)
+        Glide.with(this).load(mImageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.IMMEDIATE)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(mImageView);
         hideOrShowToolbar();
     }
