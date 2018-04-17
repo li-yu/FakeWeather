@@ -3,7 +3,7 @@
 
     <dbname value="fakeweather_db"></dbname>
 
-    <version value="5"></version>
+    <version value="6"></version>
 
     <list>
 

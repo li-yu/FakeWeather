@@ -1,8 +1,5 @@
 package com.liyu.fakeweather.model;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
-
 import org.litepal.crud.DataSupport;
 
 /**

@@ -1,5 +1,6 @@
 package com.liyu.fakeweather.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -98,7 +99,7 @@ public class MainActivity extends BaseActivity {
                 for (Module module : modules) {
                     if (module.isEnable()) {
                         enabledModule.add(module);
-                        navigationView.getMenu().add(R.id.module_group, module.getMenuId(), module.getIndex(), module.getName()).setIcon(module.getResIcon()).setCheckable(true);
+                        navigationView.getMenu().add(R.id.module_group, module.getMenuId(), module.getIndex(), module.getName()).setIcon(getDrawbleId(module.getName())).setCheckable(true);
                     }
                 }
                 if (enabledModule.size() > 0) {
@@ -111,6 +112,25 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+    }
+
+    private int getDrawbleId(String name) {
+        switch (name) {
+            case "天气":
+                return getResId(this, "ic_weather", "drawable");
+            case "公交":
+                return getResId(this, "ic_bus", "drawable");
+            case "闲读":
+                return getResId(this, "ic_reading", "drawable");
+            case "福利":
+                return getResId(this, "ic_gank", "drawable");
+            default:
+                return getResId(this, "ic_weather", "drawable");
+        }
+    }
+
+    private int getResId(Context context, String resName, String defType) {
+        return context.getResources().getIdentifier(resName, defType, context.getPackageName());
     }
 
     @Override
