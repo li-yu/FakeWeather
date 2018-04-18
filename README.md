@@ -28,7 +28,7 @@
 ![qcode](qcode.png)
 
 ### 编译环境 ###
-- Android Studio 2.3.3
+- Android Studio 3.1.1
 - jdk1.8.0_144
 
 
