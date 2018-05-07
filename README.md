@@ -1,5 +1,8 @@
 ## 假装看天气 ##
 ![screenshot](screenshot.jpg)
+>2018-05-07 更新：
+我很遗憾的关闭了天气相关的几个 api，天气 key 和城市数据请大家自行去和风天气官网申请下载，详情见 [#8](https://github.com/li-yu/FakeWeather/issues/8)
+
 
 >2017-12-15 更新：
 时间过得很快，这个项目已经有一年了，因为是练手的项目，写完之后也没过多的维护，直到有一次在站酷上看到一个[天气设计原型](http://www.zcool.com.cn/work/ZMjE1MDgwMjQ=.html)，然后我把天气模块给重写了。
