@@ -19,7 +19,7 @@ import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseWeatherResponse;
-import com.liyu.fakeweather.model.HeWeather5;
+import com.liyu.fakeweather.model.HeWeather;
 import com.liyu.fakeweather.model.HeWeatherCity;
 import com.liyu.fakeweather.model.IFakeWeather;
 import com.liyu.fakeweather.model.WeatherCity;
@@ -186,20 +186,20 @@ public class CityManageActivity extends BaseActivity {
     private Observable<IFakeWeather> getFromNetwork(final String city) {
         int weatherSrc = SettingsUtil.getWeatherSrc();
         if (weatherSrc == SettingsUtil.WEATHER_SRC_HEFENG) {
-            return WeatherUtil.getInstance().getWeatherKey().flatMap(new Func1<String, Observable<BaseWeatherResponse<HeWeather5>>>() {
+            return WeatherUtil.getInstance().getWeatherKey().flatMap(new Func1<String, Observable<BaseWeatherResponse<HeWeather>>>() {
                 @Override
-                public Observable<BaseWeatherResponse<HeWeather5>> call(String key) {
+                public Observable<BaseWeatherResponse<HeWeather>> call(String key) {
                     return ApiFactory
                             .getWeatherController()
                             .getWeather(key, city)
                             .subscribeOn(Schedulers.io());
                 }
-            }).map(new Func1<BaseWeatherResponse<HeWeather5>, IFakeWeather>() {
+            }).map(new Func1<BaseWeatherResponse<HeWeather>, IFakeWeather>() {
                 @Override
-                public IFakeWeather call(BaseWeatherResponse<HeWeather5> response) {
-                    HeWeather5 heWeather5 = response.HeWeather5.get(0);
-                    ACache.get(CityManageActivity.this).put(city, heWeather5, 30 * 60);
-                    return heWeather5;
+                public IFakeWeather call(BaseWeatherResponse<HeWeather> response) {
+                    HeWeather heWeather = response.HeWeather6.get(0);
+                    ACache.get(CityManageActivity.this).put(city, heWeather, 30 * 60);
+                    return heWeather;
                 }
             });
         } else if (weatherSrc == SettingsUtil.WEATHER_SRC_XIAOMI) {

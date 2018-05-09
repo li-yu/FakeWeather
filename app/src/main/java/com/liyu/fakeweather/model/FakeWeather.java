@@ -124,14 +124,14 @@ public class FakeWeather {
     }
 
     public static class FakeAqi implements Serializable {
-        private String api;
-        private String co;
-        private String no2;
-        private String o3;
-        private String pm10;
-        private String pm25;
-        private String qlty;
-        private String so2;
+        private String api = "";
+        private String co = "";
+        private String no2 = "";
+        private String o3 = "";
+        private String pm10 = "";
+        private String pm25 = "";
+        private String qlty = "";
+        private String so2 = "";
 
         public String getApi() {
             return api;

@@ -16,9 +16,9 @@ public interface AppController {
     @GET("http://api.caoliyu.cn/appupdate.json")
     Observable<BaseAppResponse<UpdateInfo>> checkUpdate();
 
-    @GET("http://api.caoliyu.cn/weatherkey.json")
+    @GET("https://raw.githubusercontent.com/li-yu/FakeWeather/master/api/weatherkey.json")
     Observable<BaseAppResponse<String>> getWeatherKey();
 
-    @GET("http://api.caoliyu.cn/heweather_city_list.json")
+    @GET("https://raw.githubusercontent.com/li-yu/FakeWeather/master/api/heweather_city_list.json")
     Observable<BaseHeWeatherCityResponse> getHeWeatherCityList();
 }

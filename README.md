@@ -1,8 +1,5 @@
 ## 假装看天气 ##
 ![screenshot](screenshot.jpg)
->2018-05-07 更新：
-我很遗憾的关闭了天气相关的几个 api，天气 key 和城市数据请大家自行去和风天气官网申请下载，详情见 [#8](https://github.com/li-yu/FakeWeather/issues/8)
-
 
 >2018-05-07 更新：
 我很遗憾的关闭了天气相关的几个 api，天气 key 和城市数据请大家自行去和风天气官网申请下载，详情见 [#8](https://github.com/li-yu/FakeWeather/issues/8)

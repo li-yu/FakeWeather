@@ -8,5 +8,5 @@ import java.util.List;
 
 public class BaseWeatherResponse<T> {
 
-    public List<T> HeWeather5;
+    public List<T> HeWeather6;
 }

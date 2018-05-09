@@ -19,7 +19,9 @@ import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseWeatherResponse;
 import com.liyu.fakeweather.model.AqiDetailBean;
-import com.liyu.fakeweather.model.HeWeather5;
+import com.liyu.fakeweather.model.FakeWeather;
+import com.liyu.fakeweather.model.HeWeather;
+import com.liyu.fakeweather.model.HeWeatherAir;
 import com.liyu.fakeweather.model.IFakeWeather;
 import com.liyu.fakeweather.model.WeatherCity;
 import com.liyu.fakeweather.ui.base.BaseContentFragment;
@@ -39,11 +41,13 @@ import com.liyu.fakeweather.widgets.WeatherChartView;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import retrofit2.Response;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -199,29 +203,53 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
     private Observable<IFakeWeather> getFromNetwork() {
         int weatherSrc = SettingsUtil.getWeatherSrc();
         if (weatherSrc == SettingsUtil.WEATHER_SRC_HEFENG) {
-            return WeatherUtil.getInstance().getWeatherKey().flatMap(new Func1<String, Observable<BaseWeatherResponse<HeWeather5>>>() {
+            return WeatherUtil.getInstance().getWeatherKey().flatMap(new Func1<String, Observable<BaseWeatherResponse<HeWeather>>>() {
                 @Override
-                public Observable<BaseWeatherResponse<HeWeather5>> call(String key) {
+                public Observable<BaseWeatherResponse<HeWeather>> call(String key) {
                     return ApiFactory
                             .getWeatherController()
                             .getWeather(key, cityId)
                             .subscribeOn(Schedulers.io());
                 }
-            }).map(new Func1<BaseWeatherResponse<HeWeather5>, IFakeWeather>() {
+            }).map(new Func1<BaseWeatherResponse<HeWeather>, HeWeather>() {
                 @Override
-                public IFakeWeather call(BaseWeatherResponse<HeWeather5> response) {
-                    HeWeather5 heWeather5 = response.HeWeather5.get(0);
+                public HeWeather call(BaseWeatherResponse<HeWeather> heWeatherBaseWeatherResponse) {
+                    HeWeather heWeather = heWeatherBaseWeatherResponse.HeWeather6.get(0);
+                    try {
+                        Response<BaseWeatherResponse<HeWeatherAir>> response = ApiFactory.getWeatherController().getAirSync(SettingsUtil.getWeatherKey(), heWeather.getBasic().getParent_city()).execute();
+                        if (response.body() != null && response.body().HeWeather6.size() > 0) {
+                            HeWeatherAir air = response.body().HeWeather6.get(0);
+                            FakeWeather.FakeAqi fakeAqi = new FakeWeather.FakeAqi();
+                            fakeAqi.setApi(air.getAir_now_city().getAqi());
+                            fakeAqi.setCo(air.getAir_now_city().getCo());
+                            fakeAqi.setNo2(air.getAir_now_city().getNo2());
+                            fakeAqi.setO3(air.getAir_now_city().getO3());
+                            fakeAqi.setPm10(air.getAir_now_city().getPm10());
+                            fakeAqi.setPm25(air.getAir_now_city().getPm25());
+                            fakeAqi.setQlty(air.getAir_now_city().getQlty());
+                            fakeAqi.setSo2(air.getAir_now_city().getSo2());
+                            heWeather.setFakeAqi(fakeAqi);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException("获取空气质量失败！");
+                    }
+                    return heWeather;
+                }
+            }).map(new Func1<HeWeather, IFakeWeather>() {
+                @Override
+                public IFakeWeather call(HeWeather response) {
+                    HeWeather heWeather = response;
                     if (cityId.contains(",")) {
-                        mCache.put(cityName, heWeather5, 30 * 60);
+                        mCache.put(cityName, heWeather, 30 * 60);
                     } else {
-                        mCache.put(cityId, heWeather5, 30 * 60);
+                        mCache.put(cityId, heWeather, 30 * 60);
                     }
                     ContentValues values = new ContentValues();
-                    values.put("weatherCode", heWeather5.getFakeNow().getNowCode());
-                    values.put("weatherText", heWeather5.getFakeNow().getNowText());
-                    values.put("weatherTemp", heWeather5.getFakeNow().getNowTemp());
+                    values.put("weatherCode", heWeather.getFakeNow().getNowCode());
+                    values.put("weatherText", heWeather.getFakeNow().getNowText());
+                    values.put("weatherTemp", heWeather.getFakeNow().getNowTemp());
                     DataSupport.updateAll(WeatherCity.class, values, "cityName = ?", cityName);
-                    return heWeather5;
+                    return heWeather;
                 }
             });
         } else if (weatherSrc == SettingsUtil.WEATHER_SRC_XIAOMI) {

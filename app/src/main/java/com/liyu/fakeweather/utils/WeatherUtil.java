@@ -8,7 +8,6 @@ import com.liyu.fakeweather.App;
 import com.liyu.fakeweather.http.ApiFactory;
 import com.liyu.fakeweather.http.BaseAppResponse;
 import com.liyu.fakeweather.http.RetrofitManager;
-import com.liyu.fakeweather.model.FakeWeather;
 import com.liyu.fakeweather.model.IFakeWeather;
 import com.liyu.fakeweather.model.WeatherBean;
 
@@ -77,7 +76,7 @@ public class WeatherUtil {
         Observable<String> netKey = ApiFactory.getAppController().getWeatherKey().flatMap(new Func1<BaseAppResponse<String>, Observable<String>>() {
             @Override
             public Observable<String> call(BaseAppResponse<String> response) {
-                if (TextUtils.isEmpty(response.results)) {
+                if (!TextUtils.isEmpty(response.results)) {
                     SettingsUtil.setWeatherKey(response.results);
                 }
                 return Observable.just(response.results);
