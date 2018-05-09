@@ -1,6 +1,9 @@
 ## 假装看天气 ##
 ![screenshot](screenshot.jpg)
 
+>2018-05-09 更新：
+修复了由和风天气接口变更带来的问题
+
 >2018-05-07 更新：
 我很遗憾的关闭了天气相关的几个 api，天气 key 和城市数据请大家自行去和风天气官网申请下载，详情见 [#8](https://github.com/li-yu/FakeWeather/issues/8)
 
@@ -26,7 +29,7 @@
 
 ### 下载 
 
-[直接下载 v1.3.3_20180308](http://7xp1a1.com1.z0.glb.clouddn.com/FakeWeather/FakeWeather_v1.3.3_20180308.apk)
+[直接下载 v1.3.5_20180509](https://github.com/li-yu/FakeWeather/raw/master/release/FakeWeather_v1.3.5_20180509.apk)
 
 ![qcode](qcode.png)
 
