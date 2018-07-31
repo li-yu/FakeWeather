@@ -44,8 +44,8 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        lottieAnimationView = (LottieAnimationView) findViewById(R.id.animation_view);
-        tvInfo = (TextView) findViewById(R.id.tvInfo);
+        lottieAnimationView = findViewById(R.id.animation_view);
+        tvInfo = findViewById(R.id.tvInfo);
     }
 
     @Override

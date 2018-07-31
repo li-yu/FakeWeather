@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
@@ -241,6 +242,9 @@ public class LineDetailActivity extends BaseActivity {
 
                     @Override
                     public void onNext(BaseBusResponse<BusLineDetail> response) {
+                        if (response.data == null || TextUtils.isEmpty(response.data.getLGUID())) {
+                            return;
+                        }
                         tvLineInfoSTime.setText("首班车: " + response.data.getLFStdFTime());
                         tvLineInfoETime.setText("末班车: " + response.data.getLFStdETime());
                         tvLineInfoTotal.setText("总计: " + response.data.getStandInfo().size() + " 站");

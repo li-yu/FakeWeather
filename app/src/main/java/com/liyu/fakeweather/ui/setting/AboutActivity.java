@@ -40,12 +40,12 @@ public class AboutActivity extends BaseActivity {
 
     private TextView tvVersion;
     private ImageSwitcher imageSwitcher;
-    private String[] imageUrls = {
-            "http://7xp1a1.com1.z0.glb.clouddn.com/liyu01.png",
-            "http://7xp1a1.com1.z0.glb.clouddn.com/liyu02.png",
-            "http://7xp1a1.com1.z0.glb.clouddn.com/liyu03.png",
-            "http://7xp1a1.com1.z0.glb.clouddn.com/liyu04.png",
-            "http://7xp1a1.com1.z0.glb.clouddn.com/liyu05.png"};
+    private static final String[] imageUrls = {
+            "http://cdn.liyuyu.cn/fakeweathers1.png",
+            "http://cdn.liyuyu.cn/fakeweathers2.png",
+            "http://cdn.liyuyu.cn/fakeweathers3.png",
+            "http://cdn.liyuyu.cn/fakeweathers4.png",
+            "http://cdn.liyuyu.cn/fakeweathers5.png"};
 
     private Subscription subscription;
 
@@ -62,9 +62,9 @@ public class AboutActivity extends BaseActivity {
     @Override
     protected void initViews(Bundle savedInstanceState) {
         setDisplayHomeAsUpEnabled(true);
-        tvVersion = (TextView) findViewById(R.id.tv_app_version);
+        tvVersion = findViewById(R.id.tv_app_version);
         tvVersion.setText("v" + BuildConfig.VERSION_NAME);
-        imageSwitcher = (ImageSwitcher) findViewById(R.id.imageSwitcher);
+        imageSwitcher = findViewById(R.id.imageSwitcher);
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
