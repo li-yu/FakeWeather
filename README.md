@@ -1,6 +1,9 @@
 ## 假装看天气 ##
 ![screenshot](screenshot.jpg)
 
+>2018-07-31 更新：
+托管在七牛云 CDN 上的静态图片资源莫名被大量刷流量，临近破产，真是法了克
+
 >2018-05-09 更新：
 修复了由和风天气接口变更带来的问题
 
@@ -29,12 +32,12 @@
 
 ### 下载 
 
-[直接下载 v1.3.5_20180509](https://github.com/li-yu/FakeWeather/raw/master/release/FakeWeather_v1.3.5_20180509.apk)
+[直接下载 v1.3.6_20180731](https://github.com/li-yu/FakeWeather/raw/master/release/FakeWeather_v1.3.6_20180731.apk)
 
 ![qcode](qcode.png)
 
 ### 编译环境 ###
-- Android Studio 3.1.1
+- Android Studio 3.1.3
 - jdk1.8.0_144
 
 
