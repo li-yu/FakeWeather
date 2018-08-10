@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
@@ -53,7 +52,7 @@ public class DragLayout extends RelativeLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        int action = MotionEventCompat.getActionMasked(ev);
+        int action = ev.getAction();
         if (action == MotionEvent.ACTION_CANCEL
                 || action == MotionEvent.ACTION_UP) {
             mViewDragHelper.cancel();
@@ -78,7 +77,6 @@ public class DragLayout extends RelativeLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-
         originPoint.x = targetView.getLeft();
         originPoint.y = targetView.getTop();
     }
@@ -108,18 +106,18 @@ public class DragLayout extends RelativeLayout {
 
         @Override
         public int getViewHorizontalDragRange(View child) {
-            return getMeasuredWidth() - child.getMeasuredWidth();
+            return 1;
         }
 
         @Override
         public int getViewVerticalDragRange(View child) {
-            return getMeasuredHeight() - child.getMeasuredHeight();
+            return 1;
         }
 
         @Override
         public void onViewReleased(@NonNull View releasedChild, float xvel, float yvel) {
             if (releasedChild == targetView) {
-                if (callEvent) {
+                if (callEvent || yvel > 8000) {
                     if (listener != null) {
                         listener.onDragFinished();
                     }
@@ -136,7 +134,9 @@ public class DragLayout extends RelativeLayout {
             if (top > originPoint.y) {
                 float a = (float) (top - originPoint.y) / (float) (getMeasuredHeight() - originPoint.y);
                 setBackgroundColor(ThemeUtil.changeAlpha(0xff000000, 1 - a));
-                if ((top - originPoint.y) > getMeasuredHeight() / 3) {
+                targetView.setScaleX(1 - a);
+                targetView.setScaleY(1 - a);
+                if ((top - originPoint.y) > getMeasuredHeight() / 5) {
                     callEvent = true;
                 } else {
                     callEvent = false;
