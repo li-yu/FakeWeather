@@ -10,11 +10,21 @@ public class FavoritesBusBean {
     private String LDirection;
     private String SCode;
     private String SName;
+    private long id;
 
     public FavoritesBusBean(BusLineDetail line) {
         LGUID = line.getLGUID();
         LName = line.getLName();
         LDirection = line.getLDirection();
+        id = line.getId();
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public FavoritesBusBean() {

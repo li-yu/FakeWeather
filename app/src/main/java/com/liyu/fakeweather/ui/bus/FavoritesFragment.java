@@ -15,8 +15,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -75,6 +79,18 @@ public class FavoritesFragment extends BaseContentFragment {
 
             @Override
             public void onNext(List<FavoritesBusBean> favList) {
+                final Collator chineseCollator = Collator.getInstance(Locale.CHINA);
+                Collections.sort(favList, new Comparator<FavoritesBusBean>() {
+                    @Override
+                    public int compare(FavoritesBusBean o1, FavoritesBusBean o2) {
+                        int nameDiff = chineseCollator.compare(o1.getLName(), o2.getLName());
+                        if (nameDiff == 0) {
+                            return (int) (o1.getId() - o2.getId());
+                        } else {
+                            return nameDiff;
+                        }
+                    }
+                });
                 adapter.setNewData(favList);
             }
         });
