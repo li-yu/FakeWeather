@@ -221,7 +221,8 @@ public class BusFragment extends BaseFragment {
                 .findItem(R.id.menu_subway).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                WebUtils.openInternal(getContext(), "http://api.caoliyu.cn/szsubway/index.html");
+//                WebUtils.openInternal(getContext(), "http://api.caoliyu.cn/szsubway/index.html");
+                getActivity().startActivity(new Intent(getActivity(), PublicBikeActivity.class));
                 return false;
             }
         });

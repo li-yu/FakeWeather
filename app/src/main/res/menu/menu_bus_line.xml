@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_bus_refresh"
+        android:icon="@drawable/ic_refresh"
+        android:title="刷新"
+        app:showAsAction="always"/>
+
+</menu>

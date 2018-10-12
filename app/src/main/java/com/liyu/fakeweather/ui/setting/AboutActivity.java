@@ -22,6 +22,7 @@ import com.liyu.fakeweather.utils.ShareUtils;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
 import com.liyu.fakeweather.utils.UpdateUtil;
 import com.liyu.fakeweather.utils.WebUtils;
+import com.tencent.bugly.beta.Beta;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -115,7 +116,7 @@ public class AboutActivity extends BaseActivity {
                 feedBack();
                 break;
             case R.id.btn_check_update:
-                UpdateUtil.check(AboutActivity.this, false);
+                Beta.checkUpgrade(true, false);
                 break;
             case R.id.btn_share_app:
                 ShareUtils.shareText(this, "来不及了，赶紧上车！https://github.com/li-yu/FakeWeather", "分享到");

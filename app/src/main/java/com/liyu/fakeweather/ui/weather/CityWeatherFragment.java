@@ -377,7 +377,7 @@ public class CityWeatherFragment extends BaseContentFragment implements NestedSc
     @Override
     public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
-        float fraction = (float)(scrollY) / (float)(parentToolbar.getHeight());
+        float fraction = (float) (scrollY) / (float) (parentToolbar.getHeight());
 
         if (fraction >= 1) {
             fraction = 1;

@@ -3,6 +3,10 @@ package com.liyu.fakeweather;
 import android.app.Application;
 import android.content.Context;
 
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.crashreport.CrashReport;
+
 import org.litepal.LitePal;
 
 /**
@@ -21,6 +25,7 @@ public class App extends Application {
         if (!BuildConfig.DEBUG) {
             AppExceptionHandler.getInstance().setCrashHanler(this);
         }
+        Bugly.init(getApplicationContext(), "914abea303", false);
     }
 
     public static Context getContext() {

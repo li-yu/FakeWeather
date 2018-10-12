@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
@@ -96,7 +97,7 @@ public class LineDetailActivity extends BaseActivity {
 
     @Override
     protected int getMenuId() {
-        return 0;
+        return R.menu.menu_bus_line;
     }
 
     @Override
@@ -308,5 +309,14 @@ public class LineDetailActivity extends BaseActivity {
         LineDetailActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (subscription != null && !subscription.isUnsubscribed())
             subscription.unsubscribe();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_bus_refresh) {
+            loadData();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.liyu.fakeweather">
+    package="com.liyu.fakeweather">
 
     <!-- 这个权限用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- 这个权限用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!-- 用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 访问网络，网络定位需要上网 -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- SD卡读取权限，用户写入离线定位数据 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <!-- SD卡读取权限，用户写入离线定位数据 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- 壁纸设置权限，用户设置妹子壁纸 -->
-    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <!-- Bugly 需要的权限 -->
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <!-- Bugly 需要的权限 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:name="com.liyu.fakeweather.App"
@@ -34,87 +39,96 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="E6rdq6U1vjjmTTglEtdX6fFbYTejWKEq"/>
+            android:value="E6rdq6U1vjjmTTglEtdX6fFbYTejWKEq" />
+
+        <!-- 配置APP渠道号 -->
+        <meta-data
+            android:name="BUGLY_APP_CHANNEL"
+            android:value="Bugly" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.MainActivity"
-            android:windowSoftInputMode="adjustNothing"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"></activity>
 
         <activity
             android:name="com.liyu.fakeweather.ui.bus.LineDetailActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.bus.StationDetailActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.baidu.location.f"
-            android:enabled="true"/>
+            android:enabled="true" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.girl.PictureActivity"
             android:label=""
-            android:theme="@style/PictureTheme"/>
+            android:theme="@style/PictureTheme" />
 
         <service
             android:name="com.liyu.fakeweather.service.GirlService"
-            android:enabled="true"/>
+            android:enabled="true" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.weather.ShareActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.setting.SettingActivity"
             android:label="设置"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.setting.AboutActivity"
             android:label="关于"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.girl.MzituPictureActivity"
             android:label="图集"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/WebViewTheme"/>
+            android:theme="@style/WebViewTheme" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.bus.AllLineActivity"
             android:label="全部线路"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.weather.CityManageActivity"
             android:label="城市管理"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.weather.CityChooseActivity"
             android:label="城市管理"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.setting.ModuleManageActivity"
             android:label="模块管理"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.liyu.fakeweather.ui.bus.PublicBikeActivity"
+            android:label="定位中..."
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.liyu.fakeweather.ui.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 

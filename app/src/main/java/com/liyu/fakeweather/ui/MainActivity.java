@@ -31,6 +31,7 @@ import com.liyu.fakeweather.utils.DoubleClickExit;
 import com.liyu.fakeweather.utils.RxDrawer;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
 import com.liyu.fakeweather.utils.UpdateUtil;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
