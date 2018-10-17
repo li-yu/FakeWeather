@@ -1,6 +1,7 @@
 package com.liyu.fakeweather.http.api;
 
 import com.liyu.fakeweather.http.BaseBusResponse;
+import com.liyu.fakeweather.model.AmapPoi;
 import com.liyu.fakeweather.model.BusLineDetail;
 import com.liyu.fakeweather.model.BusLineNearby;
 import com.liyu.fakeweather.model.BusLineSearch;
@@ -41,5 +42,8 @@ public interface BusController {
 
     @GET("http://bus.wisesz.mobi/v3/api/bus/tabMenu")
     Observable<BusNotice> getBusNotices();
+
+    @GET("https://restapi.amap.com/v3/place/text")
+    Observable<AmapPoi> searchPoi(@Query("keywords") String keywords, @Query("city") String city, @Query("key") String key);
 
 }

@@ -41,8 +41,8 @@ public class ShareActivity extends BaseActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        scrollView = (ScrollView) findViewById(R.id.share_container);
-        tv = (TextView) findViewById(R.id.tv_share_content);
+        scrollView = findViewById(R.id.share_container);
+        tv = findViewById(R.id.tv_share_content);
     }
 
     @Override

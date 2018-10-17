@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.liyu.fakeweather.AppGlobal;
 import com.liyu.fakeweather.R;
 import com.liyu.fakeweather.event.ModuleChangedEvent;
 import com.liyu.fakeweather.event.ThemeChangedEvent;
@@ -31,7 +30,6 @@ import com.liyu.fakeweather.utils.DoubleClickExit;
 import com.liyu.fakeweather.utils.RxDrawer;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
 import com.liyu.fakeweather.utils.UpdateUtil;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -58,6 +56,8 @@ public class MainActivity extends BaseActivity {
     private static final String FRAGMENT_TAG_READING = "闲读";
     private static final String FRAGMENT_TAG_EMPTY = "四大皆空";
 
+    private static final String CURRENT_INDEX = "currentIndex";
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initViews(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            currentFragmentTag = savedInstanceState.getString(AppGlobal.CURRENT_INDEX);
+            currentFragmentTag = savedInstanceState.getString(CURRENT_INDEX);
         }
         fragmentManager = getSupportFragmentManager();
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -100,7 +100,7 @@ public class MainActivity extends BaseActivity {
                 for (Module module : modules) {
                     if (module.isEnable()) {
                         enabledModule.add(module);
-                        navigationView.getMenu().add(R.id.module_group, module.getMenuId(), module.getIndex(), module.getName()).setIcon(getDrawbleId(module.getName())).setCheckable(true);
+                        navigationView.getMenu().add(R.id.module_group, getMenuId(module.getName()), module.getIndex(), module.getName()).setIcon(getDrawbleId(module.getName())).setCheckable(true);
                     }
                 }
                 if (enabledModule.size() > 0) {
@@ -130,6 +130,21 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private int getMenuId(String name) {
+        switch (name) {
+            case "天气":
+                return getResId(this, "navigation_item_2", "id");
+            case "公交":
+                return getResId(this, "navigation_item_1", "id");
+            case "闲读":
+                return getResId(this, "navigation_item_4", "id");
+            case "福利":
+                return getResId(this, "navigation_item_3", "id");
+            default:
+                return getResId(this, "navigation_item_2", "id");
+        }
+    }
+
     private int getResId(Context context, String resName, String defType) {
         return context.getResources().getIdentifier(resName, defType, context.getPackageName());
     }
@@ -137,7 +152,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(AppGlobal.CURRENT_INDEX, currentFragmentTag);
+        outState.putString(CURRENT_INDEX, currentFragmentTag);
     }
 
     @Override

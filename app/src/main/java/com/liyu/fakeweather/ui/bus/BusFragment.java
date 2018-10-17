@@ -198,14 +198,14 @@ public class BusFragment extends BaseFragment {
         });
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.fragment_line_search, null);
-        TextView tvBusAll = (TextView) contentView.findViewById(R.id.tv_bus_all);
+        TextView tvBusAll = contentView.findViewById(R.id.tv_bus_all);
         tvBusAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), AllLineActivity.class));
             }
         });
-        recyclerView = (RecyclerView) contentView.findViewById(R.id.rv_line_search);
+        recyclerView = contentView.findViewById(R.id.rv_line_search);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         searchAdapter = new LineSearchAdapter(R.layout.item_bus_line_search, null);
         recyclerView.setAdapter(searchAdapter);
