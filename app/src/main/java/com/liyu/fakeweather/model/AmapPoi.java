@@ -119,7 +119,7 @@ public class AmapPoi {
 
         private String id;
         private String name;
-        private String address;
+        private Object address;
         private String location;
 
         public String getId() {
@@ -139,11 +139,11 @@ public class AmapPoi {
         }
 
 
-        public String getAddress() {
+        public Object getAddress() {
             return address;
         }
 
-        public void setAddress(String address) {
+        public void setAddress(Object address) {
             this.address = address;
         }
 

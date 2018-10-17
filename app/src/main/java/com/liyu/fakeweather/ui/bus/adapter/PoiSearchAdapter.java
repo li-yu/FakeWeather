@@ -21,6 +21,6 @@ public class PoiSearchAdapter extends BaseQuickAdapter<AmapPoi.PoisBean, BaseVie
     @Override
     protected void convert(BaseViewHolder holder, final AmapPoi.PoisBean item) {
         holder.setText(R.id.tv_line_name, item.getName());
-        holder.setText(R.id.tv_line_desc, item.getAddress());
+        holder.setText(R.id.tv_line_desc, item.getAddress() instanceof CharSequence ? (CharSequence) item.getAddress() : "");
     }
 }

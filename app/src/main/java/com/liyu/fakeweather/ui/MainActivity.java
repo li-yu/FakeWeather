@@ -29,7 +29,6 @@ import com.liyu.fakeweather.ui.weather.WeatherFragment;
 import com.liyu.fakeweather.utils.DoubleClickExit;
 import com.liyu.fakeweather.utils.RxDrawer;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
-import com.liyu.fakeweather.utils.UpdateUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -157,7 +156,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
-        UpdateUtil.check(MainActivity.this, true);
     }
 
     public void initDrawer(Toolbar toolbar) {

@@ -20,7 +20,6 @@ import com.liyu.fakeweather.ui.base.BaseActivity;
 import com.liyu.fakeweather.utils.FileUtil;
 import com.liyu.fakeweather.utils.ShareUtils;
 import com.liyu.fakeweather.utils.SimpleSubscriber;
-import com.liyu.fakeweather.utils.UpdateUtil;
 import com.liyu.fakeweather.utils.WebUtils;
 import com.tencent.bugly.beta.Beta;
 
