@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.liyu.fakeweather"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 24
-        versionName "1.4.1"
+        versionCode 25
+        versionName "1.4.2"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {

@@ -24,7 +24,7 @@ public interface BusController {
 
     String uid = "0";
 
-    String deviceID = "12345678";
+    String deviceID = "a6d741de966770cff149aaeed18af5b7";
 
     String sign = "539f272911d2bb23117ea6211cce1bb5";
 

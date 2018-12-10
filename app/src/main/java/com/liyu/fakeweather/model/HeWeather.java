@@ -142,6 +142,8 @@ public class HeWeather implements Serializable, Cloneable, IFakeWeather {
     @Override
     public List<FakeWeather.FakeForecastHourly> getFakeForecastHourly() {
         List<FakeWeather.FakeForecastHourly> hourlyList = new ArrayList<>();
+        if (hourly == null)
+            return hourlyList;
         for (HeWeather.HourlyBean item : hourly) {
             FakeWeather.FakeForecastHourly hourly = new FakeWeather.FakeForecastHourly();
             hourly.setCode(item.getCond_code());
@@ -199,6 +201,8 @@ public class HeWeather implements Serializable, Cloneable, IFakeWeather {
     }
 
     private String getLifeStyleBrf(String type) {
+        if (lifestyle == null)
+            return "未知";
         for (LifestyleBean bean : lifestyle) {
             if (type.equals(bean.getType())) {
                 return bean.getBrf();
